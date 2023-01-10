@@ -11,6 +11,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import static frc.robot.Constants.OperatorConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -49,6 +50,13 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_driveSubsystem.exampleMethodCommand());
+  }
+
+  public void teleopPeriodic() {
+    double fwd = -m_driverController.getLeftY() * OperatorConstants.kSpeedMultiplier;
+    double rot = -m_driverController.getRightX() * OperatorConstants.kRotationMultiplier;
+
+    m_driveSubsystem.setSpeed(fwd, rot);
   }
 
   /**

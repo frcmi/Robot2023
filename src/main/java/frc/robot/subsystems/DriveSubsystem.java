@@ -40,6 +40,14 @@ public class DriveSubsystem extends SubsystemBase {
         });
   }
 
+  public CommandBase setSpeed(double speed, double rotation) {
+    return runOnce(() -> diffDrive.arcadeDrive(speed, rotation));
+  }
+
+  public CommandBase stop() {
+    return runOnce(() -> diffDrive.stopMotor());
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
