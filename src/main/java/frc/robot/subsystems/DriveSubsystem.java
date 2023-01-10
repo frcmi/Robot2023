@@ -4,12 +4,27 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import static frc.robot.Constants.DriveConstants;
 
-public class ExampleSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase {
+  private final CANSparkMax frontLeft = new CANSparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
+  private final CANSparkMax rearLeft = new CANSparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
+  private final CANSparkMax frontRight = new CANSparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
+  private final CANSparkMax rearRight = new CANSparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
+
+  private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
+  private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
+  private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
+
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {}
+  public DriveSubsystem() {}
 
   /**
    * Example command factory method.
