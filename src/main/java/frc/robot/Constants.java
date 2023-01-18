@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.util.Color8Bit;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -41,4 +43,17 @@ public final class Constants {
     public static final int kElevatorLeftMotorId = 5;
     public static final int kElevatorRightMotorId = 6;
   }
+
+  public static class MiscellaneousConstants {
+    //Currently placeholder values, make sure to update before testing
+    public static final int kLightPWMPort = 5;
+  }
+
+  public static class ColorConstants {
+    public static final Color8Bit kPurple = new Color8Bit(191, 64, 191);
+    public static final Color8Bit kYellow = new Color8Bit(255, 234, 0);
+    public static final Color8Bit kMaroon = new Color8Bit(128, 0, 0);
+    public static final Color8Bit kWhite = new Color8Bit(255, 255, 255);
+  }
+
 }
