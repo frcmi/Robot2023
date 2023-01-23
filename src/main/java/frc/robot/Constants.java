@@ -26,4 +26,13 @@ public final class Constants {
     public static final int kFrontRightMotorId = 3;
     public static final int kRearRightMotorId = 4;
   }
+
+  public static class ManipulatorConstants {
+    public static final int kMotorId = 7;
+    public static final double kIntakeSpeed = 0.3;
+    public static final double kReleaseSpeed = 0.2 * -1;
+    public static final double kReleaseTime = 1.0;
+    // Amps drawn by manipulator showing current spike (to detect if grabbed object) 
+    public static final double kCurrentThreshold = 2.0;
+  }
 }
