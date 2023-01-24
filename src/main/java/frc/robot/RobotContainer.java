@@ -50,7 +50,8 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_driveSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_driveSubsystem));
-    m_driverController.rightTrigger().onTrue(m_manipulatorSubsystem.intakeCommand());
+    m_driverController.rightTrigger().onTrue(m_manipulatorSubsystem.intake());
+    m_driverController.leftTrigger().onTrue(m_manipulatorSubsystem.release());
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
