@@ -17,6 +17,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final double kSpeedMultiplier = 0.2;
     public static final double kRotationMultiplier = 0.2;
+    public static final double kElevatorSpeed = 0.3;
   }
 
   public static class DriveConstants {
@@ -34,5 +35,10 @@ public final class Constants {
     public static final double kReleaseTime = 1.0;
     // Amps drawn by manipulator showing current spike (to detect if grabbed object) 
     public static final double kCurrentThreshold = 2.0;
+  }
+  
+  public static class ElevatorConstants {
+    public static final int kElevatorLeftMotorId = 5;
+    public static final int kElevatorRightMotorId = 6;
   }
 }

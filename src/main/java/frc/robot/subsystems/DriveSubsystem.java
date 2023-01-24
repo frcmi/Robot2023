@@ -24,7 +24,14 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
 
   /** Creates a new ExampleSubsystem. */
-  public DriveSubsystem() {}
+  public DriveSubsystem() {
+    frontLeft.restoreFactoryDefaults();
+    rearLeft.restoreFactoryDefaults();
+    frontRight.restoreFactoryDefaults();
+    rearRight.restoreFactoryDefaults();
+
+    leftMotors.setInverted(true);
+  }
 
   /**
    * Example command factory method.

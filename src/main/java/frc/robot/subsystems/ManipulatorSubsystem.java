@@ -11,8 +11,14 @@ import frc.robot.Constants.ManipulatorConstants;
 public class ManipulatorSubsystem extends SubsystemBase {
     private final CANSparkMax motor = new CANSparkMax(ManipulatorConstants.kMotorId, MotorType.kBrushless);
 
-    public void intake() {
-        motor.set(ManipulatorConstants.kIntakeSpeed);
+    public CommandBase intakeCommand() {
+        return setMotor(ManipulatorConstants.kIntakeSpeed)
+                .until(this::motorOverCurrent)
+                .andThen(stopCommand());
+    }
+
+    private CommandBase setMotor(double speed) {
+        return Commands.runOnce(() -> motor.set(speed), this);
     }
 
     public CommandBase release() {
@@ -27,7 +33,7 @@ public class ManipulatorSubsystem extends SubsystemBase {
     }
 
     public CommandBase stopCommand() {
-        return Commands.run(this::stop, this);
+        return Commands.runOnce(this::stop, this);
     }
 
     public boolean motorOverCurrent() {
