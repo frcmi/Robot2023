@@ -5,8 +5,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -22,6 +24,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
+
+  private final REVPhysicsSim revPhysicsSim = new REVPhysicsSim();
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
@@ -70,8 +74,16 @@ public class DriveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  public void simulationInit() {
+    revPhysicsSim.getInstance().addSparkMax(frontLeft, DCMotor.getNEO(1));
+    revPhysicsSim.getInstance().addSparkMax(rearLeft, DCMotor.getNEO(1));
+    revPhysicsSim.getInstance().addSparkMax(frontRight, DCMotor.getNEO(1));
+    revPhysicsSim.getInstance().addSparkMax(rearRight, DCMotor.getNEO(1));
+  }
+
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+    revPhysicsSim.getInstance().run();
   }
 }

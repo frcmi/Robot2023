@@ -4,7 +4,11 @@
 
 package frc.robot;
 
+import java.lang.reflect.Field;
+
+import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -28,6 +32,13 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    // Flush NetworkTables every loop. This ensures that robot pose and other values
+    // are sent during every iteration.
+    setNetworkTablesFlushEnabled(true);
+
+    if (Robot.isSimulation()) {
+      extendSimulationWatchdogPeriod();
+    }
   }
 
   /**
@@ -97,9 +108,26 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+    m_robotContainer.simulationInit();
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    m_robotContainer.simulationPeriodic();
+  }
+
+  private void extendSimulationWatchdogPeriod() {
+    System.out.println("INFO: Extending IterativeRobot watchdog period");
+    try {
+        Field field = IterativeRobotBase.class.getDeclaredField("m_watchdog");
+        field.setAccessible(true);
+        Watchdog watchdog = (Watchdog) field.get(this);
+        watchdog.setTimeout(1.0);
+    } catch (NoSuchFieldException | IllegalAccessException e) {
+        e.printStackTrace();
+    }
+}
+
 }
