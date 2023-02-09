@@ -43,7 +43,7 @@ public final class Constants {
     public static final double ksVolts = 0.91351;
     public static final double kvVoltSecondsPerMeter = 2.5447;
     public static final double kaVoltSecondsSquaredPerMeter = 0.47201;
-    public static final double kMomentOfInertia = 10.0;
+    public static final double kMomentOfInertia = 300.2;
     public static final double kMass = 100.0;
     public static final double kStallAmps = 105.0;
     public static final double kFreeAmps = 1.8;
