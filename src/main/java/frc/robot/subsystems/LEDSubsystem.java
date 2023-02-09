@@ -22,14 +22,13 @@ public class LEDSubsystem extends SubsystemBase {
   public LEDSubsystem(int numberOfLights, Color8Bit color) {
     addressableLED = new AddressableLED(MiscellaneousConstants.kLightPWMPort);
     stripNumberOfLights = numberOfLights;
-    lightColor = color;
     addressableLEDBuffer = new AddressableLEDBuffer(numberOfLights);
     addressableLED.setData(addressableLEDBuffer);
     addressableLED.setLength(addressableLEDBuffer.getLength());
-    setColor(lightColor);
   }
 
   public void setColor(Color8Bit color) {
+    lightColor = color;
     for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
       addressableLEDBuffer.setLED(i, lightColor);
     }

@@ -59,6 +59,10 @@ public class RobotContainer {
     // m_driverController.b().whileTrue(m_driveSubsystem.exampleMethodCommand());
   }
 
+  public void periodic() {
+    m_driveSubsystem.periodic();
+  }
+
   public void teleopPeriodic() {
     double fwd = m_driverController.getLeftY() * OperatorConstants.kSpeedMultiplier;
     double rot = m_driverController.getLeftX() * OperatorConstants.kRotationMultiplier;

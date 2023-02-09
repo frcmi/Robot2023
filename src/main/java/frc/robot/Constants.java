@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /**
@@ -28,6 +29,42 @@ public final class Constants {
     public static final int kRearLeftMotorId = 2;
     public static final int kFrontRightMotorId = 3;
     public static final int kRearRightMotorId = 4;
+
+    //!!!!! THESE ARE ALL PLACEHOLDER VALUES FROM THE PRACTICE BOT !!!!!
+    public static final double kTrackwidthMeters = 0.62898; //Need to measure
+    public static final DifferentialDriveKinematics kDriveKinematics =
+        new DifferentialDriveKinematics(kTrackwidthMeters);
+
+    public static final int kEncoderCPR = 2048;
+    public static final double kWheelDiameterMeters = 0.1524;
+    public static final double kWheelCircumference = Math.PI * kWheelDiameterMeters;
+    public static final double kGearRatio = 10.9091; 
+    public static final double kEncoderDistancePerTick = kWheelCircumference / kGearRatio / kEncoderCPR ;
+    public static final double ksVolts = 0.91351;
+    public static final double kvVoltSecondsPerMeter = 2.5447;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.47201;
+    public static final double kMomentOfInertia = 10.0;
+    public static final double kMass = 100.0;
+    public static final double kStallAmps = 105.0;
+    public static final double kFreeAmps = 1.8;
+    public static final double kStallTorque = 2.6;
+    public static final double kFreeSpeedRPS = 5676.0;
+    public static final double kEncoderResolutionCPR = 42.0;
+  }
+  //!!!!! THESE ARE ALL PLACEHOLDER VALUES FROM THE PRACTICE BOT !!!!!
+  public static final class AutoConstants {
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+
+    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
+
+    public static final double kTurnP = 1.0;
+    public static final double kTurnI = 1.0;
+    public static final double kTurnD = 1.0;
+    public static final double kTurnToleranceDeg = 1.0;
+    public static final double kTurnRateToleranceDegPerS = 1.0;
   }
 
   public static class ManipulatorConstants {
