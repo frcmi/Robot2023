@@ -21,6 +21,7 @@ import edu.wpi.first.hal.simulation.EncoderDataJNI;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DigitalSource;
 import edu.wpi.first.wpilibj.Encoder;
@@ -36,6 +37,9 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+import edu.wpi.first.wpilibj.RobotController;
+
 import static frc.robot.Constants.DriveConstants;
 import static frc.robot.Constants.AutoConstants;
 import static frc.robot.Constants.OperatorConstants;
@@ -45,19 +49,18 @@ public class DriveSubsystem extends SubsystemBase {
   private final CANSparkMax rearLeft = new CANSparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
   private final CANSparkMax frontRight = new CANSparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
   private final CANSparkMax rearRight = new CANSparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
-  private final RelativeEncoder leftEncoder = frontLeft.getEncoder(com.revrobotics.SparkMaxRelativeEncoder.Type.kHallSensor, 42);
-  private final RelativeEncoder rightEncoder = frontRight.getEncoder(com.revrobotics.SparkMaxRelativeEncoder.Type.kHallSensor, 42);
-  //private final EncoderSim leftEncoderSim = new EncoderSim((Encoder) leftEncoder);
-  //private final EncoderSim rightEncoderSim = new EncoderSim((Encoder) rightEncoder);
+  private final RelativeEncoder leftEncoder = frontLeft.getEncoder();
+  private final RelativeEncoder rightEncoder = frontRight.getEncoder();
+  private SimDeviceSim leftSparkSim = new SimDeviceSim("SPARK MAX [1]");
+  private SimDeviceSim rightSparkSim = new SimDeviceSim("SPARK MAX [2]");
   private final AHRS ahrs = new AHRS(Port.kMXP);
   private final Field2d field = new Field2d();
-  //private final Gyro gyro = ahrs;
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
-  //private final REVPhysicsSim revPhysicsSim = new REVPhysicsSim();
   public DifferentialDrivetrainSim diffSim = new DifferentialDrivetrainSim(DCMotor.getNEO(1), DriveConstants.kGearRatio, DriveConstants.kMomentOfInertia, DriveConstants.kMass, DriveConstants.kWheelDiameterMeters/2, DriveConstants.kTrackwidthMeters, null);
   public DifferentialDriveOdometry odometry;
+  private double gyroSimAngle = 0.0;
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem(Pose2d startingPose) {
@@ -80,7 +83,7 @@ public class DriveSubsystem extends SubsystemBase {
     rearLeft.follow(frontLeft);
     rearRight.follow(frontRight);
     leftMotors.setInverted(true);
-    odometry = new DifferentialDriveOdometry(ahrs.getRotation2d(),leftEncoder.getPosition(), rightEncoder.getPosition(), new Pose2d(5.0, 13.5, new Rotation2d()));
+    odometry = new DifferentialDriveOdometry(ahrs.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition(), new Pose2d(5.0, 5.5, new Rotation2d()));
     SmartDashboard.putData("Field", field);
   }
 
@@ -103,6 +106,9 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public CommandBase setSpeed(double speed, double rotation) {
+    frontLeft.set(-speed / RobotController.getInputVoltage());
+    frontRight.set(speed / RobotController.getInputVoltage());
+
     return runOnce(() -> diffDrive.arcadeDrive(speed, rotation));
   }
 
@@ -123,30 +129,39 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    REVPhysicsSim.getInstance().run();
-    odometry.update(ahrs.getRotation2d(),
+    //REVPhysicsSim.getInstance().run();
+    odometry.update(Robot.isReal() ? ahrs.getRotation2d() : new Rotation2d(gyroSimAngle),
                     leftEncoder.getPosition(),
                     rightEncoder.getPosition());
     field.setRobotPose(odometry.getPoseMeters());
+
+    SmartDashboard.putNumber("gyro angle", ahrs.getAngle());
+    SmartDashboard.putNumber("pitch", ahrs.getPitch());
+    SmartDashboard.putNumber("yaw", ahrs.getYaw());
+    SmartDashboard.putNumber("roll", ahrs.getRoll());
+    diffDrive.feed();
   }
 
   public void simulationInit() {
-    REVPhysicsSim.getInstance().addSparkMax(frontLeft, DCMotor.getNEO(1));
-    REVPhysicsSim.getInstance().addSparkMax(rearLeft, DCMotor.getNEO(1));
-    REVPhysicsSim.getInstance().addSparkMax(frontRight, DCMotor.getNEO(1));
-    REVPhysicsSim.getInstance().addSparkMax(rearRight, DCMotor.getNEO(1));
+    REVPhysicsSim.getInstance().addSparkMax(frontLeft, DCMotor.getNEO(2));
+    // REVPhysicsSim.getInstance().addSparkMax(rearLeft, DCMotor.getNEO(1));
+    REVPhysicsSim.getInstance().addSparkMax(frontRight, DCMotor.getNEO(2));
+    // REVPhysicsSim.getInstance().addSparkMax(rearRight, DCMotor.getNEO(1));
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
     //REVPhysicsSim.getInstance().run();
-    diffSim.setInputs(leftMotors.get() * frontLeft.getBusVoltage(),
-                       rightMotors.get() * frontRight.getBusVoltage());
-    leftEncoder.setPosition(diffSim.getLeftPositionMeters());
-    //leftEncoderSim.setRate(diffSim.getLeftVelocityMetersPerSecond());
-    rightEncoder.setPosition(diffSim.getRightPositionMeters());
-    //leftEncoder.setRate(diffSim.getRightVelocityMetersPerSecond());
-    //ahrs.setAngle(-diffSim.getHeading().getDegrees());
+    REVPhysicsSim.getInstance().run();
+    diffSim.setInputs(frontLeft.get() * RobotController.getInputVoltage(),
+                       frontRight.get() * RobotController.getInputVoltage());
+    diffSim.update(Robot.kDefaultPeriod);
+    leftSparkSim.getDouble("Position").set(diffSim.getLeftPositionMeters());
+    leftSparkSim.getDouble("Velocity").set(diffSim.getLeftVelocityMetersPerSecond());
+    rightSparkSim.getDouble("Position").set(diffSim.getRightPositionMeters());
+    rightSparkSim.getDouble("Velocity").set(diffSim.getRightVelocityMetersPerSecond());
+    gyroSimAngle += DriveConstants.kDriveKinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(diffSim.getLeftVelocityMetersPerSecond(), diffSim.getRightVelocityMetersPerSecond())).omegaRadiansPerSecond
+        * Robot.kDefaultPeriod;
   }
 }
