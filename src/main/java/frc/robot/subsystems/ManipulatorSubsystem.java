@@ -19,11 +19,11 @@ public class ManipulatorSubsystem extends SubsystemBase {
     public ManipulatorSubsystem() {
         elevatorLeftMotor.restoreFactoryDefaults();
         elevatorRightMotor.restoreFactoryDefaults();
-        elevatorRightMotor.setInverted(true);
+        elevatorRightMotor.follow(elevatorLeftMotor, true);
 
         armLeftMotor.restoreFactoryDefaults();
         armRightMotor.restoreFactoryDefaults();
-        armRightMotor.setInverted(true);
+        armRightMotor.follow(armLeftMotor, true);
     }
 
     public void setMotors(double speed) {
