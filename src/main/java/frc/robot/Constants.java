@@ -18,6 +18,7 @@ public final class Constants {
     public static final double kSpeedMultiplier = 0.2;
     public static final double kRotationMultiplier = 0.2;
     public static final double kElevatorSpeed = 0.3;
+    public static final double kArmSpeed = 0.3;
   }
 
   public static class DriveConstants {
@@ -28,8 +29,8 @@ public final class Constants {
     public static final int kRearRightMotorId = 4;
   }
 
-  public static class ManipulatorConstants {
-    public static final int kMotorId = 7;
+  public static class IntakeConstants {
+    public static final int kMotorId = 9;
     public static final double kIntakeSpeed = 0.3;
     public static final double kReleaseSpeed = 0.2 * -1;
     public static final double kReleaseTime = 1.0;
@@ -37,8 +38,10 @@ public final class Constants {
     public static final double kCurrentThreshold = 2.0;
   }
   
-  public static class ElevatorConstants {
+  public static class ManipulatorConstants {
     public static final int kElevatorLeftMotorId = 5;
     public static final int kElevatorRightMotorId = 6;
+    public static final int kArmLeftMotorId = 7;
+    public static final int kArmRightMotorId = 8;
   }
 }
