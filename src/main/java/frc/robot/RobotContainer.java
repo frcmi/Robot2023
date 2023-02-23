@@ -62,7 +62,7 @@ public class RobotContainer {
     double rot = m_driverController.getLeftX() * OperatorConstants.kRotationMultiplier;
     m_driveSubsystem.setSpeed(fwd, rot);
 
-    double elevator = m_driverController.getRightY() * OperatorConstants.kElevatorSpeed;
+    double elevator = m_driverController.getRightY();
     m_manipulatorSubsystem.setMotors(elevator);
   }
 

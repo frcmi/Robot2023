@@ -2,25 +2,35 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ManipulatorConstants;
 
 public class ManipulatorSubsystem extends SubsystemBase {
-    private final WPI_TalonFX elevatorLeftMotor = new WPI_TalonFX(ManipulatorConstants.kElevatorLeftMotorId);
-    private final WPI_TalonFX elevatorRightMotor = new WPI_TalonFX(ManipulatorConstants.kElevatorRightMotorId);
+    private final CANSparkMax elevatorLeftMotor = new CANSparkMax(ManipulatorConstants.kElevatorLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final CANSparkMax elevatorRightMotor = new CANSparkMax(ManipulatorConstants.kElevatorRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+
+    private final CANSparkMax armLeftMotor = new CANSparkMax(ManipulatorConstants.kArmLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final CANSparkMax armRightMotor = new CANSparkMax(ManipulatorConstants.kArmRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
 
 
     public ManipulatorSubsystem() {
-        elevatorLeftMotor.configFactoryDefault();
-        elevatorRightMotor.configFactoryDefault();
-        
-        // Set one to inverted, not sure which one right now
-        // leftMotor.setInverted(true);
+        elevatorLeftMotor.restoreFactoryDefaults();
+        elevatorRightMotor.restoreFactoryDefaults();
         elevatorRightMotor.setInverted(true);
+
+        armLeftMotor.restoreFactoryDefaults();
+        armRightMotor.restoreFactoryDefaults();
+        armRightMotor.setInverted(true);
     }
 
     public void setMotors(double speed) {
-        elevatorLeftMotor.set(speed);
-        elevatorRightMotor.set(speed);
+        elevatorLeftMotor.set(speed * Constants.OperatorConstants.kElevatorSpeed);
+        elevatorRightMotor.set(speed * Constants.OperatorConstants.kElevatorSpeed);
+
+        armLeftMotor.set(speed * Constants.OperatorConstants.kArmSpeed);
+        armRightMotor.set(speed * Constants.OperatorConstants.kArmSpeed);
     }
 }

@@ -18,6 +18,7 @@ public final class Constants {
     public static final double kSpeedMultiplier = 0.2;
     public static final double kRotationMultiplier = 0.2;
     public static final double kElevatorSpeed = 0.3;
+    public static final double kArmSpeed = 0.3;
   }
 
   public static class DriveConstants {
@@ -40,5 +41,7 @@ public final class Constants {
   public static class ManipulatorConstants {
     public static final int kElevatorLeftMotorId = 5;
     public static final int kElevatorRightMotorId = 6;
+    public static final int kArmLeftMotorId = 7;
+    public static final int kArmRightMotorId = 8;
   }
 }
