@@ -34,6 +34,7 @@ public final class Constants {
     public static final double kIntakeSpeed = 0.3;
     public static final double kReleaseSpeed = 0.2 * -1;
     public static final double kReleaseTime = 1.0;
+    public static final int kCurrentLimit = 15;
     // Amps drawn by manipulator showing current spike (to detect if grabbed object) 
     public static final double kCurrentThreshold = 2.0;
   }
@@ -43,5 +44,9 @@ public final class Constants {
     public static final int kElevatorRightMotorId = 6;
     public static final int kArmLeftMotorId = 7;
     public static final int kArmRightMotorId = 8;
+    public static final double kElevatorGearRatio = 1.0/15.0;
+    public static final double kArmGearRatio = 1.0/180.0;
+    public static final int kElevatorCurrentLimit = 40;
+    public static final int kArmCurrentLimit = 40;
   }
 }

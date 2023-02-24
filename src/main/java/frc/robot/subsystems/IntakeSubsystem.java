@@ -11,6 +11,12 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeSubsystem extends SubsystemBase {
     private final CANSparkMax motor = new CANSparkMax(IntakeConstants.kMotorId, MotorType.kBrushless);
 
+    public IntakeSubsystem() {
+        motor.restoreFactoryDefaults();
+        motor.setSmartCurrentLimit(IntakeConstants.kCurrentLimit);
+        motor.burnFlash();
+    }
+
     public CommandBase intake() {
         return setMotor(IntakeConstants.kIntakeSpeed)
                 .until(this::motorOverCurrent)

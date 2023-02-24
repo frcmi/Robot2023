@@ -4,8 +4,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.ManipulatorConstants;
 
 public class ManipulatorSubsystem extends SubsystemBase {
@@ -18,19 +20,38 @@ public class ManipulatorSubsystem extends SubsystemBase {
 
     public ManipulatorSubsystem() {
         elevatorLeftMotor.restoreFactoryDefaults();
+        elevatorLeftMotor.setSmartCurrentLimit(ManipulatorConstants.kElevatorCurrentLimit);
+        elevatorLeftMotor.burnFlash();
         elevatorRightMotor.restoreFactoryDefaults();
         elevatorRightMotor.follow(elevatorLeftMotor, true);
+        elevatorRightMotor.setSmartCurrentLimit(ManipulatorConstants.kElevatorCurrentLimit);
+        elevatorRightMotor.burnFlash();
 
         armLeftMotor.restoreFactoryDefaults();
+        armLeftMotor.setSmartCurrentLimit(ManipulatorConstants.kArmCurrentLimit);
+        armLeftMotor.burnFlash();
         armRightMotor.restoreFactoryDefaults();
         armRightMotor.follow(armLeftMotor, true);
+        armRightMotor.setSmartCurrentLimit(ManipulatorConstants.kArmCurrentLimit);
+        armRightMotor.burnFlash();
     }
 
     public void setMotors(double speed) {
-        elevatorLeftMotor.set(speed * Constants.OperatorConstants.kElevatorSpeed);
-        elevatorRightMotor.set(speed * Constants.OperatorConstants.kElevatorSpeed);
+        setElevatorMotors(speed);
+        setArmMotors(speed);
+    }
 
-        armLeftMotor.set(speed * Constants.OperatorConstants.kArmSpeed);
-        armRightMotor.set(speed * Constants.OperatorConstants.kArmSpeed);
+    private void setArmMotors(double speed) {
+        speed *= OperatorConstants.kArmSpeed;
+
+        armLeftMotor.set(speed);
+        armRightMotor.set(speed);
+    }
+
+    private void setElevatorMotors(double speed) {
+        speed *= OperatorConstants.kElevatorSpeed;
+
+        elevatorLeftMotor.set(speed);
+        elevatorRightMotor.set(speed);
     }
 }
