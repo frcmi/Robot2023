@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
 public class ManipulatorSubsystem extends SubsystemBase {
-    private ArmSubsystem m_armSubsystem;
-    private ElevatorSubsystem m_elevatorSubsystem;
+    private final ArmSubsystem m_armSubsystem;
+    private final ElevatorSubsystem m_elevatorSubsystem;
 
     public ManipulatorSubsystem(ArmSubsystem armSubsystem, ElevatorSubsystem elevatorSubsystem) {
         m_armSubsystem = armSubsystem;

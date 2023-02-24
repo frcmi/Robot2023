@@ -50,7 +50,8 @@ public class RobotContainer {
     //     .onTrue(new ExampleCommand(m_driveSubsystem));
     m_driverController.rightTrigger().onTrue(m_intakeSubsystem.intake());
     m_driverController.leftTrigger().onTrue(m_intakeSubsystem.release());
-
+    m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
+    m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
@@ -63,7 +64,7 @@ public class RobotContainer {
     m_driveSubsystem.setSpeed(fwd, rot);
 
     double elevator = m_driverController.getRightY();
-    m_manipulatorSubsystem.setMotors(elevator);
+//    m_manipulatorSubsystem.setMotors(elevator);
   }
 
   /**

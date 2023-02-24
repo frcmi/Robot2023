@@ -51,5 +51,15 @@ public final class Constants {
     public static final int kRightMotorId = 8;
     public static final double kArmGearRatio = 1.0/180.0;
     public static final int kCurrentLimit = 40;
+    // PID parameters
+    public static final double kP = 0.3;
+    public static final double kI = 0.0;
+    public static final double kD = 0.0;
+    // FeedForward parameters
+    public static final double kS = 0.0;
+    public static final double kG = 0.0;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
+
   }
 }
