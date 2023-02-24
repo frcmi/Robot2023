@@ -39,14 +39,17 @@ public final class Constants {
     public static final double kCurrentThreshold = 2.0;
   }
   
-  public static class ManipulatorConstants {
-    public static final int kElevatorLeftMotorId = 5;
-    public static final int kElevatorRightMotorId = 6;
-    public static final int kArmLeftMotorId = 7;
-    public static final int kArmRightMotorId = 8;
-    public static final double kElevatorGearRatio = 1.0/15.0;
+  public static class ElevatorConstants {
+    public static final int kLeftMotorId = 5;
+    public static final int kRightMotorId = 6;
+    public static final double kGearRatio = 1.0/15.0;
+    public static final int kCurrentLimit = 40;
+  }
+
+  public static class ArmConstants {
+    public static final int kLeftMotorId = 7;
+    public static final int kRightMotorId = 8;
     public static final double kArmGearRatio = 1.0/180.0;
-    public static final int kElevatorCurrentLimit = 40;
-    public static final int kArmCurrentLimit = 40;
+    public static final int kCurrentLimit = 40;
   }
 }
