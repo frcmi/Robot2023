@@ -14,7 +14,7 @@ import frc.robot.Constants.OperatorConstants;
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax leftMotor = new CANSparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final AbsoluteEncoder encoder = rightMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+    private final AbsoluteEncoder absoluteEncoder = leftMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
 
     private final PIDController pidController = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
 //    private final ArmFeedforward feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
@@ -38,7 +38,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getAngle() {
-        return encoder.getPosition();
+        return absoluteEncoder.getPosition();
     }
 
     public CommandBase moveArm() {
@@ -58,6 +58,6 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveArmToRelative(double angleOffset) {
-        return moveArmTo(encoder.getPosition() + angleOffset);
+        return moveArmTo(absoluteEncoder.getPosition() + angleOffset);
     }
 }
