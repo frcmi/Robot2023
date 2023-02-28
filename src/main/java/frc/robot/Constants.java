@@ -36,7 +36,9 @@ public final class Constants {
     public static final double kReleaseTime = 1.0;
     public static final int kCurrentLimit = 15;
     // Amps drawn by manipulator showing current spike (to detect if grabbed object) 
-    public static final double kCurrentThreshold = 2.0;
+    public static final double kCurrentThreshold = 15.0;
+    // Time to keep running intake under current spike
+    public static final double kIntakeTime = 0.75;
   }
   
   public static class ElevatorConstants {

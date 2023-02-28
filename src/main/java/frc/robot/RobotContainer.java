@@ -48,8 +48,12 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_driveSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_driveSubsystem));
-    m_driverController.rightTrigger().onTrue(m_intakeSubsystem.intake());
-    m_driverController.leftTrigger().onTrue(m_intakeSubsystem.release());
+    m_driverController.rightTrigger()
+      .onTrue(m_intakeSubsystem.intake())
+      .onFalse(m_intakeSubsystem.stopCommand());
+    m_driverController.leftTrigger()
+      .onTrue(m_intakeSubsystem.reverseIntake())
+      .onFalse(m_intakeSubsystem.stopCommand());
     m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
     m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
 

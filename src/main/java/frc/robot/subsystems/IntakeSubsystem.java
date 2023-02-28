@@ -17,9 +17,11 @@ public class IntakeSubsystem extends SubsystemBase {
         motor.burnFlash();
     }
 
+    // Intake cone, release cube
     public CommandBase intake() {
         return setMotor(IntakeConstants.kIntakeSpeed)
                 .until(this::motorOverCurrent)
+                .andThen(Commands.waitSeconds(IntakeConstants.kIntakeTime))
                 .andThen(stopCommand());
     }
 
@@ -27,11 +29,12 @@ public class IntakeSubsystem extends SubsystemBase {
         return Commands.runOnce(() -> motor.set(speed), this);
     }
 
-    public CommandBase release() {
-        return Commands.sequence(
-            setMotor(IntakeConstants.kReleaseSpeed),
-            Commands.waitSeconds(IntakeConstants.kReleaseTime),
-            stopCommand());
+    // Release cone, intake cube
+    public CommandBase reverseIntake() {
+        return setMotor(IntakeConstants.kIntakeSpeed * -1)
+                .until(this::motorOverCurrent)
+                .andThen(Commands.waitSeconds(IntakeConstants.kIntakeTime))
+                .andThen(stopCommand());
     }
 
     public void stop() {
