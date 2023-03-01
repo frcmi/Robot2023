@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
@@ -31,6 +32,13 @@ public class ArmSubsystem extends SubsystemBase {
 
         pidController.setTolerance(1);
         setDefaultCommand(moveArm());
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Arm Angle", getAngle());
+        SmartDashboard.putData("Arm PID", pidController);
+        SmartDashboard.putNumber("Arm Speed", leftMotor.get());
     }
 
     private void setMotors(double speed) {
