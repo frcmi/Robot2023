@@ -56,11 +56,10 @@ public class RobotContainer {
       .onTrue(m_intakeSubsystem.reverseIntake())
       .onFalse(m_intakeSubsystem.stopCommand());
 
-
     // Elevator bindings
     m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(m_driverController::getRightY));
 
-    // Elevator bindings
+    // Arm bindings
     m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMove(m_driverController::getRightX));
     m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
     m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
