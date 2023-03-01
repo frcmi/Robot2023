@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -31,7 +33,7 @@ public class ArmSubsystem extends SubsystemBase {
         setDefaultCommand(moveArm());
     }
 
-    public void setMotors(double speed) {
+    private void setMotors(double speed) {
         speed *= OperatorConstants.kArmSpeed;
         leftMotor.set(speed);
         rightMotor.set(speed);
@@ -47,6 +49,10 @@ public class ArmSubsystem extends SubsystemBase {
             leftMotor.set(pidOutput);
             rightMotor.set(pidOutput);
         });
+    }
+
+    public CommandBase manualMove(DoubleSupplier input) {
+        return run(() -> setMotors(input.getAsDouble()));
     }
 
     public CommandBase setTarget(double angle) {

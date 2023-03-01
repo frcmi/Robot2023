@@ -23,7 +23,6 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-  private final ManipulatorSubsystem m_manipulatorSubsystem = new ManipulatorSubsystem(m_armSubsystem, m_elevatorSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -45,30 +44,30 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_driveSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_driveSubsystem));
+    // Drive bindings
+    m_driveSubsystem.setDefaultCommand(m_driveSubsystem
+      .setSpeed(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController.leftBumper()));
+
+    // Intake bindings
     m_driverController.rightTrigger()
       .onTrue(m_intakeSubsystem.intake())
       .onFalse(m_intakeSubsystem.stopCommand());
     m_driverController.leftTrigger()
       .onTrue(m_intakeSubsystem.reverseIntake())
       .onFalse(m_intakeSubsystem.stopCommand());
+
+
+    // Elevator bindings
+    m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(m_driverController::getRightY));
+
+    // Elevator bindings
+    m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMove(m_driverController::getRightX));
     m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
     m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    // m_driverController.b().whileTrue(m_driveSubsystem.exampleMethodCommand());
   }
 
   public void teleopPeriodic() {
-    double fwd = m_driverController.getLeftY() * OperatorConstants.kSpeedMultiplier;
-    double rot = m_driverController.getLeftX() * OperatorConstants.kRotationMultiplier;
-    m_driveSubsystem.setSpeed(fwd, rot);
 
-    double elevator = m_driverController.getRightY();
-//    m_manipulatorSubsystem.setMotors(elevator);
   }
 
   /**

@@ -11,7 +11,12 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.OperatorConstants;
+
 import static frc.robot.Constants.DriveConstants;
+
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 public class DriveSubsystem extends SubsystemBase {
   private final CANSparkMax frontLeft = new CANSparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
@@ -47,8 +52,12 @@ public class DriveSubsystem extends SubsystemBase {
         });
   }
 
-  public CommandBase setSpeed(double speed, double rotation) {
-    return runOnce(() -> diffDrive.arcadeDrive(speed, rotation));
+  public CommandBase setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
+    return run(() -> {
+      double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier;
+      double rotation = rotationSupplier.getAsDouble() * OperatorConstants.kRotationMultiplier;
+      diffDrive.curvatureDrive(speed, rotation, rotationLock.getAsBoolean());
+    });
   }
 
   public CommandBase stop() {

@@ -1,7 +1,11 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
@@ -22,9 +26,15 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightMotor.burnFlash();
     }
 
-    public void setMotors(double speed) {
+    private void setMotors(double speed) {
         speed *= OperatorConstants.kElevatorSpeed;
         leftMotor.set(speed);
         rightMotor.set(speed);
+    }
+
+    public CommandBase manualMotors(DoubleSupplier input) {
+        return run(() -> {
+            setMotors(input.getAsDouble());
+        });
     }
 }
