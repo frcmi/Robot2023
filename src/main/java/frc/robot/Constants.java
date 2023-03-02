@@ -55,6 +55,9 @@ public final class Constants {
     public static final double kG = 0.0;
     public static final double kV = 0.0;
     public static final double kA = 0.0;
+    // Motion Profile
+    public static final double kMaxVel = 0.5;
+    public static final double kMaxAccel = 0.1;
   }
 
   public static class ArmConstants {
@@ -71,6 +74,8 @@ public final class Constants {
     public static final double kG = 0.0;
     public static final double kV = 0.0;
     public static final double kA = 0.0;
-
+    // Motion Profile
+    public static final double kMaxVel = 0.5;
+    public static final double kMaxAccel = 0.1;
   }
 }

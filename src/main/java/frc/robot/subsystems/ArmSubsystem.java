@@ -7,7 +7,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,7 +20,9 @@ public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final AbsoluteEncoder absoluteEncoder = leftMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
 
-    private final PIDController pidController = new PIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD);
+    private final ProfiledPIDController pidController 
+        = new ProfiledPIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD, 
+            new TrapezoidProfile.Constraints(ArmConstants.kMaxVel, ArmConstants.kMaxAccel));
 //    private final ArmFeedforward feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
     public ArmSubsystem() {
         leftMotor.restoreFactoryDefaults();
@@ -31,7 +34,8 @@ public class ArmSubsystem extends SubsystemBase {
         rightMotor.burnFlash();
 
         pidController.setTolerance(1);
-        setDefaultCommand(moveArm());
+        // Disabled while manualMove is default for testing
+        // setDefaultCommand(moveArm());
     }
 
     @Override
@@ -64,7 +68,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase setTarget(double angle) {
-        return runOnce(() -> pidController.setSetpoint(angle));
+        return runOnce(() -> pidController.setGoal(angle));
     }
 
     public CommandBase moveArmTo(double angle) {
