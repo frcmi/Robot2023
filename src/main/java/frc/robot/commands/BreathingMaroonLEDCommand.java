@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.LEDControllerSubsystem;
 
 public class BreathingMaroonLEDCommand {
-    protected final Color8Bit initialMaroon = new Color8Bit(0, 0, 0);
+    protected final Color8Bit initialMaroon = new Color8Bit(144, 56, 32);
     protected Color8Bit currentColor;
     protected int[] ports;
     protected int[] lengths;
