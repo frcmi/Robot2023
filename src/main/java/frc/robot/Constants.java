@@ -19,6 +19,7 @@ public final class Constants {
     public static final double kRotationMultiplier = 0.2;
     public static final double kElevatorSpeed = 0.3;
     public static final double kArmSpeed = 0.3;
+    public static final double ArmDeadzone = 0.2;
   }
 
   public static class DriveConstants {

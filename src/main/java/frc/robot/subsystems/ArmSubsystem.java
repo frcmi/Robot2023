@@ -34,8 +34,6 @@ public class ArmSubsystem extends SubsystemBase {
         rightMotor.burnFlash();
 
         pidController.setTolerance(1);
-        // Disabled while manualMove is default for testing
-        // setDefaultCommand(moveArm());
     }
 
     @Override
@@ -55,16 +53,25 @@ public class ArmSubsystem extends SubsystemBase {
         return absoluteEncoder.getPosition();
     }
 
-    public CommandBase moveArm() {
-        return run(() -> {
-            double pidOutput = pidController.calculate(getAngle());
-            leftMotor.set(pidOutput);
-            rightMotor.set(pidOutput);
-        });
+    private void setPID() {
+        double pidOutput = pidController.calculate(getAngle());
+        leftMotor.set(pidOutput);
+        rightMotor.set(pidOutput);
     }
 
-    public CommandBase manualMove(DoubleSupplier input) {
-        return run(() -> setMotors(input.getAsDouble()));
+    public CommandBase pidArm() {
+        return run(this::setPID);
+    }
+
+    public CommandBase manualMove(DoubleSupplier inputSupplier) {
+        return run(() -> {
+            double input = inputSupplier.getAsDouble();
+            if (Math.abs(input) < OperatorConstants.ArmDeadzone) {
+                pidArm();
+                return;
+            }
+            setMotors(input);
+        });
     }
 
     public CommandBase setTarget(double angle) {
@@ -72,7 +79,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveArmTo(double angle) {
-        return setTarget(angle).andThen(moveArm()).until(pidController::atSetpoint);
+        return setTarget(angle).andThen(pidArm()).until(pidController::atSetpoint);
     }
 
     public CommandBase moveArmToRelative(double angleOffset) {
