@@ -34,7 +34,10 @@ public class DriveSubsystem extends SubsystemBase {
     rearLeft.restoreFactoryDefaults();
     frontRight.restoreFactoryDefaults();
     rearRight.restoreFactoryDefaults();
-
+    
+    rearLeft.follow(frontLeft);
+    rearRight.follow(frontRight);
+    
     leftMotors.setInverted(true);
   }
 
