@@ -68,7 +68,7 @@ public class RobotContainer {
   public void teleopPeriodic() {
     double fwd = m_driverController.getLeftY() * OperatorConstants.kSpeedMultiplier;
     double rot = m_driverController.getLeftX() * OperatorConstants.kRotationMultiplier;
-    m_driveSubsystem.setSpeed(fwd, rot);
+    m_driveSubsystem.arcadeDrive(fwd, rot);
 
     double elevator = m_driverController.getRightY() * OperatorConstants.kElevatorSpeed;
     m_elevatorSubsystem.setMotors(elevator);

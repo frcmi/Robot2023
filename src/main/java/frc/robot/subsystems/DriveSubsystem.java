@@ -58,7 +58,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
-  public DifferentialDrivetrainSim diffSim = new DifferentialDrivetrainSim(DCMotor.getNEO(1), DriveConstants.kGearRatio, DriveConstants.kMomentOfInertia, DriveConstants.kMass, DriveConstants.kWheelDiameterMeters/2, DriveConstants.kTrackwidthMeters, null);
+  public DifferentialDrivetrainSim diffSim = new DifferentialDrivetrainSim(DCMotor.getNEO(2), DriveConstants.kGearRatio, DriveConstants.kMomentOfInertia, DriveConstants.kMass, DriveConstants.kWheelDiameterMeters/2, DriveConstants.kTrackwidthMeters, null);
   public DifferentialDriveOdometry odometry;
   private double gyroSimAngle = 0.0;
 
@@ -82,7 +82,9 @@ public class DriveSubsystem extends SubsystemBase {
     rearRight.restoreFactoryDefaults();
     rearLeft.follow(frontLeft);
     rearRight.follow(frontRight);
-    leftMotors.setInverted(true);
+    //leftMotors.setInverted(true);
+    frontLeft.setInverted(true);
+    rearLeft.setInverted(true);
     odometry = new DifferentialDriveOdometry(ahrs.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition(), new Pose2d(5.0, 5.5, new Rotation2d()));
     SmartDashboard.putData("Field", field);
   }
@@ -105,13 +107,27 @@ public class DriveSubsystem extends SubsystemBase {
         });
   }
 
-  public CommandBase setSpeed(double speed, double rotation) {
+  public CommandBase arcadeDrive(double speed, double rotation) {
     frontLeft.set(-speed / RobotController.getInputVoltage());
     frontRight.set(speed / RobotController.getInputVoltage());
 
     return runOnce(() -> diffDrive.arcadeDrive(speed, rotation));
   }
 
+  public CommandBase tankDrive(double speedLeft, double speedRight) {
+    frontLeft.set(-speedLeft / RobotController.getInputVoltage());
+    frontRight.set(-speedRight / RobotController.getInputVoltage());
+
+    return runOnce(() -> diffDrive.tankDrive(speedLeft, speedRight));
+  }
+
+  /* 
+  public CommandBase tankDriveVolts(double voltsLeft, double voltsRight) {
+
+
+    return runOnce(() ->)
+  }
+  */
   public CommandBase stop() {
     return runOnce(() -> diffDrive.stopMotor());
   }
@@ -161,7 +177,7 @@ public class DriveSubsystem extends SubsystemBase {
     leftSparkSim.getDouble("Velocity").set(diffSim.getLeftVelocityMetersPerSecond());
     rightSparkSim.getDouble("Position").set(diffSim.getRightPositionMeters());
     rightSparkSim.getDouble("Velocity").set(diffSim.getRightVelocityMetersPerSecond());
-    gyroSimAngle += DriveConstants.kDriveKinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(diffSim.getLeftVelocityMetersPerSecond(), diffSim.getRightVelocityMetersPerSecond())).omegaRadiansPerSecond
+    gyroSimAngle += DriveConstants.kDriveKinematics.toChassisSpeeds(new DifferentialDriveWheelSpeeds(-diffSim.getLeftVelocityMetersPerSecond(), diffSim.getRightVelocityMetersPerSecond())).omegaRadiansPerSecond
         * Robot.kDefaultPeriod;
   }
 }

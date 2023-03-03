@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /**
@@ -18,8 +19,8 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kSpeedMultiplier = 0.2;
-    public static final double kRotationMultiplier = 0.2;
+    public static final double kSpeedMultiplier =  1; //0.2;
+    public static final double kRotationMultiplier = 1; //0.2;
     public static final double kElevatorSpeed = 0.3;
   }
 
@@ -35,21 +36,21 @@ public final class Constants {
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
-    public static final int kEncoderCPR = 2048;
-    public static final double kWheelDiameterMeters = 0.1524;
+    // public static final int kEncoderCPR = 2048;
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(6.0);
     public static final double kWheelCircumference = Math.PI * kWheelDiameterMeters;
     public static final double kGearRatio = 10.9091; 
-    public static final double kEncoderDistancePerTick = kWheelCircumference / kGearRatio / kEncoderCPR ;
+    //public static final double kEncoderDistancePerTick = kWheelCircumference / kGearRatio / kEncoderResolutionPPR ;
     public static final double ksVolts = 0.91351;
     public static final double kvVoltSecondsPerMeter = 2.5447;
     public static final double kaVoltSecondsSquaredPerMeter = 0.47201;
-    public static final double kMomentOfInertia = 300.2;
-    public static final double kMass = 100.0;
+    public static final double kMomentOfInertia = 6;
+    public static final double kMass = 50.0;
     public static final double kStallAmps = 105.0;
     public static final double kFreeAmps = 1.8;
     public static final double kStallTorque = 2.6;
     public static final double kFreeSpeedRPS = 5676.0;
-    public static final double kEncoderResolutionCPR = 42.0;
+    public static final double kEncoderResolutionPPR = 42.0;
   }
   //!!!!! THESE ARE ALL PLACEHOLDER VALUES FROM THE PRACTICE BOT !!!!!
   public static final class AutoConstants {
