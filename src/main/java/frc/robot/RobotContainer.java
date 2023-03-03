@@ -10,6 +10,7 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public final PhotonvisionSubsystem m_PhotonvisionSubsystem;
   public final DriveSubsystem m_driveSubsystem;
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
@@ -30,7 +32,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_PhotonvisionSubsystem = new m_PhotonvisionSubsystem();
+    m_PhotonvisionSubsystem = new PhotonvisionSubsystem();
     m_driveSubsystem = new DriveSubsystem(m_PhotonvisionSubsystem);
     // Configure the trigger bindings
     configureBindings();
@@ -76,8 +78,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_driveSubsystem);
-  }
+  // public Command getAutonomousCommand() {
+  //   // An example command will be run in autonomous
+  //   return Autos.exampleAuto(m_driveSubsystem);
+  // }
 }
