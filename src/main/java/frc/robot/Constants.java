@@ -20,6 +20,8 @@ public final class Constants {
     public static final double kElevatorSpeed = 0.3;
     public static final double kArmSpeed = 0.3;
     public static final double ArmDeadzone = 0.2;
+    public static final int kLightsPerFoot = 9;
+    public static final int[] kLightPorts = {0, 1}; // <== Placeholder!!
   }
 
   public static class DriveConstants {
@@ -45,7 +47,7 @@ public final class Constants {
   public static class ElevatorConstants {
     public static final int kLeftMotorId = 5;
     public static final int kRightMotorId = 6;
-    public static final double kGearRatio = 1.0/15.0;
+    public static final double kGearRatio = 15.0/1.0;
     public static final int kCurrentLimit = 40;
     // PID parameters
     public static final double kP = 0.3;
@@ -59,12 +61,14 @@ public final class Constants {
     // Motion Profile
     public static final double kMaxVel = 0.5;
     public static final double kMaxAccel = 0.1;
+
+    public static final double kSprocketDiameter = 4.8; //centimetres
   }
 
   public static class ArmConstants {
     public static final int kLeftMotorId = 7;
     public static final int kRightMotorId = 8;
-    public static final double kArmGearRatio = 1.0/180.0;
+    public static final double kArmGearRatio = 180.0/1.0;
     public static final int kCurrentLimit = 40;
     // PID parameters
     public static final double kP = 0.3;

@@ -6,6 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.BreathingMaroonLEDCommand;
+import frc.robot.commands.PurpleLEDCommand;
+import frc.robot.commands.YellowLEDCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,6 +26,10 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+  private final PurpleLEDCommand m_purpleLEDCommand = new PurpleLEDCommand(OperatorConstants.kLightPorts, new int[] {OperatorConstants.kLightsPerFoot, OperatorConstants.kLightsPerFoot});
+  private final YellowLEDCommand m_yellowLEDCommand = new YellowLEDCommand(OperatorConstants.kLightPorts, new int[] {OperatorConstants.kLightsPerFoot, OperatorConstants.kLightsPerFoot});
+  private final BreathingMaroonLEDCommand m_maroonLEDCommand = new BreathingMaroonLEDCommand(OperatorConstants.kLightPorts, new int[] {OperatorConstants.kLightsPerFoot, OperatorConstants.kLightsPerFoot});
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =

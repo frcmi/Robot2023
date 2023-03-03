@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import java.util.ArrayList;
 
-import com.revrobotics.CIEColor;
-
 import java.awt.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.subsystems.LEDControllerSubsystem;
@@ -14,12 +12,14 @@ public class BreathingMaroonLEDCommand {
     protected int[] ports;
     protected int[] lengths;
     protected boolean increasing = true;
+    protected boolean breathing;
     protected ArrayList<LEDControllerSubsystem> ledControllerArrayList;
 
     public BreathingMaroonLEDCommand(int[] ports, int[] lengths) {
         this.lengths = lengths;
         this.ports = ports;
         currentColor = initialMaroon;
+        breathing = true;
     }
 
     public void instantiateControllers() {
@@ -53,9 +53,20 @@ public class BreathingMaroonLEDCommand {
     }
 
     public void periodic() {
-        currentColor = breathingColor();
+        if (breathing) {
+            currentColor = breathingColor();
+        }
         for (LEDControllerSubsystem ledSub : ledControllerArrayList) {
             ledSub.setColor(currentColor);
         }
     }
+
+    public boolean getBreathing() {
+        return breathing;
+    }
+
+    public void setBreathing(boolean breathTime) {
+        breathing = breathTime;
+    }
+    
 }
