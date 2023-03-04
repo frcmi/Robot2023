@@ -13,6 +13,7 @@ import frc.robot.Constants.IntakeConstants;
 public class IntakeSubsystem extends SubsystemBase {
     private final CANSparkMax motor = new CANSparkMax(IntakeConstants.kMotorId, MotorType.kBrushless);
     private final MedianFilter currentFilter = new MedianFilter(10); 
+    private double filteredCurrent = 0;
 
     public IntakeSubsystem() {
         motor.restoreFactoryDefaults();
@@ -23,6 +24,7 @@ public class IntakeSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake Current", motor.getOutputCurrent());
+        SmartDashboard.putNumber("Intake Median Current", filteredCurrent);
         SmartDashboard.putNumber("Intake Speed", motor.get());
     }
 
@@ -55,7 +57,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public boolean motorOverCurrent() {
-        double filteredCurrent = currentFilter.calculate(motor.getOutputCurrent());
+        filteredCurrent = currentFilter.calculate(motor.getOutputCurrent());
         return filteredCurrent > IntakeConstants.kCurrentThreshold;
     }
 }
