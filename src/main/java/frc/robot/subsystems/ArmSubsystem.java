@@ -34,6 +34,8 @@ public class ArmSubsystem extends SubsystemBase {
         rightMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
         rightMotor.burnFlash();
 
+        absoluteEncoder.setDistancePerRotation(360);
+
         pidController.setGoal(getAngle());
         pidController.setTolerance(1);
     }
