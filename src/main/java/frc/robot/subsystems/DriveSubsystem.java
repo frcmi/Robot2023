@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
+import com.kauailabs.navx.frc.AHRS;
 
-import static frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveConstants;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -27,6 +28,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
+  private final AHRS navX = new AHRS();
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
@@ -75,6 +77,24 @@ public class DriveSubsystem extends SubsystemBase {
   public boolean exampleCondition() {
     // Query some boolean state, such as a digital sensor.
     return false;
+  }
+
+  public float getPitch() {
+    return navX.getPitch();
+  }
+
+  public void tankDriveVolts(double leftVolts, double rightVolts) {
+    leftMotors.setVoltage(leftVolts);
+    rightMotors.setVoltage(rightVolts);
+  }
+
+  public CommandBase balanceCommand() {
+    return run(() -> {
+      double pitchAngleRadians = getPitch() * (Math.PI / 180.0);
+      double xAxisRate = Math.sin(pitchAngleRadians);
+      tankDriveVolts(xAxisRate * 7, xAxisRate * 7);
+    })
+      .until(() -> Math.abs(getPitch()) < 3);
   }
 
   @Override
