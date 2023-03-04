@@ -37,7 +37,9 @@ public final class Constants {
 
     public static final double kWheelDiameter = Units.inchesToMeters(5.0);
     public static final double kWheelCircumference = kWheelDiameter * Math.PI;
-    //public static final double kWheelGearRatio = 
+    public static final double kWheelGearRatio = 1/1; // <== PLACEHOLDER MUST REPLACE
+    public static final double kWheelEncoderDistancePerCount = kWheelCircumference / kWheelGearRatio / kNeoEncoderResolutionCPR;
+
   }
 
   public static class IntakeConstants {
@@ -74,7 +76,7 @@ public final class Constants {
 
     public static final double kSprocketDiameter = 0.048; //metres
     public static final double kSprocketCircumference = Math.PI * kSprocketDiameter;
-    public static final double kEncoderDistancePerCount = kSprocketCircumference / kElevatorGearRatio / kNeoEncoderResolutionCPR;
+    public static final double kElevatorEncoderDistancePerCount = kSprocketCircumference / kElevatorGearRatio / kNeoEncoderResolutionCPR;
   }
 
   public static class ArmConstants {
