@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -11,6 +12,7 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
     private final CANSparkMax motor = new CANSparkMax(IntakeConstants.kMotorId, MotorType.kBrushless);
+    private final MedianFilter currentFilter = new MedianFilter(10); 
 
     public IntakeSubsystem() {
         motor.restoreFactoryDefaults();
@@ -49,10 +51,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public CommandBase stopCommand() {
-        return Commands.runOnce(this::stop, this);
+        return runOnce(this::stop);
     }
 
     public boolean motorOverCurrent() {
-        return motor.getOutputCurrent() > IntakeConstants.kCurrentThreshold;
+        double filteredCurrent = currentFilter.calculate(motor.getOutputCurrent());
+        return filteredCurrent > IntakeConstants.kCurrentThreshold;
     }
 }
