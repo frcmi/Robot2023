@@ -11,6 +11,7 @@ import frc.robot.commands.PurpleLEDCommand;
 import frc.robot.commands.YellowLEDCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -62,6 +63,14 @@ public class RobotContainer {
     m_driverController.leftTrigger()
       .onTrue(m_intakeSubsystem.reverseIntake())
       .onFalse(m_intakeSubsystem.stopCommand());
+    m_driverController.povUp()
+      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(true)).andThen(Commands.runOnce(m_maroonLEDCommand::instantiateControllers)));
+    
+    m_driverController.povRight()
+      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(false)).andThen(Commands.runOnce(m_purpleLEDCommand::instantiateControllers)));
+
+    m_driverController.povLeft()
+      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(false)).andThen(Commands.runOnce(m_yellowLEDCommand::instantiateControllers)));
 
     // Elevator bindings
     m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(m_driverController::getRightY));

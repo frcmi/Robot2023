@@ -19,13 +19,14 @@ public final class Constants {
     public static final double kRotationMultiplier = 0.2;
     public static final double kElevatorSpeed = 0.3;
     public static final double kArmSpeed = 0.3;
-    public static final double ArmDeadzone = 0.2;
+    public static final double kArmDeadzone = 0.2;
     public static final int kLightsPerFoot = 9;
     public static final int[] kLightPorts = {0, 1}; // <== Placeholder!!
   }
 
   public static class DriveConstants {
     //Currently placeholder values, make sure to update before testing
+    public static final int kNeoEncoderResolutionCPR = 42;
     public static final int kFrontLeftMotorId = 1;
     public static final int kRearLeftMotorId = 2;
     public static final int kFrontRightMotorId = 3;
@@ -33,6 +34,7 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
+    public static final int kNeoEncoderResolutionCPR = 42;
     public static final int kMotorId = 9;
     public static final double kIntakeSpeed = 0.3;
     public static final double kReleaseSpeed = 0.2 * -1;
@@ -45,9 +47,10 @@ public final class Constants {
   }
   
   public static class ElevatorConstants {
+    public static final int kNeoEncoderResolutionCPR = 42;
     public static final int kLeftMotorId = 5;
     public static final int kRightMotorId = 6;
-    public static final double kGearRatio = 15.0/1.0;
+    public static final double kElevatorGearRatio = 15.0/1.0;
     public static final int kCurrentLimit = 40;
     // PID parameters
     public static final double kP = 0.3;
@@ -62,10 +65,13 @@ public final class Constants {
     public static final double kMaxVel = 0.5;
     public static final double kMaxAccel = 0.1;
 
-    public static final double kSprocketDiameter = 4.8; //centimetres
+    public static final double kSprocketDiameter = 0.048; //metres
+    public static final double kSprocketCircumference = Math.PI * kSprocketDiameter;
+    public static final double kEncoderDistancePerCount = kSprocketCircumference / kElevatorGearRatio / kNeoEncoderResolutionCPR;
   }
 
   public static class ArmConstants {
+    public static final int kNeoEncoderResolutionCPR = 42;
     public static final int kLeftMotorId = 7;
     public static final int kRightMotorId = 8;
     public static final double kArmGearRatio = 180.0/1.0;

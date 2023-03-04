@@ -19,7 +19,7 @@ public class BreathingMaroonLEDCommand {
         this.lengths = lengths;
         this.ports = ports;
         currentColor = initialMaroon;
-        breathing = true;
+        breathing = false;
     }
 
     public void instantiateControllers() {
@@ -68,5 +68,5 @@ public class BreathingMaroonLEDCommand {
     public void setBreathing(boolean breathTime) {
         breathing = breathTime;
     }
-    
+
 }

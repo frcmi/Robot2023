@@ -66,7 +66,7 @@ public class ArmSubsystem extends SubsystemBase {
     public CommandBase manualMove(DoubleSupplier inputSupplier) {
         return run(() -> {
             double input = inputSupplier.getAsDouble();
-            if (Math.abs(input) < OperatorConstants.ArmDeadzone) {
+            if (Math.abs(input) < OperatorConstants.kArmDeadzone) {
                 pidArm();
                 return;
             }
