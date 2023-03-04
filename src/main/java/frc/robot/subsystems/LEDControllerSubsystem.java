@@ -19,6 +19,8 @@ public class LEDControllerSubsystem extends SubsystemBase {
   protected boolean breathing;
 
   public LEDControllerSubsystem(int[] ports, int[] numberOfLights) {
+    addressableLEDs = new AddressableLED[ports.length];
+    addressableLEDBuffers = new AddressableLEDBuffer[ports.length];
     for (int i = 0; i < ports.length; i++) {
       addressableLEDs[i] = new AddressableLED(ports[i]);
       addressableLEDBuffers[i] = new AddressableLEDBuffer(numberOfLights[i]);
