@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -22,8 +23,6 @@ public final class Constants {
     public static final double kElevatorSpeed = 0.3;
     public static final double kArmSpeed = 0.3;
     public static final double kArmDeadzone = 0.2;
-    public static final int kLightsPerFoot = 9;
-    public static final int[] kLightPorts = {0, 1}; // <== Placeholder!!
   }
 
   public static class DriveConstants {
@@ -40,6 +39,15 @@ public final class Constants {
     public static final double kWheelGearRatio = 1/1; // <== PLACEHOLDER MUST REPLACE
     public static final double kWheelEncoderDistancePerCount = kWheelCircumference / kWheelGearRatio / kNeoEncoderResolutionCPR;
 
+  }
+
+  public static class LEDConstants {
+    public static final Color8Bit kYellow = new Color8Bit(255, 255, 0);
+    public static final Color8Bit kPurple = new Color8Bit(255, 0, 255);
+    public static final Color8Bit kInitialMaroon = new Color8Bit(144, 56, 32);
+    public static final int kLightsPerFoot = 9;
+    public static final int[] kLightPorts = {0, 1}; // <== Placeholder!!
+    public static final int[] kLightsLengthsArray = {kLightsPerFoot, kLightsPerFoot};
   }
 
   public static class IntakeConstants {

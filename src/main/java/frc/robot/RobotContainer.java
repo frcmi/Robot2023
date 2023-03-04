@@ -4,11 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.BreathingMaroonLEDCommand;
-import frc.robot.commands.PurpleLEDCommand;
-import frc.robot.commands.YellowLEDCommand;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -27,9 +26,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-  private final PurpleLEDCommand m_purpleLEDCommand = new PurpleLEDCommand(OperatorConstants.kLightPorts, new int[] {OperatorConstants.kLightsPerFoot, OperatorConstants.kLightsPerFoot});
-  private final YellowLEDCommand m_yellowLEDCommand = new YellowLEDCommand(OperatorConstants.kLightPorts, new int[] {OperatorConstants.kLightsPerFoot, OperatorConstants.kLightsPerFoot});
-  private final BreathingMaroonLEDCommand m_maroonLEDCommand = new BreathingMaroonLEDCommand(OperatorConstants.kLightPorts, new int[] {OperatorConstants.kLightsPerFoot, OperatorConstants.kLightsPerFoot});
+  private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem(LEDConstants.kLightPorts, LEDConstants.kLightsLengthsArray);
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -64,16 +61,11 @@ public class RobotContainer {
       .onTrue(m_intakeSubsystem.reverseIntake())
       .onFalse(m_intakeSubsystem.stopCommand());
     m_driverController.povUp()
-      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(true))
-      .andThen(Commands.runOnce(m_maroonLEDCommand::instantiateControllers)));
-    
+      .onTrue(m_ledSubsystem.maroonLEDCommand());
     m_driverController.povRight()
-      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(false))
-      .andThen(Commands.runOnce(m_purpleLEDCommand::instantiateControllers)));
-
+      .onTrue(m_ledSubsystem.purpleLEDCommand());
     m_driverController.povLeft()
-      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(false))
-      .andThen(Commands.runOnce(m_yellowLEDCommand::instantiateControllers)));
+      .onTrue(m_ledSubsystem.yellowLEDCommand());
 
     // Elevator bindings
     m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(m_driverController::getRightY));
@@ -86,12 +78,6 @@ public class RobotContainer {
 
   public void teleopPeriodic() {
 
-  }
-
-  public void periodic() {
-    if (m_maroonLEDCommand.getBreathing()) {
-      m_maroonLEDCommand.periodic();
-    }
   }
 
   /**
