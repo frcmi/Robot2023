@@ -57,21 +57,17 @@ public class ArmSubsystem extends SubsystemBase {
         return absoluteEncoder.getAbsolutePosition();
     }
 
-    private void setPID() {
+    private void pidMotors() {
         double pidOutput = pidController.calculate(getAngle());
         leftMotor.set(pidOutput);
         rightMotor.set(pidOutput);
-    }
-
-    public CommandBase pidArm() {
-        return run(this::setPID);
     }
 
     public CommandBase manualMove(DoubleSupplier inputSupplier) {
         return run(() -> {
             double input = inputSupplier.getAsDouble();
             if (Math.abs(input) < OperatorConstants.kArmDeadzone) {
-                pidArm();
+                pidMotors();
                 return;
             }
             setMotors(input);
@@ -84,7 +80,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveArmTo(double angle) {
-        return setTarget(angle).andThen(pidArm()).until(pidController::atSetpoint);
+        return setTarget(angle).andThen(this::pidMotors).until(pidController::atSetpoint);
     }
 
     public CommandBase moveArmToRelative(double angleOffset) {
