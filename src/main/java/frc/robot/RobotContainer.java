@@ -64,13 +64,16 @@ public class RobotContainer {
       .onTrue(m_intakeSubsystem.reverseIntake())
       .onFalse(m_intakeSubsystem.stopCommand());
     m_driverController.povUp()
-      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(true)).andThen(Commands.runOnce(m_maroonLEDCommand::instantiateControllers)));
+      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(true))
+      .andThen(Commands.runOnce(m_maroonLEDCommand::instantiateControllers)));
     
     m_driverController.povRight()
-      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(false)).andThen(Commands.runOnce(m_purpleLEDCommand::instantiateControllers)));
+      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(false))
+      .andThen(Commands.runOnce(m_purpleLEDCommand::instantiateControllers)));
 
     m_driverController.povLeft()
-      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(false)).andThen(Commands.runOnce(m_yellowLEDCommand::instantiateControllers)));
+      .onTrue(Commands.runOnce(() -> m_maroonLEDCommand.setBreathing(false))
+      .andThen(Commands.runOnce(m_yellowLEDCommand::instantiateControllers)));
 
     // Elevator bindings
     m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(m_driverController::getRightY));
@@ -83,6 +86,12 @@ public class RobotContainer {
 
   public void teleopPeriodic() {
 
+  }
+
+  public void periodic() {
+    if (m_maroonLEDCommand.getBreathing()) {
+      m_maroonLEDCommand.periodic();
+    }
   }
 
   /**
