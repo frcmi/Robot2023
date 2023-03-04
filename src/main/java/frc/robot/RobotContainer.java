@@ -60,12 +60,6 @@ public class RobotContainer {
     m_driverController.leftTrigger()
       .onTrue(m_intakeSubsystem.reverseIntake())
       .onFalse(m_intakeSubsystem.stopCommand());
-    m_driverController.povUp()
-      .onTrue(m_ledSubsystem.maroonLEDCommand());
-    m_driverController.povRight()
-      .onTrue(m_ledSubsystem.purpleLEDCommand());
-    m_driverController.povLeft()
-      .onTrue(m_ledSubsystem.yellowLEDCommand());
 
     // Elevator bindings
     m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(m_driverController::getRightY));
@@ -74,6 +68,14 @@ public class RobotContainer {
     m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMove(m_driverController::getRightX));
     m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
     m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
+
+    // LED Bindings
+    m_driverController.povUp()
+      .onTrue(m_ledSubsystem.maroonLEDCommand());
+    m_driverController.povRight()
+      .onTrue(m_ledSubsystem.purpleLEDCommand());
+    m_driverController.povLeft()
+      .onTrue(m_ledSubsystem.yellowLEDCommand());
   }
 
   public void teleopPeriodic() {
