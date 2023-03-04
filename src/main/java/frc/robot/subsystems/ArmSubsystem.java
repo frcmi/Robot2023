@@ -9,6 +9,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,7 +19,7 @@ import frc.robot.Constants.OperatorConstants;
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax leftMotor = new CANSparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final AbsoluteEncoder absoluteEncoder = leftMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+    private final DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(ArmConstants.kEncoderDIOPort);
 
     private final ProfiledPIDController pidController 
         = new ProfiledPIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD, 
@@ -33,6 +34,7 @@ public class ArmSubsystem extends SubsystemBase {
         rightMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
         rightMotor.burnFlash();
 
+        pidController.setGoal(getAngle());
         pidController.setTolerance(1);
     }
 
@@ -50,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getAngle() {
-        return absoluteEncoder.getPosition();
+        return absoluteEncoder.getAbsolutePosition();
     }
 
     private void setPID() {
@@ -71,6 +73,7 @@ public class ArmSubsystem extends SubsystemBase {
                 return;
             }
             setMotors(input);
+            pidController.setGoal(getAngle());
         });
     }
 
@@ -83,6 +86,6 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveArmToRelative(double angleOffset) {
-        return moveArmTo(absoluteEncoder.getPosition() + angleOffset);
+        return moveArmTo(getAngle() + angleOffset);
     }
 }

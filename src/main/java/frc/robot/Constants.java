@@ -75,6 +75,7 @@ public final class Constants {
     public static final int kLeftMotorId = 7;
     public static final int kRightMotorId = 8;
     public static final double kArmGearRatio = 180.0/1.0;
+    public static final int kEncoderDIOPort = 0;
     public static final int kCurrentLimit = 40;
     // PID parameters
     public static final double kP = 0.3;
