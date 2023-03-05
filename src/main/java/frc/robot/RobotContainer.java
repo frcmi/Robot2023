@@ -26,7 +26,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-  private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem(LEDConstants.kLightPorts, LEDConstants.kLightsLengthsArray);
+  //private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem(LEDConstants.kLightPorts, LEDConstants.kLightsLengthsArray);
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -69,13 +69,14 @@ public class RobotContainer {
     m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
     m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
 
+    m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
     // LED Bindings
-    m_driverController.povUp()
-      .onTrue(m_ledSubsystem.maroonLEDCommand());
-    m_driverController.povRight()
-      .onTrue(m_ledSubsystem.purpleLEDCommand());
-    m_driverController.povLeft()
-      .onTrue(m_ledSubsystem.yellowLEDCommand());
+    // m_driverController.povUp()
+    //   .onTrue(m_ledSubsystem.maroonLEDCommand());
+    // m_driverController.povRight()
+    //   .onTrue(m_ledSubsystem.purpleLEDCommand());
+    // m_driverController.povLeft()
+    //   .onTrue(m_ledSubsystem.yellowLEDCommand());
   }
 
   public void teleopPeriodic() {

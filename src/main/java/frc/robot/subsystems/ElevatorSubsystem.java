@@ -4,9 +4,11 @@ import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,14 +24,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, 
         new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVel, ElevatorConstants.kMaxAccel));
 
+    private final RelativeEncoder encoder = leftMotor.getEncoder();
     public ElevatorSubsystem() {
         leftMotor.restoreFactoryDefaults();
         leftMotor.setSmartCurrentLimit(ElevatorConstants.kCurrentLimit);
         leftMotor.burnFlash();
         rightMotor.restoreFactoryDefaults();
-        rightMotor.follow(leftMotor, true);
+        leftMotor.follow(rightMotor, true);
         rightMotor.setSmartCurrentLimit(ElevatorConstants.kCurrentLimit);
         rightMotor.burnFlash();
+
+        encoder.setPositionConversionFactor(ElevatorConstants.kElevatorEncoderDistancePerCount);
     }
 
     private void setMotors(double speed) {
@@ -42,6 +47,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putData("Elevator PID", pidController);
         SmartDashboard.putNumber("Elevator Speed", leftMotor.get());
+        SmartDashboard.putNumber("Elevator Pos", getPosition());
+    }
+
+    public double getPosition() {
+        return encoder.getPosition();
     }
 
     public CommandBase manualMotors(DoubleSupplier input) {

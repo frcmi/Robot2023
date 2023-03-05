@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kSpeedMultiplier = 0.2;
+    public static final double kSpeedMultiplier = 1;
     public static final double kRotationMultiplier = 0.2;
     public static final double kElevatorSpeed = 0.3;
     public static final double kArmSpeed = 0.3;
@@ -45,7 +45,7 @@ public final class Constants {
     public static final Color8Bit kYellow = new Color8Bit(255, 255, 0);
     public static final Color8Bit kPurple = new Color8Bit(255, 0, 255);
     public static final Color8Bit kInitialMaroon = new Color8Bit(144, 56, 32);
-    public static final int kLightsPerFoot = 9;
+    public static final int kLightsPerFoot = 1;
     public static final int[] kLightPorts = {0, 1}; // <== Placeholder!!
     public static final int[] kLightsLengthsArray = {kLightsPerFoot, kLightsPerFoot};
   }
@@ -53,7 +53,7 @@ public final class Constants {
   public static class IntakeConstants {
     public static final int kNeoEncoderResolutionCPR = 42;
     public static final int kMotorId = 9;
-    public static final double kIntakeSpeed = 0.3;
+    public static final double kIntakeSpeed = 0.5;
     public static final double kReleaseSpeed = 0.2 * -1;
     public static final double kReleaseTime = 1.0;
     public static final int kCurrentLimit = 15;
@@ -67,7 +67,7 @@ public final class Constants {
     public static final int kNeoEncoderResolutionCPR = 42;
     public static final int kLeftMotorId = 5;
     public static final int kRightMotorId = 6;
-    public static final double kElevatorGearRatio = 15.0/1.0;
+    public static final double kElevatorGearRatio = 1.0/15.0;
     public static final int kCurrentLimit = 40;
     // PID parameters
     public static final double kP = 0.3;
@@ -92,10 +92,11 @@ public final class Constants {
     public static final int kLeftMotorId = 7;
     public static final int kRightMotorId = 8;
     public static final double kArmGearRatio = 180.0/1.0;
+    public static final int kEncoderOffset = 130;
     public static final int kEncoderDIOPort = 0;
     public static final int kCurrentLimit = 40;
     // PID parameters
-    public static final double kP = 0.3;
+    public static final double kP = -0.3;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     // FeedForward parameters

@@ -26,6 +26,9 @@ public class IntakeSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Intake Current", motor.getOutputCurrent());
         SmartDashboard.putNumber("Intake Median Current", filteredCurrent);
         SmartDashboard.putNumber("Intake Speed", motor.get());
+        var currentCommand = this.getCurrentCommand();
+        if (currentCommand != null)
+        SmartDashboard.putString("Intake Command", currentCommand.getName());
     }
 
     // Intake cone, release cube
@@ -37,7 +40,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private CommandBase setMotor(double speed) {
-        return Commands.runOnce(() -> motor.set(speed), this);
+        return Commands.run(() -> motor.set(speed), this);
     }
 
     // Release cone, intake cube

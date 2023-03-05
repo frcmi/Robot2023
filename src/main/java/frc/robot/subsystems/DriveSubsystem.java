@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
@@ -40,7 +41,7 @@ public class DriveSubsystem extends SubsystemBase {
     rearLeft.follow(frontLeft);
     rearRight.follow(frontRight);
     
-    leftMotors.setInverted(true);
+    rightMotors.setInverted(true);
   }
 
   /**
@@ -100,6 +101,8 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("DT Current", frontLeft.getOutputCurrent());
+    SmartDashboard.putNumber("DT Speed", frontLeft.get());
   }
 
   @Override

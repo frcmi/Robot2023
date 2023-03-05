@@ -34,8 +34,6 @@ public class ArmSubsystem extends SubsystemBase {
         rightMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
         rightMotor.burnFlash();
 
-        absoluteEncoder.setDistancePerRotation(360);
-
         pidController.setGoal(getAngle());
         pidController.setTolerance(1);
     }
@@ -54,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getAngle() {
-        return absoluteEncoder.getAbsolutePosition();
+        return absoluteEncoder.getAbsolutePosition() * 360 - ArmConstants.kEncoderOffset;
     }
 
     private void pidMotors() {

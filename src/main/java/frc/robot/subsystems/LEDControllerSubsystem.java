@@ -23,7 +23,7 @@ public class LEDControllerSubsystem extends SubsystemBase {
     addressableLEDBuffers = new AddressableLEDBuffer[ports.length];
     for (int i = 0; i < ports.length; i++) {
       addressableLEDs[i] = new AddressableLED(ports[i]);
-      addressableLEDBuffers[i] = new AddressableLEDBuffer(numberOfLights[i]);
+      addressableLEDBuffers[i] = new AddressableLEDBuffer(1);
       addressableLEDs[i].setData(addressableLEDBuffers[i]);
       addressableLEDs[i].setLength(addressableLEDBuffers[i].getLength());
     }
