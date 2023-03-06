@@ -7,10 +7,13 @@ package frc.robot.commands;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-/** An example command that uses an example subsystem. */
+/** Command that has balance code in .execute and finish code in .isFinished */
 public class BalanceCommand extends CommandBase {
   private DriveSubsystem m_drive;
 
+  /**
+  * @param drive is the DriveSubsystem that the command should attempt balancing on
+  */
   public BalanceCommand(DriveSubsystem drive) {
     m_drive = drive;
   }
