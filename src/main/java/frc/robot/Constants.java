@@ -19,6 +19,7 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double kSpeedMultiplier = 1;
+    public static final double kSpeedSlewRate = 0.5;
     public static final double kRotationMultiplier = 0.2;
     public static final double kElevatorSpeed = 0.3;
     public static final double kArmSpeed = 0.3;
