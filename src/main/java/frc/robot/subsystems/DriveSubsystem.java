@@ -81,6 +81,7 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Gyro Pitch", getPitch());
+    //DT stands for DriveTrain
     SmartDashboard.putNumber("DT Current", frontLeft.getOutputCurrent());
     SmartDashboard.putNumber("DT Speed", frontLeft.get());
   }
