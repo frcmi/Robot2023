@@ -42,14 +42,15 @@ public final class Constants {
     public static final double kWheelGearRatio = (64 * 52) / (11*34); // Joey: dt should be 11:52 into 34:64
     public static final double kWheelEncoderDistancePerCount = kWheelCircumference / kWheelGearRatio / kNeoEncoderResolutionCPR;
     public static final double kTrackwidthMeters = 0.62898; //Need to measure
-    public static final DifferentialDriveKinematics kDriveKinematics =
-        new DifferentialDriveKinematics(kTrackwidthMeters);
     public static final double ksVolts = 0.25355;
     public static final double kvVoltSecondsPerMeter = 2.0519;
     public static final double kaVoltSecondsSquaredPerMeter = 0.53639;
-
     // Example value only - as above, this must be tuned for your drive!
     public static final double kPDriveVel = 3.7728;
+    // Feedforward
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
+    public static final double kA = 0.0;
   }
 
   public static class LEDConstants {
