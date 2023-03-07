@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
@@ -35,10 +36,19 @@ public final class Constants {
     public static final int kFrontRightMotorId = 3;
     public static final int kRearRightMotorId = 4;
 
+    //NOT placeholders (except for the gear ratio)
     public static final double kWheelDiameter = Units.inchesToMeters(5.0);
     public static final double kWheelCircumference = kWheelDiameter * Math.PI;
     public static final double kWheelGearRatio = 1/1; // <== PLACEHOLDER MUST REPLACE
     public static final double kWheelEncoderDistancePerCount = kWheelCircumference / kWheelGearRatio / kNeoEncoderResolutionCPR;
+
+    //Placeholders - need tuning
+    public static final double ksVolts = 0.25355;
+    public static final double kvVoltSecondsPerMeter = 2.0519;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.53639;
+    public static final double kTrackwidthMeters = 0.62898; //Need to measure
+    public static final DifferentialDriveKinematics kDriveKinematics =
+        new DifferentialDriveKinematics(kTrackwidthMeters);
 
   }
 
@@ -49,6 +59,22 @@ public final class Constants {
     public static final int kLightsPerFoot = 1;
     public static final int[] kLightPorts = {0, 1}; // <== Placeholder!!
     public static final int[] kLightsLengthsArray = {kLightsPerFoot, kLightsPerFoot};
+  }
+
+  public static final class AutoConstants {
+    //These are ALL placeholders
+    public static final double kMaxSpeedMetersPerSecond = 0.5;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.1;
+
+    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
+
+    public static final double kTurnP = 0.8;
+    public static final double kTurnI = 0.0;
+    public static final double kTurnD = 0.0;
+    public static final double kTurnToleranceDeg = 1.0;
+    public static final double kTurnRateToleranceDegPerS = 1.0;
   }
 
   public static class IntakeConstants {

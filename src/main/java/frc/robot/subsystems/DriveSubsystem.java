@@ -8,10 +8,15 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 import com.kauailabs.navx.frc.AHRS;
@@ -32,6 +37,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
   private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
   private final AHRS navX = new AHRS();
+  private final DifferentialDriveOdometry m_odometry;
+
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
@@ -44,6 +51,8 @@ public class DriveSubsystem extends SubsystemBase {
     rearRight.follow(frontRight);
     
     rightMotors.setInverted(true);
+
+    m_odometry = new DifferentialDriveOdometry(getHeading(), 0, 0, new Pose2d()); 
   }
 
   public CommandBase setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
@@ -62,6 +71,57 @@ public class DriveSubsystem extends SubsystemBase {
   public float getPitch() {
     // NavX mounted upside down!
     return navX.getPitch() * -1;
+  }
+
+  public Rotation2d getHeading() {
+    return navX.getRotation2d() /* .plus(Rotation2d.fromDegrees(180))*/;
+  }
+
+  public void zeroHeading() {
+    navX.reset();
+  }
+
+  public double getTurnRate() {
+    return navX.getRate();
+  }
+
+  public double getLeftEncoderDistance() {
+    return -frontLeft.getEncoder().getPosition() * frontLeft.getEncoder().getCountsPerRevolution();
+  }
+
+  public double getRightEncoderDistance() {
+    return rearRight.getEncoder().getPosition() * rearRight.getEncoder().getCountsPerRevolution();
+  }
+
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
+
+  public CommandBase resetOdometryCmd(Pose2d pose) {
+    return Commands.runOnce(() -> resetOdometry(pose), this);
+  }
+
+  /**
+   * Resets the odometry to the specified pose.
+   *
+   * @param pose The pose to which to set the odometry.
+   */
+  public void resetOdometry(Pose2d pose) {
+    resetEncoders();
+    m_odometry.resetPosition(getHeading(), 0, 0, pose);
+  }
+
+  public void resetEncoders() {
+    frontLeft.getEncoder().setPosition(0.0);
+    rearLeft.getEncoder().setPosition(0.0);
+    frontRight.getEncoder().setPosition(0.0);
+    rearRight.getEncoder().setPosition(0.0);
+   }
+
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() { //in m/s
+    return new DifferentialDriveWheelSpeeds(
+    -frontLeft.getEncoder().getVelocity() * DriveConstants.kWheelEncoderDistancePerCount * 10, 
+    frontRight.getEncoder().getVelocity() * DriveConstants.kWheelEncoderDistancePerCount * 10);
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -83,6 +143,11 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Pitch", getPitch());
     SmartDashboard.putNumber("DT Current", frontLeft.getOutputCurrent());
     SmartDashboard.putNumber("DT Speed", frontLeft.get());
+    SmartDashboard.putBoolean("Is Balancing?", balanceCommand().isScheduled());
+    m_odometry.update(
+        getHeading(), 
+        getLeftEncoderDistance(), 
+        getRightEncoderDistance());
   }
 
   @Override
