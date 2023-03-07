@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.BalanceCommand;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.Constants.DriveConstants;
@@ -130,17 +132,21 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public CommandBase balanceCommand() {
+    return new BalanceCommand(this);
+    /*
     return run(() -> {
       double pitchAngleRadians = getPitch() * (Math.PI / 180.0);
       double xAxisRate = Math.sin(pitchAngleRadians);
       tankDriveVolts(xAxisRate * 7, xAxisRate * 7);
     })
       .until(() -> Math.abs(getPitch()) < 3);
+    */
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Gyro Pitch", getPitch());
+    //DT stands for DriveTrain
     SmartDashboard.putNumber("DT Current", frontLeft.getOutputCurrent());
     SmartDashboard.putNumber("DT Speed", frontLeft.get());
     SmartDashboard.putBoolean("Is Balancing?", balanceCommand().isScheduled());
