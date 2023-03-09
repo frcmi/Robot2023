@@ -46,7 +46,7 @@ public final class Constants {
     public static final Color8Bit kYellow = new Color8Bit(255, 255, 0);
     public static final Color8Bit kPurple = new Color8Bit(255, 0, 255);
     public static final Color8Bit kInitialMaroon = new Color8Bit(144, 56, 32);
-    public static final int kLightsPerFoot = 1;
+    public static final int kLightsPerFoot = 9;
     public static final int[] kLightPorts = {0, 1}; // <== Placeholder!!
     public static final int[] kLightsLengthsArray = {kLightsPerFoot, kLightsPerFoot};
   }
