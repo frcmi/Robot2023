@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,6 +25,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, 
         new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVel, ElevatorConstants.kMaxAccel));
 
+    private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
     private final RelativeEncoder encoder = leftMotor.getEncoder();
     public ElevatorSubsystem() {
         leftMotor.restoreFactoryDefaults();
@@ -56,7 +58,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public CommandBase manualMotors(DoubleSupplier input) {
         return run(() -> {
-            setMotors(input.getAsDouble());
+            setMotors(speedFilter.calculate(input.getAsDouble()));
         });
     }
 }
