@@ -69,7 +69,7 @@ public class ArmSubsystem extends SubsystemBase {
         return run(() -> {
             double input = inputSupplier.getAsDouble();
             if (Math.abs(input) < OperatorConstants.kArmDeadzone) {
-                pidMotors();
+                // pidMotors();
                 return;
             }
             setMotors(input);

@@ -9,6 +9,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.*;
+
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -62,12 +66,16 @@ public class RobotContainer {
       .onFalse(m_intakeSubsystem.stopCommand());
 
     // Elevator bindings
-    m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(m_driverController::getRightY));
+    m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(
+      axisFromButtons(m_driverController.a(), m_driverController.y())
+    ));
 
     // Arm bindings
-    m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMove(m_driverController::getRightX));
-    m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
-    m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
+    m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMove(
+      axisFromButtons(m_driverController.x(), m_driverController.b())
+    ));
+    // m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
+    // m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
 
     m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
     // LED Bindings
@@ -77,6 +85,11 @@ public class RobotContainer {
     //   .onTrue(m_ledSubsystem.purpleLEDCommand());
     // m_driverController.povLeft()
     //   .onTrue(m_ledSubsystem.yellowLEDCommand());
+  }
+
+  public DoubleSupplier axisFromButtons(BooleanSupplier firstButton, BooleanSupplier secondButton) {
+    // Boolean as num is 0 or 1, this prevents fighting when both are pressed and normalizes [-1, 1]!
+    return () -> Boolean.compare(firstButton.getAsBoolean(), false) - Boolean.compare(secondButton.getAsBoolean(), false);
   }
 
   public void teleopPeriodic() {
