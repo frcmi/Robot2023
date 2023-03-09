@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +27,7 @@ public class ArmSubsystem extends SubsystemBase {
     private final ProfiledPIDController pidController 
         = new ProfiledPIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD, 
             new TrapezoidProfile.Constraints(ArmConstants.kMaxVel, ArmConstants.kMaxAccel));
+    private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
 //    private final ArmFeedforward feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
     public ArmSubsystem() {
         leftMotor.restoreFactoryDefaults();
@@ -68,6 +70,7 @@ public class ArmSubsystem extends SubsystemBase {
     public CommandBase manualMove(DoubleSupplier inputSupplier) {
         return run(() -> {
             double input = inputSupplier.getAsDouble();
+            input = speedFilter.calculate(input);
             if (Math.abs(input) < OperatorConstants.kArmDeadzone) {
                 // pidMotors();
                 return;
