@@ -23,12 +23,12 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public final PhotonvisionSubsystem m_PhotonvisionSubsystem;
-  public final DriveSubsystem m_driveSubsystem;
-  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
-  private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-  //private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem(LEDConstants.kLightPorts, LEDConstants.kLightsLengthsArray);
+  // public final PhotonvisionSubsystem m_PhotonvisionSubsystem;
+  // public final DriveSubsystem m_driveSubsystem;
+  // private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  // private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  // private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
+  private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem(0,9);
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -37,8 +37,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_PhotonvisionSubsystem = new PhotonvisionSubsystem();
-    m_driveSubsystem = new DriveSubsystem(m_PhotonvisionSubsystem);
+    // m_PhotonvisionSubsystem = new PhotonvisionSubsystem();
+    // m_driveSubsystem = new DriveSubsystem(m_PhotonvisionSubsystem);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -54,33 +54,33 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Drive bindings
-    m_driveSubsystem.setDefaultCommand(m_driveSubsystem
-      .setSpeed(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController.leftBumper()));
+    // m_driveSubsystem.setDefaultCommand(m_driveSubsystem
+    //   .setSpeed(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController.leftBumper()));
 
-    // Intake bindings
-    m_driverController.rightTrigger()
-      .onTrue(m_intakeSubsystem.intake())
-      .onFalse(m_intakeSubsystem.stopCommand());
-    m_driverController.leftTrigger()
-      .onTrue(m_intakeSubsystem.reverseIntake())
-      .onFalse(m_intakeSubsystem.stopCommand());
+    // // Intake bindings
+    // m_driverController.rightTrigger()
+    //   .onTrue(m_intakeSubsystem.intake())
+    //   .onFalse(m_intakeSubsystem.stopCommand());
+    // m_driverController.leftTrigger()
+    //   .onTrue(m_intakeSubsystem.reverseIntake())
+    //   .onFalse(m_intakeSubsystem.stopCommand());
 
-    // Elevator bindings
-    m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(m_driverController::getRightY));
+    // // Elevator bindings
+    // m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(m_driverController::getRightY));
 
-    // Arm bindings
-    m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMove(m_driverController::getRightX));
-    m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
-    m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
+    // // Arm bindings
+    // m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMove(m_driverController::getRightX));
+    // m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
+    // m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
 
-    m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
+    // m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
     // LED Bindings
-    // m_driverController.povUp()
-    //   .onTrue(m_ledSubsystem.maroonLEDCommand());
-    // m_driverController.povRight()
-    //   .onTrue(m_ledSubsystem.purpleLEDCommand());
-    // m_driverController.povLeft()
-    //   .onTrue(m_ledSubsystem.yellowLEDCommand());
+    m_driverController.povUp()
+      .onTrue(m_ledSubsystem.maroonLEDCommand());
+    m_driverController.povRight()
+      .onTrue(m_ledSubsystem.purpleLEDCommand());
+    m_driverController.povLeft()
+      .onTrue(m_ledSubsystem.yellowLEDCommand());
   }
 
   public void teleopPeriodic() {
@@ -94,6 +94,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_driveSubsystem);
+    return Autos.exampleAuto();
   }
 }

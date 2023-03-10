@@ -14,6 +14,10 @@ public final class Autos {
     return Commands.waitSeconds(0); // Replace with real auto
   }
 
+  public static CommandBase exampleAuto() {
+    return Commands.waitSeconds(0); // Replace with real auto
+  }
+
   private Autos() {
     throw new UnsupportedOperationException("This is a utility class!");
   }
