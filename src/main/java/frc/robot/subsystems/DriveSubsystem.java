@@ -54,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
   public CommandBase setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
     return run(() -> {
       double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier;
-      speed = speedFilter.calculate(speed);
+      // speed = speedFilter.calculate(speed);
       double rotation = rotationSupplier.getAsDouble() * OperatorConstants.kRotationMultiplier;
       diffDrive.curvatureDrive(speed, rotation, rotationLock.getAsBoolean());
     });
