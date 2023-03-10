@@ -58,7 +58,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public CommandBase manualMotors(DoubleSupplier input) {
         return run(() -> {
-            setMotors(speedFilter.calculate(input.getAsDouble()));
+            setMotors(input.getAsDouble());
         });
     }
 }

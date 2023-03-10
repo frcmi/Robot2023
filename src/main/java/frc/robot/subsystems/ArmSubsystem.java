@@ -66,7 +66,7 @@ public class ArmSubsystem extends SubsystemBase {
     public CommandBase manualMove(DoubleSupplier inputSupplier) {
         return run(() -> {
             double input = inputSupplier.getAsDouble();
-            input = speedFilter.calculate(input);
+            // input = speedFilter.calculate(input);
             if (Math.abs(input) < OperatorConstants.kArmDeadzone) {
                 // pidMotors();
                 return;
