@@ -6,6 +6,8 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -20,6 +22,7 @@ import frc.robot.Constants.OperatorConstants;
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax leftMotor = new CANSparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private static final CANSparkMax.IdleMode KB_IDLE_MODE = IdleMode.kBrake;
     private final DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(ArmConstants.kEncoderDIOPort);
 
     private final ProfiledPIDController pidController 
@@ -30,10 +33,12 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
         leftMotor.restoreFactoryDefaults();
         leftMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
+        leftMotor.setIdleMode(KB_IDLE_MODE);
         leftMotor.burnFlash();
         rightMotor.restoreFactoryDefaults();
         rightMotor.follow(leftMotor, true);
         rightMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
+        rightMotor.setIdleMode(KB_IDLE_MODE);
         rightMotor.burnFlash();
 
         pidController.setGoal(getAngle());
