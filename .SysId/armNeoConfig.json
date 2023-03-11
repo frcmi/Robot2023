@@ -1,9 +1,9 @@
 {
-  "counts per rotation": 8192.0,
-  "encoder type": "roboRIO quadrature",
+  "counts per rotation": 1.0,
+  "encoder type": "Encoder Port",
   "encoding": true,
   "gearing denominator": 1.0,
-  "gearing numerator": 1.0,
+  "gearing numerator": 180.0,
   "gyro": "Analog Gyro",
   "gyro ctor": "0",
   "is drivetrain": false,
