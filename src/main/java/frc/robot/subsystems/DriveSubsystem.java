@@ -38,12 +38,23 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem() {
     frontLeft.restoreFactoryDefaults();
     frontLeft.setIdleMode(IdleMode.kBrake);
+    frontLeft.setSmartCurrentLimit(DriveConstants.currentLimit);
+    frontLeft.burnFlash();
+    
     rearLeft.restoreFactoryDefaults();
     rearLeft.setIdleMode(IdleMode.kBrake);
+    rearLeft.setSmartCurrentLimit(DriveConstants.currentLimit);
+    rearLeft.burnFlash();
+
     frontRight.restoreFactoryDefaults();
     frontRight.setIdleMode(IdleMode.kBrake);
+    frontRight.setSmartCurrentLimit(DriveConstants.currentLimit);
+    frontRight.burnFlash();
+
     rearRight.restoreFactoryDefaults();
     rearRight.setIdleMode(IdleMode.kBrake);
+    rearRight.setSmartCurrentLimit(DriveConstants.currentLimit);
+    rearRight.burnFlash();
     
     rearLeft.follow(frontLeft);
     rearRight.follow(frontRight);
