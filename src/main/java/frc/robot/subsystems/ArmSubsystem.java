@@ -57,6 +57,12 @@ public class ArmSubsystem extends SubsystemBase {
         rightMotor.set(speed);
     }
 
+    public CommandBase manualMotors(DoubleSupplier input) {
+        return run(() -> {
+            setMotors(input.getAsDouble());
+        });
+    }
+
     public double getAngle() {
         return absoluteEncoder.getAbsolutePosition() * 360 - ArmConstants.kEncoderOffset;
     }
@@ -70,7 +76,7 @@ public class ArmSubsystem extends SubsystemBase {
     public CommandBase manualMove(DoubleSupplier inputSupplier) {
         return run(() -> {
             double input = inputSupplier.getAsDouble();
-            // input = speedFilter.calculate(input);
+            input = speedFilter.calculate(input);
             if (Math.abs(input) < OperatorConstants.kArmDeadzone) {
                 // pidMotors();
                 return;
