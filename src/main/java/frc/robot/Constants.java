@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kSpeedMultiplier = 1;
+    public static final double kSpeedMultiplier = 0.75;
     public static final double kSpeedSlewRate = 0.5;
     public static final double kRotationMultiplier = 0.2;
     public static final double kElevatorSpeed = 0.3;
@@ -29,6 +29,7 @@ public final class Constants {
   public static class DriveConstants {
     public static final int kNeoEncoderResolutionCPR = 42;
 
+    public static final int currentLimit = 35;
     //Currently placeholder values, make sure to update before testing
     public static final int kFrontLeftMotorId = 1;
     public static final int kRearLeftMotorId = 2;
