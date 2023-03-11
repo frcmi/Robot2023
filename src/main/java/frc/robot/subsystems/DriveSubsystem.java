@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -36,9 +37,13 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
     frontLeft.restoreFactoryDefaults();
+    frontLeft.setIdleMode(IdleMode.kBrake);
     rearLeft.restoreFactoryDefaults();
+    rearLeft.setIdleMode(IdleMode.kBrake);
     frontRight.restoreFactoryDefaults();
+    frontRight.setIdleMode(IdleMode.kBrake);
     rearRight.restoreFactoryDefaults();
+    rearRight.setIdleMode(IdleMode.kBrake);
     
     rearLeft.follow(frontLeft);
     rearRight.follow(frontRight);

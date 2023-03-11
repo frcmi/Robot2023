@@ -6,6 +6,8 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -28,10 +30,12 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
         leftMotor.restoreFactoryDefaults();
         leftMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
+        leftMotor.setIdleMode(IdleMode.kBrake);
         leftMotor.burnFlash();
         rightMotor.restoreFactoryDefaults();
         rightMotor.follow(leftMotor, true);
         rightMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
+        rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.burnFlash();
 
         pidController.setGoal(getAngle());

@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -28,10 +29,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorSubsystem() {
         leftMotor.restoreFactoryDefaults();
         leftMotor.setSmartCurrentLimit(ElevatorConstants.kCurrentLimit);
+        leftMotor.setIdleMode(IdleMode.kBrake);
         leftMotor.burnFlash();
         rightMotor.restoreFactoryDefaults();
         leftMotor.follow(rightMotor, true);
         rightMotor.setSmartCurrentLimit(ElevatorConstants.kCurrentLimit);
+        rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.burnFlash();
 
         encoder.setPositionConversionFactor(ElevatorConstants.kElevatorEncoderDistancePerCount);
