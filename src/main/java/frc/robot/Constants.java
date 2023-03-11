@@ -21,8 +21,8 @@ public final class Constants {
     public static final double kSpeedMultiplier = 0.75;
     public static final double kSpeedSlewRate = 0.5;
     public static final double kRotationMultiplier = 0.2;
-    public static final double kElevatorSpeed = 0.3;
-    public static final double kArmSpeed = 0.3;
+    public static final double kElevatorSpeed = 0.5;
+    public static final double kArmSpeed = 0.5;
     public static final double kArmDeadzone = 0.2;
   }
 
@@ -32,8 +32,8 @@ public final class Constants {
     public static final int currentLimit = 35;
     //Currently placeholder values, make sure to update before testing
     public static final int kFrontLeftMotorId = 1;
-    public static final int kRearLeftMotorId = 2;
-    public static final int kFrontRightMotorId = 3;
+    public static final int kRearLeftMotorId = 3;
+    public static final int kFrontRightMotorId = 2;
     public static final int kRearRightMotorId = 4;
 
     public static final double kWheelDiameter = Units.inchesToMeters(5.0);

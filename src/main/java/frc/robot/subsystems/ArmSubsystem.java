@@ -22,6 +22,7 @@ import frc.robot.Constants.OperatorConstants;
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax leftMotor = new CANSparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private static final CANSparkMax.IdleMode KB_IDLE_MODE = IdleMode.kBrake;
     private final DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(ArmConstants.kEncoderDIOPort);
 
     private final ProfiledPIDController pidController 
