@@ -71,11 +71,11 @@ public class RobotContainer {
     ));
 
     // Arm bindings
-    m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMotors(
-      axisFromButtons(m_driverController.x(), m_driverController.b())
-    ));
-    // m_driverController.a().onTrue(m_armSubsystem.moveArmToRelative(10));
-    // m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
+    // m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMotors(
+    //   axisFromButtons(m_driverController.x(), m_driverController.b())
+    // ));
+    m_driverController.x().onTrue(m_armSubsystem.moveArmToRelative(10));
+    m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-10));
 
     m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
     // LED Bindings

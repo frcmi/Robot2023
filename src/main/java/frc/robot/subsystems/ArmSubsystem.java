@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,7 +30,11 @@ public class ArmSubsystem extends SubsystemBase {
         = new ProfiledPIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD, 
             new TrapezoidProfile.Constraints(ArmConstants.kMaxVel, ArmConstants.kMaxAccel));
     private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
-//    private final ArmFeedforward feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
+    private final ArmFeedforward feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
+
+    double lastSpeed = 0;
+    double lastTime = Timer.getFPGATimestamp();
+
     public ArmSubsystem() {
         leftMotor.restoreFactoryDefaults();
         leftMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
@@ -87,12 +92,22 @@ public class ArmSubsystem extends SubsystemBase {
         });
     }
 
+    public void goToPosition(double goalAngle) {
+        double pidVal = pidController.calculate(getAngle(), goalAngle);
+        double acceleration = (pidController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
+        leftMotor.setVoltage(
+            pidVal + feedforward.calculate(pidController.getSetpoint().velocity, acceleration));
+        lastSpeed = pidController.getSetpoint().velocity;
+        lastTime = Timer.getFPGATimestamp();
+    }
+      
+
     public CommandBase setTarget(double angle) {
         return runOnce(() -> pidController.setGoal(angle));
     }
 
     public CommandBase moveArmTo(double angle) {
-        return setTarget(angle).andThen(this::pidMotors).until(pidController::atSetpoint);
+        return run(() -> goToPosition(angle)).until(pidController::atSetpoint);
     }
 
     public CommandBase moveArmToRelative(double angleOffset) {
