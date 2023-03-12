@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import java.sql.Time;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.AbsoluteEncoder;
@@ -37,10 +38,12 @@ public class ArmSubsystem extends SubsystemBase {
 
     public ArmSubsystem() {
         leftMotor.restoreFactoryDefaults();
+        rightMotor.restoreFactoryDefaults();
+        Timer.delay(0.1);
         leftMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
         leftMotor.setIdleMode(IdleMode.kBrake);
         leftMotor.burnFlash();
-        rightMotor.restoreFactoryDefaults();
+        Timer.delay(0.1);
         rightMotor.follow(leftMotor, true);
         rightMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
         rightMotor.setIdleMode(IdleMode.kBrake);
@@ -101,13 +104,17 @@ public class ArmSubsystem extends SubsystemBase {
         lastTime = Timer.getFPGATimestamp();
     }
       
+    public void stop() {
+        leftMotor.stopMotor();
+        rightMotor.stopMotor();
+    }
 
     public CommandBase setTarget(double angle) {
         return runOnce(() -> pidController.setGoal(angle));
     }
 
     public CommandBase moveArmTo(double angle) {
-        return run(() -> goToPosition(angle)).until(pidController::atGoal);
+        return run(() -> goToPosition(angle)).until(pidController::atGoal).andThen(this::stop);
     }
 
     public CommandBase moveArmToRelative(double angleOffset) {
