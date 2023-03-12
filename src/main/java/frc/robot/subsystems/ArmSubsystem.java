@@ -107,7 +107,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveArmTo(double angle) {
-        return run(() -> goToPosition(angle)).until(pidController::atSetpoint);
+        return run(() -> goToPosition(angle)).until(pidController::atGoal);
     }
 
     public CommandBase moveArmToRelative(double angleOffset) {
