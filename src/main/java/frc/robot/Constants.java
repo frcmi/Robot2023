@@ -98,14 +98,14 @@ public final class Constants {
     public static final int kEncoderDIOPort = 0;
     public static final int kCurrentLimit = 40;
     // PID parameters
-    public static final double kP = -0.3;
+    public static final double kP = 0.3;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     // FeedForward parameters
-    public static final double kS = 0.0;
-    public static final double kG = 0.0;
-    public static final double kV = 0.0;
-    public static final double kA = 0.0;
+    public static final double kS = 0.10807;
+    public static final double kG = 0.08836;
+    public static final double kV = 0.060835;
+    public static final double kA = 0.0062442;
     // Motion Profile
     public static final double kMaxVel = 0.5;
     public static final double kMaxAccel = 0.1;
