@@ -1,5 +1,5 @@
 {
-  "counts per rotation": 8192.0,
+  "counts per rotation": 2048.0,
   "encoder type": "roboRIO quadrature",
   "encoding": true,
   "gearing denominator": 1.0,
