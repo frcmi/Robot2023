@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -88,7 +89,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getAngle() {
-        return absoluteEncoder.getAbsolutePosition() * 360 - ArmConstants.kEncoderOffset;
+        return (absoluteEncoder.getAbsolutePosition() * Math.PI) + ArmConstants.encoderOffset;
     }
 
     private void pidMotors() {
@@ -111,11 +112,10 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void goToPosition(double goalAngle) {
-        double pidVal = pidController.calculate(getAngle(), goalAngle);
-        double acceleration = (pidController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
-        setVolts(pidVal + feedforward.calculate(pidController.getSetpoint().velocity, acceleration));
-        lastSpeed = pidController.getSetpoint().velocity;
-        lastTime = Timer.getFPGATimestamp();
+        double pidOutput = pidController.calculate(getAngle(), goalAngle);
+        State setpoint = pidController.getSetpoint();
+        double ffOutpout = feedforward.calculate(setpoint.position, setpoint.velocity);
+        setVolts(pidOutput + ffOutpout);  
     }
       
     public void stop() {
