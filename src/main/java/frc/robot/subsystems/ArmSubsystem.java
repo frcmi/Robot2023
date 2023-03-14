@@ -41,18 +41,18 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem() {
         leftMotor.restoreFactoryDefaults();
         rightMotor.restoreFactoryDefaults();
-        Timer.delay(0.1);
+        Timer.delay(0.2);
         leftMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
         leftMotor.setIdleMode(IdleMode.kBrake);
         leftMotor.burnFlash();
-        Timer.delay(0.1);
+        Timer.delay(0.2);
         rightMotor.follow(leftMotor, true);
         rightMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
         rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.burnFlash();
 
         pidController.setGoal(getAngle());
-        pidController.setTolerance(1);
+        pidController.setTolerance(Math.toRadians(1));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ArmSubsystem extends SubsystemBase {
         speed *= OperatorConstants.kArmSpeed;
 
         double angle = getAngle();
-        // Stop movement
+        // Stop movement if outside bounds
         if (angle < ArmConstants.minAngle || angle > ArmConstants.maxAngle)
             speed = 0;
         leftMotor.set(speed);
@@ -75,7 +75,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private void setVolts(double volts) {
         double angle = getAngle();
-        // Stop movement
+        // Stop movement if outside bounds
         if (angle < ArmConstants.minAngle || angle > ArmConstants.maxAngle)
             volts = 0;
         leftMotor.setVoltage(volts);
