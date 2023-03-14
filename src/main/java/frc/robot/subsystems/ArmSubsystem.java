@@ -8,7 +8,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
+import edu.wpi.first.cscore.VideoProperty;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -24,7 +26,6 @@ import frc.robot.Constants.OperatorConstants;
 public class ArmSubsystem extends SubsystemBase {
     private final CANSparkMax leftMotor = new CANSparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private static final CANSparkMax.IdleMode KB_IDLE_MODE = IdleMode.kBrake;
     private final DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(ArmConstants.kEncoderDIOPort);
 
     private final ProfiledPIDController pidController 
@@ -60,15 +61,29 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Arm Speed", leftMotor.get());
     }
 
-    private void setMotors(double speed) {
+    private void setSpeed(double speed) {
         speed *= OperatorConstants.kArmSpeed;
+
+        double angle = getAngle();
+        // Stop movement
+        if (angle < ArmConstants.minAngle || angle > ArmConstants.maxAngle)
+            speed = 0;
         leftMotor.set(speed);
         rightMotor.set(speed);
     }
 
+    private void setVolts(double volts) {
+        double angle = getAngle();
+        // Stop movement
+        if (angle < ArmConstants.minAngle || angle > ArmConstants.maxAngle)
+            volts = 0;
+        leftMotor.setVoltage(volts);
+        rightMotor.setVoltage(volts);
+    }
+
     public CommandBase manualMotors(DoubleSupplier input) {
         return run(() -> {
-            setMotors(input.getAsDouble());
+            setSpeed(input.getAsDouble());
         });
     }
 
@@ -90,7 +105,7 @@ public class ArmSubsystem extends SubsystemBase {
                 // pidMotors();
                 return;
             }
-            setMotors(input);
+            setSpeed(input);
             pidController.setGoal(getAngle());
         });
     }
@@ -98,8 +113,7 @@ public class ArmSubsystem extends SubsystemBase {
     public void goToPosition(double goalAngle) {
         double pidVal = pidController.calculate(getAngle(), goalAngle);
         double acceleration = (pidController.getSetpoint().velocity - lastSpeed) / (Timer.getFPGATimestamp() - lastTime);
-        leftMotor.setVoltage(
-            pidVal + feedforward.calculate(pidController.getSetpoint().velocity, acceleration));
+        setVolts(pidVal + feedforward.calculate(pidController.getSetpoint().velocity, acceleration));
         lastSpeed = pidController.getSetpoint().velocity;
         lastTime = Timer.getFPGATimestamp();
     }
