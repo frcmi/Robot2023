@@ -97,6 +97,8 @@ public final class Constants {
     public static final int kEncoderOffset = 130;
     public static final int kEncoderDIOPort = 0;
     public static final int kCurrentLimit = 40;
+    public static final int minAngle = 10;
+    public static final int maxAngle = 170;
     // PID parameters
     public static final double kP = 0.3;
     public static final double kI = 0.0;
