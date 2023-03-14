@@ -37,7 +37,7 @@ public final class Constants {
 
     public static final double kWheelDiameter = Units.inchesToMeters(5.0);
     public static final double kWheelCircumference = kWheelDiameter * Math.PI;
-    public static final double kWheelGearRatio = 1/1; // <== PLACEHOLDER MUST REPLACE
+    public static final double kWheelGearRatio = (64 * 52) / (11*34); // Joey: dt should be 11:52 into 34:64
     public static final double kWheelEncoderDistancePerCount = kWheelCircumference / kWheelGearRatio / kNeoEncoderResolutionCPR;
 
   }
