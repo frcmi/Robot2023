@@ -1,16 +1,10 @@
 package frc.robot.subsystems;
 
-import java.sql.Time;
 import java.util.function.DoubleSupplier;
 
-import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
-
-import edu.wpi.first.cscore.VideoProperty;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -96,12 +90,6 @@ public class ArmSubsystem extends SubsystemBase {
         return -(absoluteEncoder.getAbsolutePosition() * 2 * Math.PI) + ArmConstants.encoderOffset;
     }
 
-    private void pidMotors() {
-        double pidOutput = pidController.calculate(getAngle());
-        leftMotor.set(pidOutput);
-        rightMotor.set(pidOutput);
-    }
-
     public CommandBase manualMove(DoubleSupplier inputSupplier) {
         return run(() -> {
             double input = inputSupplier.getAsDouble();
@@ -115,7 +103,7 @@ public class ArmSubsystem extends SubsystemBase {
         });
     }
 
-    public void goToPosition(double goalAngle) {
+    public void setGoalVolts(double goalAngle) {
         double pidOutput = pidController.calculate(getAngle(), goalAngle);
         State setpoint = pidController.getSetpoint();
         double ffOutpout = feedforward.calculate(setpoint.position, setpoint.velocity);
@@ -132,7 +120,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveArmTo(double angle) {
-        return run(() -> goToPosition(angle)).until(pidController::atGoal).andThen(this::stop);
+        return run(() -> setGoalVolts(angle)).until(pidController::atGoal).andThen(this::stop);
     }
 
     public CommandBase moveArmToRelative(double angleOffset) {
