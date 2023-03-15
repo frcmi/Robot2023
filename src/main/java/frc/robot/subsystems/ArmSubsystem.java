@@ -51,15 +51,19 @@ public class ArmSubsystem extends SubsystemBase {
         rightMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.burnFlash();
 
+        absoluteEncoder.setDistancePerRotation(1);
         pidController.setGoal(getAngle());
         pidController.setTolerance(Math.toRadians(1));
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm Angle", getAngle());
+        SmartDashboard.putNumber("Arm Radians", getAngle());
+        SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
+        SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.get());
         SmartDashboard.putData("Arm PID", pidController);
-        SmartDashboard.putNumber("Arm Speed", leftMotor.get());
+        SmartDashboard.putNumber("Arm PID Error", Math.toDegrees(pidController.getPositionError()));
+        SmartDashboard.putNumber("Arm Current", leftMotor.getOutputCurrent());
     }
 
     private void setSpeed(double speed) {
@@ -89,7 +93,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getAngle() {
-        return (absoluteEncoder.getAbsolutePosition() * Math.PI) + ArmConstants.encoderOffset;
+        return -(absoluteEncoder.getAbsolutePosition() * 2 * Math.PI) + ArmConstants.encoderOffset;
     }
 
     private void pidMotors() {

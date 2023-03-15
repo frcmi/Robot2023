@@ -95,15 +95,15 @@ public final class Constants {
     public static final int kRightMotorId = 8;
     public static final double kArmGearRatio = 180.0/1.0;
     // 0 should be the middle
-    public static final double encoderOffset = Math.toRadians(30);
+    public static final double encoderOffset = Math.toRadians(225);
     // Lowest safe rotation relative to encoderOffset 
-    public static final double minAngle = -Math.toRadians(90);
+    public static final double minAngle = -Math.toRadians(125);
     // Highest safe rotation relative to encoderOffset 
-    public static final double maxAngle = Math.toRadians(90);
+    public static final double maxAngle = Math.toRadians(125);
     public static final int kEncoderDIOPort = 0;
     public static final int kCurrentLimit = 40;
     // PID parameters
-    public static final double kP = 0.3;
+    public static final double kP = 0.8;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     // FeedForward parameters
