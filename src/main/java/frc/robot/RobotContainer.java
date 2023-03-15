@@ -66,16 +66,18 @@ public class RobotContainer {
       .onFalse(m_intakeSubsystem.stopCommand());
 
     // Elevator bindings
-    m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(
-      axisFromButtons(m_driverController.a(), m_driverController.y())
-    ));
+    // m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(
+    //   axisFromButtons(m_driverController.a(), m_driverController.y())
+    // ));
+    m_driverController.a().onTrue(m_elevatorSubsystem.moveToRelative(10));
+    m_driverController.y().onTrue(m_elevatorSubsystem.moveToRelative(-10));
 
     // Arm bindings
     // m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMotors(
     //   axisFromButtons(m_driverController.x(), m_driverController.b())
     // ));
-    m_driverController.x().onTrue(m_armSubsystem.moveArmToRelative(Math.toRadians(45)));
-    m_driverController.b().onTrue(m_armSubsystem.moveArmToRelative(-Math.toRadians(45)));
+    m_driverController.x().onTrue(m_armSubsystem.moveToRelative(Math.toRadians(45)));
+    m_driverController.b().onTrue(m_armSubsystem.moveToRelative(-Math.toRadians(45)));
 
     m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
     // LED Bindings

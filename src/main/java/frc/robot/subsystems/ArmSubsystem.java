@@ -119,11 +119,11 @@ public class ArmSubsystem extends SubsystemBase {
         return runOnce(() -> pidController.setGoal(angle));
     }
 
-    public CommandBase moveArmTo(double angle) {
+    public CommandBase moveTo(double angle) {
         return run(() -> setGoalVolts(angle)).until(pidController::atGoal).andThen(this::stop);
     }
 
-    public CommandBase moveArmToRelative(double angleOffset) {
-        return moveArmTo(getAngle() + angleOffset);
+    public CommandBase moveToRelative(double angleOffset) {
+        return moveTo(getAngle() + angleOffset);
     }
 }

@@ -71,6 +71,8 @@ public final class Constants {
     public static final int kRightMotorId = 6;
     public static final double kElevatorGearRatio = 1.0/15.0;
     public static final int kCurrentLimit = 40;
+    public static final double maxPos = 55;
+    public static final double minPos = 0;
     // PID parameters
     public static final double kP = 0.3;
     public static final double kI = 0.0;

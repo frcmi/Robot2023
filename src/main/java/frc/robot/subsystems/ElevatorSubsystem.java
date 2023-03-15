@@ -7,9 +7,11 @@ import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -23,11 +25,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final CANSparkMax rightMotor = new CANSparkMax(ElevatorConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
 
     private final ProfiledPIDController pidController 
-    = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, 
-        new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVel, ElevatorConstants.kMaxAccel));
+        = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, 
+            new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVel, ElevatorConstants.kMaxAccel));
 
-    private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
+    private final ElevatorFeedforward feedforward 
+        = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
     private final RelativeEncoder encoder = leftMotor.getEncoder();
+
     public ElevatorSubsystem() {
         leftMotor.restoreFactoryDefaults();
         leftMotor.setSmartCurrentLimit(ElevatorConstants.kCurrentLimit);
@@ -59,9 +63,37 @@ public class ElevatorSubsystem extends SubsystemBase {
         return encoder.getPosition();
     }
 
+    private void setVolts(double volts) {
+        double position = getPosition();
+        // Stop movement if outside bounds
+        if (position < ElevatorConstants.minPos || position > ElevatorConstants.maxPos)
+            volts = 0;
+        leftMotor.setVoltage(volts);
+        rightMotor.setVoltage(volts);
+    }
+
+    public void stop() {
+        setVolts(feedforward.calculate(0));
+    }
+
+    public void setGoalVolts(double goalPosition) {
+        double pidOutput = pidController.calculate(getPosition(), goalPosition);
+        State setpoint = pidController.getSetpoint();
+        double ffOutpout = feedforward.calculate(setpoint.velocity);
+        setVolts(pidOutput + ffOutpout);
+    }
+
     public CommandBase manualMotors(DoubleSupplier input) {
         return run(() -> {
             setMotors(input.getAsDouble());
         });
+    }
+
+    public CommandBase moveTo(double position) {
+        return run(() -> setGoalVolts(position)).until(pidController::atGoal).andThen(this::stop);
+    }
+
+    public CommandBase moveToRelative(double positionOffset) {
+        return moveTo(getPosition() + positionOffset);
     }
 }
