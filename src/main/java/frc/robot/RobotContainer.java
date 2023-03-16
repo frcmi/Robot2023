@@ -76,6 +76,7 @@ public class RobotContainer {
     // m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMotors(
     //   axisFromButtons(m_driverController.x(), m_driverController.b())
     // ));
+    m_armSubsystem.setDefaultCommand(m_armSubsystem.stop());
     m_driverController.x().onTrue(m_armSubsystem.moveTo(Math.toRadians(45)));
     m_driverController.b().onTrue(m_armSubsystem.moveTo(Math.toRadians(-45)));
     m_driverController.povDown().onTrue(m_armSubsystem.moveTo(Math.toRadians(90)));

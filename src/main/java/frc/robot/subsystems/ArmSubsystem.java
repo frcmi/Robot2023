@@ -110,9 +110,8 @@ public class ArmSubsystem extends SubsystemBase {
         setVolts(pidOutput + ffOutpout);  
     }
       
-    public void stop() {
-        leftMotor.stopMotor();
-        rightMotor.stopMotor();
+    public CommandBase stop() {
+        return run(() -> setVolts(feedforward.kg));
     }
 
     public CommandBase setTarget(double angle) {
@@ -120,7 +119,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveTo(double angle) {
-        return run(() -> setGoalVolts(angle)).until(pidController::atGoal).andThen(this::stop);
+        return run(() -> setGoalVolts(angle)).until(pidController::atGoal).andThen(stop());
     }
 
     public CommandBase moveToRelative(double angleOffset) {
