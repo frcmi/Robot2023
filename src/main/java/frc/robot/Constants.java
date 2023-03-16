@@ -109,10 +109,11 @@ public final class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     // FeedForward parameters
-    public static final double kS = 0.10807;
-    public static final double kG = 0.08836;
-    public static final double kV = 0.060835;
-    public static final double kA = 0.0062442;
+    // regression from F = kG cos Theta is 0.265
+    public static final double kS = 0.0;
+    public static final double kG = 0.12 ;
+    public static final double kV = 3.5;
+    public static final double kA = 0.01;
     // Motion Profile
     public static final double kMaxVel = 0.5;
     public static final double kMaxAccel = 0.1;
