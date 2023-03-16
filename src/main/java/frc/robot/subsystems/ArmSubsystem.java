@@ -15,12 +15,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.SparkMax;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 
 public class ArmSubsystem extends SubsystemBase {
-    private final CANSparkMax leftMotor = new CANSparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final SparkMax leftMotor = new SparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final SparkMax rightMotor = new SparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(ArmConstants.kEncoderDIOPort);
 
     private final ProfiledPIDController pidController 
@@ -33,17 +34,11 @@ public class ArmSubsystem extends SubsystemBase {
     double lastTime = Timer.getFPGATimestamp();
 
     public ArmSubsystem() {
-        leftMotor.restoreFactoryDefaults();
-        rightMotor.restoreFactoryDefaults();
-        Timer.delay(0.2);
         leftMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
-        leftMotor.setIdleMode(IdleMode.kBrake);
-        leftMotor.burnFlash();
-        Timer.delay(0.2);
+        leftMotor.setIdleMode(IdleMode.kCoast);
         rightMotor.follow(leftMotor, true);
         rightMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
-        rightMotor.setIdleMode(IdleMode.kBrake);
-        rightMotor.burnFlash();
+        rightMotor.setIdleMode(IdleMode.kCoast);
 
         absoluteEncoder.setDistancePerRotation(1);
         pidController.setGoal(getAngle());
