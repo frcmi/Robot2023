@@ -19,15 +19,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SparkMax;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.OperatorConstants;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
 
-public class ElevatorSubsystem extends SubsystemBase {
+public class ElevatorSubsystem extends SubsystemBase implements Loggable {
     //private final CANSparkMax leftMotor = new CANSparkMax(ElevatorConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     //private final CANSparkMax rightMotor = new CANSparkMax(ElevatorConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final SparkMax leftMotor = new SparkMax(ElevatorConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final SparkMax rightMotor = new SparkMax(ElevatorConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
 
 
+    @Log
     private final ProfiledPIDController pidController 
         = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, 
             new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVel, ElevatorConstants.kMaxAccel));
@@ -56,13 +59,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightMotor.set(speed);
     }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putData("Elevator PID", pidController);
-        SmartDashboard.putNumber("Elevator Speed", leftMotor.get());
-        SmartDashboard.putNumber("Elevator Pos", getPosition());
+    @Log
+    public double getSpeed() {
+        return leftMotor.get();
     }
 
+    @Log
     public double getPosition() {
         return encoder.getPosition();
     }
