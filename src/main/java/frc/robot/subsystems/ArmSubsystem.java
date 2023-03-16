@@ -49,9 +49,9 @@ public class ArmSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Arm Radians", getAngle());
         SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
-        SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.get());
+        SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.getAbsolutePosition());
         SmartDashboard.putData("Arm PID", pidController);
-        SmartDashboard.putNumber("Arm PID Error", Math.toDegrees(pidController.getPositionError()));
+        SmartDashboard.putNumber("Arm PID Error Deg", Math.toDegrees(pidController.getPositionError()));
         SmartDashboard.putNumber("Arm Current", leftMotor.getOutputCurrent());
     }
 
@@ -102,15 +102,13 @@ public class ArmSubsystem extends SubsystemBase {
         double pidOutput = pidController.calculate(getAngle(), goalAngle);
         State setpoint = pidController.getSetpoint();
         double ffOutpout = feedforward.calculate(setpoint.position, setpoint.velocity);
-        setVolts(pidOutput + ffOutpout);  
+        setVolts(pidOutput + ffOutpout);
+        SmartDashboard.putNumber("FF", ffOutpout);
+  
     }
       
     public CommandBase stop() {
         return run(() -> setVolts(feedforward.kg));
-    }
-
-    public CommandBase setTarget(double angle) {
-        return runOnce(() -> pidController.setGoal(angle));
     }
 
     public CommandBase moveTo(double angle) {
