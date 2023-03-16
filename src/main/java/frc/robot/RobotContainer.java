@@ -94,6 +94,10 @@ public class RobotContainer {
     return () -> Boolean.compare(firstButton.getAsBoolean(), false) - Boolean.compare(secondButton.getAsBoolean(), false);
   }
 
+  public void robotInit () {
+    SparkMax.burnFlashInSync();
+  }
+
   public void teleopPeriodic() {
 
   }

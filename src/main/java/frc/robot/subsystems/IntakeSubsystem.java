@@ -8,17 +8,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.SparkMax;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-    private final CANSparkMax motor = new CANSparkMax(IntakeConstants.kMotorId, MotorType.kBrushless);
+    //private final CANSparkMax motor = new CANSparkMax(IntakeConstants.kMotorId, MotorType.kBrushless);
+    private final SparkMax motor = new SparkMax(IntakeConstants.kMotorId, MotorType.kBrushless);
     private final MedianFilter currentFilter = new MedianFilter(10); 
     private double filteredCurrent = 0;
 
     public IntakeSubsystem() {
-        motor.restoreFactoryDefaults();
+        //motor.restoreFactoryDefaults();
         motor.setSmartCurrentLimit(IntakeConstants.kCurrentLimit);
-        motor.burnFlash();
+        //motor.burnFlash();
     }
 
     @Override

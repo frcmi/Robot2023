@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 import com.kauailabs.navx.frc.AHRS;
+import frc.robot.SparkMax;
+
 
 import frc.robot.Constants.DriveConstants;
 
@@ -23,10 +25,15 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DriveSubsystem extends SubsystemBase {
-  private final CANSparkMax frontLeft = new CANSparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
-  private final CANSparkMax rearLeft = new CANSparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
-  private final CANSparkMax frontRight = new CANSparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
-  private final CANSparkMax rearRight = new CANSparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
+  // private final CANSparkMax frontLeft = new CANSparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
+  // private final CANSparkMax rearLeft = new CANSparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
+  // private final CANSparkMax frontRight = new CANSparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
+  // private final CANSparkMax rearRight = new CANSparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
+  private final SparkMax frontLeft = new SparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
+  private final SparkMax rearLeft = new SparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
+  private final SparkMax frontRight = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
+  private final SparkMax rearRight = new SparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
+
 
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
@@ -36,25 +43,25 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
-    frontLeft.restoreFactoryDefaults();
+    //frontLeft.restoreFactoryDefaults();
     frontLeft.setIdleMode(IdleMode.kBrake);
     frontLeft.setSmartCurrentLimit(DriveConstants.currentLimit);
-    frontLeft.burnFlash();
+    //frontLeft.burnFlash();
     
-    rearLeft.restoreFactoryDefaults();
+    //rearLeft.restoreFactoryDefaults();
     rearLeft.setIdleMode(IdleMode.kBrake);
     rearLeft.setSmartCurrentLimit(DriveConstants.currentLimit);
-    rearLeft.burnFlash();
+    //rearLeft.burnFlash();
 
-    frontRight.restoreFactoryDefaults();
+    //frontRight.restoreFactoryDefaults();
     frontRight.setIdleMode(IdleMode.kBrake);
     frontRight.setSmartCurrentLimit(DriveConstants.currentLimit);
-    frontRight.burnFlash();
+    //frontRight.burnFlash();
 
-    rearRight.restoreFactoryDefaults();
+    //rearRight.restoreFactoryDefaults();
     rearRight.setIdleMode(IdleMode.kBrake);
     rearRight.setSmartCurrentLimit(DriveConstants.currentLimit);
-    rearRight.burnFlash();
+    //rearRight.burnFlash();
     
     rearLeft.follow(frontLeft);
     rearRight.follow(frontRight);
