@@ -31,9 +31,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final ProfiledPIDController pidController 
         = new ProfiledPIDController(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, 
             new TrapezoidProfile.Constraints(ElevatorConstants.kMaxVel, ElevatorConstants.kMaxAccel));
-
-    private final ElevatorFeedforward feedforward 
-        = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
     private final RelativeEncoder encoder = leftMotor.getEncoder();
 
     public ElevatorSubsystem() {
@@ -70,21 +67,22 @@ public class ElevatorSubsystem extends SubsystemBase {
     private void setVolts(double volts) {
         double position = getPosition();
         // Stop movement if outside bounds
-        if (position < ElevatorConstants.minPos || position > ElevatorConstants.maxPos)
+        boolean outOfBounds = position < ElevatorConstants.minPos || position > ElevatorConstants.maxPos;
+        if (outOfBounds)
             volts = 0;
+        SmartDashboard.putBoolean("Elevator Bounds", !outOfBounds);
+        SmartDashboard.putNumber("Elevator Out Volts", volts);
         leftMotor.setVoltage(volts);
         rightMotor.setVoltage(volts);
     }
 
     public void stop() {
-        setVolts(feedforward.calculate(0));
+        setVolts(ElevatorConstants.kG);
     }
 
     public void setGoalVolts(double goalPosition) {
         double pidOutput = pidController.calculate(getPosition(), goalPosition);
-        State setpoint = pidController.getSetpoint();
-        double ffOutpout = feedforward.calculate(setpoint.velocity);
-        setVolts(pidOutput + ffOutpout);
+        setVolts(pidOutput);
     }
 
     public CommandBase manualMotors(DoubleSupplier input) {
@@ -95,9 +93,5 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public CommandBase moveTo(double position) {
         return run(() -> setGoalVolts(position)).until(pidController::atGoal).andThen(this::stop);
-    }
-
-    public CommandBase moveToRelative(double positionOffset) {
-        return moveTo(getPosition() + positionOffset);
     }
 }

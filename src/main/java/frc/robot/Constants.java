@@ -69,7 +69,7 @@ public final class Constants {
     public static final int kNeoEncoderResolutionCPR = 42;
     public static final int kLeftMotorId = 5;
     public static final int kRightMotorId = 6;
-    public static final double kElevatorGearRatio = 1.0/15.0;
+    public static final double kElevatorGearRatio = 15.0;
     public static final int kCurrentLimit = 40;
     public static final double maxPos = 55;
     public static final double minPos = 0;
@@ -88,7 +88,7 @@ public final class Constants {
 
     public static final double kSprocketDiameter = 0.048; //metres
     public static final double kSprocketCircumference = Math.PI * kSprocketDiameter;
-    public static final double kElevatorEncoderDistancePerCount = kSprocketCircumference / kElevatorGearRatio / kNeoEncoderResolutionCPR;
+    public static final double kElevatorEncoderDistancePerCount = kSprocketCircumference / kElevatorGearRatio;
   }
 
   public static class ArmConstants {

@@ -69,8 +69,8 @@ public class RobotContainer {
     // m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(
     //   axisFromButtons(m_driverController.a(), m_driverController.y())
     // ));
-    m_driverController.a().onTrue(m_elevatorSubsystem.moveToRelative(10));
-    m_driverController.y().onTrue(m_elevatorSubsystem.moveToRelative(-10));
+    m_driverController.a().onTrue(m_elevatorSubsystem.moveTo(0.10));
+    m_driverController.y().onTrue(m_elevatorSubsystem.moveTo(0.30));
 
     // Arm bindings
     // m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMotors(
