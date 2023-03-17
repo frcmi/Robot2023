@@ -83,8 +83,8 @@ public final class Constants {
     public static final double kV = 11.961;
     public static final double kA = 0.47998;
     // Motion Profile
-    public static final double kMaxVel = 0.5;
-    public static final double kMaxAccel = 0.1;
+    public static final double kMaxVel = 0.75;
+    public static final double kMaxAccel = 0.3;
 
     public static final double kSprocketDiameter = 0.048; //metres
     public static final double kSprocketCircumference = Math.PI * kSprocketDiameter;
