@@ -96,4 +96,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     public CommandBase moveTo(double position) {
         return run(() -> setGoalVolts(position)).until(pidController::atGoal).andThen(this::stop);
     }
+
+    public CommandBase raise() {
+        return moveTo(0.4);
+    }
+
+    public CommandBase lower() {
+        return moveTo(0.0);
+    }
 }

@@ -82,16 +82,16 @@ public class RobotContainer {
     m_driverController.b().onTrue(m_armSubsystem.moveTo(Math.toRadians(-45)));
     // Ground
     m_driverController.povDown().onTrue(Commands.parallel(
-      m_armSubsystem.moveTo(Math.toRadians(-90)), m_elevatorSubsystem.moveTo(0.0)));
+      m_armSubsystem.moveTo(Math.toRadians(-90)), m_elevatorSubsystem.lower()));
     // Stow
     m_driverController.povUp().onTrue(Commands.parallel(
-      m_armSubsystem.moveTo(Math.toRadians(150)), m_elevatorSubsystem.moveTo(0.0)));
+      m_armSubsystem.moveTo(Math.toRadians(150)), m_elevatorSubsystem.lower()));
     // L2/Substation
     m_driverController.povRight().onTrue(Commands.parallel(
-      m_armSubsystem.moveTo(Math.toRadians(50)), m_elevatorSubsystem.moveTo(0.0)));
+      m_armSubsystem.moveTo(Math.toRadians(50)), m_elevatorSubsystem.lower()));
     // L3
     m_driverController.povLeft().onTrue(Commands.parallel(
-      m_armSubsystem.moveTo(Math.toRadians(50)), m_elevatorSubsystem.moveTo(0.40)));
+      m_armSubsystem.moveTo(Math.toRadians(50)), m_elevatorSubsystem.raise()));
 
     m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
     // LED Bindings
