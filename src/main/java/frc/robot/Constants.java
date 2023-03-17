@@ -20,7 +20,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final double kSpeedMultiplier = 0.75;
     public static final double kSpeedSlewRate = 0.5;
-    public static final double kRotationMultiplier = 0.2;
+    public static final double kRotationMultiplier = 0.3;
     public static final double kElevatorSpeed = 0.5;
     public static final double kArmSpeed = 0.5;
     public static final double kArmDeadzone = 0.2;
@@ -72,9 +72,9 @@ public final class Constants {
     public static final double kElevatorGearRatio = 15.0;
     public static final int kCurrentLimit = 40;
     public static final double maxPos = 55;
-    public static final double minPos = 0;
+    public static final double minPos = -1;
     // PID parameters
-    public static final double kP = 0.3;
+    public static final double kP = 1.5;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     // FeedForward parameters
@@ -101,7 +101,7 @@ public final class Constants {
     // Lowest safe rotation relative to encoderOffset 
     public static final double minAngle = -Math.toRadians(125);
     // Highest safe rotation relative to encoderOffset 
-    public static final double maxAngle = Math.toRadians(125);
+    public static final double maxAngle = Math.toRadians(180);
     public static final int kEncoderDIOPort = 0;
     public static final int kCurrentLimit = 40;
     // PID parameters

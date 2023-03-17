@@ -69,9 +69,10 @@ public class RobotContainer {
     // m_elevatorSubsystem.setDefaultCommand(m_elevatorSubsystem.manualMotors(
     //   axisFromButtons(m_driverController.a(), m_driverController.y())
     // ));
-    m_driverController.a().onTrue(m_elevatorSubsystem.moveTo(0.10));
-    m_driverController.y().onTrue(m_elevatorSubsystem.moveTo(0.30));
-
+    m_driverController.a().onTrue(m_elevatorSubsystem.moveTo(0.0));
+    m_driverController.y().onTrue(m_elevatorSubsystem.moveTo(0.40));
+    Command elevatorDown = m_elevatorSubsystem.moveTo(0.0);
+    Command elevatorUp = m_elevatorSubsystem.moveTo(0.40);
     // Arm bindings
     // m_armSubsystem.setDefaultCommand(m_armSubsystem.manualMotors(
     //   axisFromButtons(m_driverController.x(), m_driverController.b())
@@ -79,10 +80,18 @@ public class RobotContainer {
     m_armSubsystem.setDefaultCommand(m_armSubsystem.stop());
     m_driverController.x().onTrue(m_armSubsystem.moveTo(Math.toRadians(45)));
     m_driverController.b().onTrue(m_armSubsystem.moveTo(Math.toRadians(-45)));
-    m_driverController.povDown().onTrue(m_armSubsystem.moveTo(Math.toRadians(90)));
-    m_driverController.povUp().onTrue(m_armSubsystem.moveTo(Math.toRadians(-90)));
-    m_driverController.povRight().onTrue(m_armSubsystem.moveTo(Math.toRadians(0)));
-    m_driverController.povLeft().onTrue(m_armSubsystem.moveTo(Math.toRadians(110)));
+    // Ground
+    m_driverController.povDown().onTrue(Commands.parallel(
+      m_armSubsystem.moveTo(Math.toRadians(-90)), m_elevatorSubsystem.moveTo(0.0)));
+    // Stow
+    m_driverController.povUp().onTrue(Commands.parallel(
+      m_armSubsystem.moveTo(Math.toRadians(150)), m_elevatorSubsystem.moveTo(0.0)));
+    // L2/Substation
+    m_driverController.povRight().onTrue(Commands.parallel(
+      m_armSubsystem.moveTo(Math.toRadians(50)), m_elevatorSubsystem.moveTo(0.0)));
+    // L3
+    m_driverController.povLeft().onTrue(Commands.parallel(
+      m_armSubsystem.moveTo(Math.toRadians(50)), m_elevatorSubsystem.moveTo(0.40)));
 
     m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
     // LED Bindings

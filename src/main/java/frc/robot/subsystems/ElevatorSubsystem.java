@@ -36,12 +36,13 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorSubsystem() {
         //leftMotor.restoreFactoryDefaults();
         leftMotor.setSmartCurrentLimit(ElevatorConstants.kCurrentLimit);
-        leftMotor.setIdleMode(IdleMode.kBrake);
+        leftMotor.setIdleMode(IdleMode.kCoast);
         //leftMotor.burnFlash();
         //rightMotor.restoreFactoryDefaults();
+        rightMotor.setInverted(true);
         leftMotor.follow(rightMotor, true);
         rightMotor.setSmartCurrentLimit(ElevatorConstants.kCurrentLimit);
-        rightMotor.setIdleMode(IdleMode.kBrake);
+        rightMotor.setIdleMode(IdleMode.kCoast);
         //rightMotor.burnFlash();
 
         encoder.setPositionConversionFactor(ElevatorConstants.kElevatorEncoderDistancePerCount);
@@ -82,7 +83,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void setGoalVolts(double goalPosition) {
         double pidOutput = pidController.calculate(getPosition(), goalPosition);
-        setVolts(pidOutput);
+        pidOutput *= 25;
+        setVolts(pidOutput + ElevatorConstants.kG);
     }
 
     public CommandBase manualMotors(DoubleSupplier input) {

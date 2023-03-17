@@ -44,22 +44,22 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
     //frontLeft.restoreFactoryDefaults();
-    frontLeft.setIdleMode(IdleMode.kBrake);
+    frontLeft.setIdleMode(IdleMode.kCoast);
     frontLeft.setSmartCurrentLimit(DriveConstants.currentLimit);
     //frontLeft.burnFlash();
     
     //rearLeft.restoreFactoryDefaults();
-    rearLeft.setIdleMode(IdleMode.kBrake);
+    rearLeft.setIdleMode(IdleMode.kCoast);
     rearLeft.setSmartCurrentLimit(DriveConstants.currentLimit);
     //rearLeft.burnFlash();
 
     //frontRight.restoreFactoryDefaults();
-    frontRight.setIdleMode(IdleMode.kBrake);
+    frontRight.setIdleMode(IdleMode.kCoast);
     frontRight.setSmartCurrentLimit(DriveConstants.currentLimit);
     //frontRight.burnFlash();
 
     //rearRight.restoreFactoryDefaults();
-    rearRight.setIdleMode(IdleMode.kBrake);
+    rearRight.setIdleMode(IdleMode.kCoast);
     rearRight.setSmartCurrentLimit(DriveConstants.currentLimit);
     //rearRight.burnFlash();
     
@@ -74,7 +74,10 @@ public class DriveSubsystem extends SubsystemBase {
       double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier;
       // speed = speedFilter.calculate(speed);
       double rotation = rotationSupplier.getAsDouble() * OperatorConstants.kRotationMultiplier;
-      diffDrive.curvatureDrive(speed, rotation, rotationLock.getAsBoolean());
+      if (rotationLock.getAsBoolean())
+        diffDrive.arcadeDrive(0, rotation * 1.5);
+      else
+        diffDrive.curvatureDrive(speed, rotation, false);
     });
   }
 

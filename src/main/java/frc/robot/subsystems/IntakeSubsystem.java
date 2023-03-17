@@ -16,10 +16,10 @@ public class IntakeSubsystem extends SubsystemBase {
     private final SparkMax motor = new SparkMax(IntakeConstants.kMotorId, MotorType.kBrushless);
     private final MedianFilter currentFilter = new MedianFilter(10); 
     private double filteredCurrent = 0;
-
+    
     public IntakeSubsystem() {
         //motor.restoreFactoryDefaults();
-        motor.setSmartCurrentLimit(IntakeConstants.kCurrentLimit);
+        motor.setSmartCurrentLimit(30, 40);
         //motor.burnFlash();
     }
 
@@ -36,9 +36,10 @@ public class IntakeSubsystem extends SubsystemBase {
     // Intake cone, release cube
     public CommandBase intake() {
         return setMotor(IntakeConstants.kIntakeSpeed)
-                .until(this::motorOverCurrent)
-                .andThen(Commands.waitSeconds(IntakeConstants.kIntakeTime))
-                .andThen(stopCommand());
+                // .until(this::motorOverCurrent)
+                // .andThen(Commands.waitSeconds(IntakeConstants.kIntakeTime))
+                // .andThen(stopCommand())
+                ;
     }
 
     private CommandBase setMotor(double speed) {
@@ -48,9 +49,10 @@ public class IntakeSubsystem extends SubsystemBase {
     // Release cone, intake cube
     public CommandBase reverseIntake() {
         return setMotor(IntakeConstants.kIntakeSpeed * -1)
-                .until(this::motorOverCurrent)
-                .andThen(Commands.waitSeconds(IntakeConstants.kIntakeTime))
-                .andThen(stopCommand());
+                // .until(this::motorOverCurrent)
+                // .andThen(Commands.waitSeconds(IntakeConstants.kIntakeTime))
+                // .andThen(stopCommand())
+                ;
     }
 
     public void stop() {
