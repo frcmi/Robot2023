@@ -26,7 +26,9 @@ public final class Autos {
 
   // Right now only cone l3
   public static CommandBase score(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator) {
-      return Setpoints.L3(subsystem, elevator).andThen(intake.reverseIntake().withTimeout(0.5));
+      return Setpoints.L3(subsystem, elevator)
+        .andThen(intake.intake().withTimeout(1))
+        .andThen(Setpoints.Stow(subsystem, elevator));
   }
 
   public static CommandBase scoreThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
