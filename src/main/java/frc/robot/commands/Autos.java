@@ -18,7 +18,7 @@ public final class Autos {
     return Commands.waitSeconds(0); // Replace with real auto
   }
 
-  public static CommandBase moveSeconds(DriveSubsystem driveSub, double speed, boolean reversed) {
+  public static CommandBase moveSeconds(DriveSubsystem driveSub, double speed) {
     return Commands.run(() -> {
       driveSub.setSpeed(speed);
     }).withTimeout(2.5).andThen(driveSub.stop());
@@ -32,7 +32,7 @@ public final class Autos {
   }
 
   public static CommandBase scoreThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
-    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.5, true));
+    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, -0.5));
   }
 
   private Autos() {
