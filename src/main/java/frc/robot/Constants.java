@@ -117,7 +117,7 @@ public final class Constants {
     public static final double kV = 3.5;
     public static final double kA = 0.01;
     // Motion Profile
-    public static final double kMaxVel = 1.5;
-    public static final double kMaxAccel = 0.5;
+    public static final double kMaxVel = 3;
+    public static final double kMaxAccel = 1;
   }
 }
