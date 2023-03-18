@@ -22,7 +22,7 @@ public final class Setpoints {
     }
 
     public static CommandBase Stow(ArmSubsystem arm, ElevatorSubsystem elevator) {
-        return arm.moveTo(Math.toRadians(50)).alongWith(elevator.lower());
+        return arm.moveTo(Math.toRadians(155)).alongWith(elevator.lower());
     }
 
     public static CommandBase L2(ArmSubsystem arm, ElevatorSubsystem elevator) {
