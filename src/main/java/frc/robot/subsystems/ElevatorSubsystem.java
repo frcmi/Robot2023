@@ -53,8 +53,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putData("Elevator PID", pidController);
-        SmartDashboard.putNumber("Elevator Speed", leftMotor.get());
+        // SmartDashboard.putData("Elevator PID", pidController);
+        // SmartDashboard.putNumber("Elevator Speed", leftMotor.get());
         SmartDashboard.putNumber("Elevator Pos", getPosition());
         setDefaultCommand(run(this::stop));
         Command command = getCurrentCommand();

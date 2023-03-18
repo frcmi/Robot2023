@@ -73,6 +73,8 @@ public final class Constants {
     public static final int kCurrentLimit = 40;
     public static final double maxPos = 0.55;
     public static final double minPos = -0.01;
+    public static final double raisedPos = 0.4;
+    public static final double loweredPos = 0.0;
     // PID parameters
     public static final double kP = 1.5;
     public static final double kI = 0.0;

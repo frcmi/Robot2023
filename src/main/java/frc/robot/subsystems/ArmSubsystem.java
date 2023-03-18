@@ -49,18 +49,18 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm Radians", getAngle());
+        // SmartDashboard.putNumber("Arm Radians", getAngle());
         SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
-        SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.getAbsolutePosition());
-        SmartDashboard.putData("Arm PID", pidController);
-        SmartDashboard.putNumber("Arm PID Error Deg", Math.toDegrees(pidController.getPositionError()));
+        // SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.getAbsolutePosition());
+        // SmartDashboard.putData("Arm PID", pidController);
+        // SmartDashboard.putNumber("Arm PID Error Deg", Math.toDegrees(pidController.getPositionError()));
     }
 
     private void setVolts(double volts) {
         double angle = getAngle();
         double kg = feedforward.calculate(angle, 0);
         SmartDashboard.putNumber("Arm Voltage Input", volts);
-        SmartDashboard.putNumber("Arm kg", kg);
+        // SmartDashboard.putNumber("Arm kg", kg);
         SmartDashboard.putBoolean("Arm Bounds", !(angle > ArmConstants.maxAngle || angle < ArmConstants.minAngle));
         // Stop movement if outside bounds
         if (angle < ArmConstants.minAngle) 
@@ -68,8 +68,8 @@ public class ArmSubsystem extends SubsystemBase {
         if (angle > ArmConstants.maxAngle)
             volts = Math.max(-2, Math.min(kg, volts));
 
-        SmartDashboard.putNumber("Arm Voltage Set", volts);
-        SmartDashboard.putNumber("Arm Voltage Left", leftMotor.getAppliedOutput());
+        // SmartDashboard.putNumber("Arm Voltage Set", volts);
+        // SmartDashboard.putNumber("Arm Voltage Left", leftMotor.getAppliedOutput());
         leftMotor.setVoltage(volts);
         rightMotor.setVoltage(volts);
     }
