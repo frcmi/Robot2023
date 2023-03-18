@@ -112,6 +112,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    diffDrive.feed();
+    diffDrive.feedWatchdog();
     SmartDashboard.putNumber("Gyro Pitch", getPitch());
     SmartDashboard.putNumber("DT Current", frontLeft.getOutputCurrent());
     SmartDashboard.putNumber("DT Speed", frontLeft.get());
