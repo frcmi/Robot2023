@@ -81,7 +81,7 @@ public final class Constants {
     public static final double kD = 0.0;
     // FeedForward parameters
     public static final double kS = 0.078775;
-    public static final double kG = 0.13759;
+    public static final double kG = 0.1;
     public static final double kV = 11.961;
     public static final double kA = 0.47998;
     // Motion Profile
