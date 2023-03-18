@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.filter.MedianFilter;
@@ -21,6 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
         //motor.restoreFactoryDefaults();
         motor.setSmartCurrentLimit(30, 40);
         //motor.burnFlash();
+        motor.setIdleMode(IdleMode.kBrake);
     }
 
     @Override

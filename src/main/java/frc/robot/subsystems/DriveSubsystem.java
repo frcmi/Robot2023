@@ -96,12 +96,14 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public CommandBase balanceCommand() {
-    return run(() -> {
+    CommandBase command = run(() -> {
       double pitchAngleRadians = getPitch() * (Math.PI / 180.0);
-      double xAxisRate = Math.sin(pitchAngleRadians);
-      tankDriveVolts(xAxisRate * 7, xAxisRate * 7);
+      double xAxisRate = Math.sin(pitchAngleRadians) * 7;
+      tankDriveVolts(xAxisRate, xAxisRate);
     })
       .until(() -> Math.abs(getPitch()) < 3);
+    command.setName("Balance");
+    return command;
   }
 
   @Override

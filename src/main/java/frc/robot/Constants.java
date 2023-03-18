@@ -71,8 +71,8 @@ public final class Constants {
     public static final int kRightMotorId = 6;
     public static final double kElevatorGearRatio = 15.0;
     public static final int kCurrentLimit = 40;
-    public static final double maxPos = 55;
-    public static final double minPos = -1;
+    public static final double maxPos = 0.55;
+    public static final double minPos = -0.01;
     // PID parameters
     public static final double kP = 1.5;
     public static final double kI = 0.0;
@@ -97,25 +97,25 @@ public final class Constants {
     public static final int kRightMotorId = 8;
     public static final double kArmGearRatio = 180.0/1.0;
     // 0 should be the middle
-    public static final double encoderOffset = Math.toRadians(225);
+    public static final double encoderOffset = Math.toRadians(224.45);
     // Lowest safe rotation relative to encoderOffset 
     public static final double minAngle = -Math.toRadians(125);
     // Highest safe rotation relative to encoderOffset 
-    public static final double maxAngle = Math.toRadians(180);
+    public static final double maxAngle = Math.toRadians(160);
     public static final int kEncoderDIOPort = 0;
     public static final int kCurrentLimit = 40;
     // PID parameters
-    public static final double kP = 1.2;
+    public static final double kP = 5;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     // FeedForward parameters
     // regression from F = kG cos Theta is 0.265
     public static final double kS = 0.0;
-    public static final double kG = 0.12 ;
+    public static final double kG = 0.16;
     public static final double kV = 3.5;
     public static final double kA = 0.01;
     // Motion Profile
-    public static final double kMaxVel = 0.5;
-    public static final double kMaxAccel = 0.1;
+    public static final double kMaxVel = 1.5;
+    public static final double kMaxAccel = 0.5;
   }
 }

@@ -14,6 +14,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SparkMax;
@@ -46,12 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         //rightMotor.burnFlash();
 
         encoder.setPositionConversionFactor(ElevatorConstants.kElevatorEncoderDistancePerCount);
-    }
-
-    private void setMotors(double speed) {
-        speed *= OperatorConstants.kElevatorSpeed;
-        leftMotor.set(speed);
-        rightMotor.set(speed);
+        pidController.setTolerance(0.5);
     }
 
     @Override
@@ -59,6 +55,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putData("Elevator PID", pidController);
         SmartDashboard.putNumber("Elevator Speed", leftMotor.get());
         SmartDashboard.putNumber("Elevator Pos", getPosition());
+        Command command = getCurrentCommand();
+        if (command != null)
+            SmartDashboard.putString("Elevator Command", command.getName());
+        else
+            SmartDashboard.putString("Elevator Command", "null");
     }
 
     public double getPosition() {
@@ -67,10 +68,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void setVolts(double volts) {
         double position = getPosition();
-        // Stop movement if outside bounds
         boolean outOfBounds = position < ElevatorConstants.minPos || position > ElevatorConstants.maxPos;
-        if (outOfBounds)
-            volts = 0;
+        // Stop movement if outside bounds
+        if (position < ElevatorConstants.minPos) 
+            volts = Math.max(0, Math.min(2, volts));
+        if (position > ElevatorConstants.maxPos)
+            volts = Math.max(-2, Math.min(0, volts));
         SmartDashboard.putBoolean("Elevator Bounds", !outOfBounds);
         SmartDashboard.putNumber("Elevator Out Volts", volts);
         leftMotor.setVoltage(volts);
@@ -87,21 +90,19 @@ public class ElevatorSubsystem extends SubsystemBase {
         setVolts(pidOutput + ElevatorConstants.kG);
     }
 
-    public CommandBase manualMotors(DoubleSupplier input) {
-        return run(() -> {
-            setMotors(input.getAsDouble());
-        });
-    }
-
     public CommandBase moveTo(double position) {
         return run(() -> setGoalVolts(position)).until(pidController::atGoal).andThen(this::stop);
     }
 
     public CommandBase raise() {
-        return moveTo(0.4);
+        CommandBase command = moveTo(0.4);
+        command.setName("RaiseElevator");
+        return command;
     }
 
     public CommandBase lower() {
-        return moveTo(0.0);
+        CommandBase command = moveTo(0);
+        command.setName("LowerElevator");
+        return command;
     }
 }
