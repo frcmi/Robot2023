@@ -32,7 +32,7 @@ public final class Autos {
   }
 
   public static CommandBase scoreThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
-    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, -0.5));
+    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.5));
   }
 
   private Autos() {
