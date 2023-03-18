@@ -29,8 +29,7 @@ public class ArmSubsystem extends SubsystemBase {
             new TrapezoidProfile.Constraints(ArmConstants.kMaxVel, ArmConstants.kMaxAccel));
     private final ArmFeedforward feedforward = new ArmFeedforward(ArmConstants.kS, ArmConstants.kG, ArmConstants.kV, ArmConstants.kA);
 
-    double lastSpeed = 0;
-    double lastTime = Timer.getFPGATimestamp();
+    private double goalAngle = getAngle();
 
     public ArmSubsystem() {
         leftMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
@@ -54,6 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
         // SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.getAbsolutePosition());
         // SmartDashboard.putData("Arm PID", pidController);
         // SmartDashboard.putNumber("Arm PID Error Deg", Math.toDegrees(pidController.getPositionError()));
+        setGoalVolts(goalAngle);
     }
 
     private void setVolts(double volts) {
@@ -95,6 +95,6 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveTo(double angle) {
-        return run(() -> setGoalVolts(angle)).until(pidController::atGoal);
+        return run(() -> goalAngle = angle).until(pidController::atGoal);
     }
 }

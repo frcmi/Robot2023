@@ -76,7 +76,7 @@ public final class Constants {
     public static final double raisedPos = 0.4;
     public static final double loweredPos = 0.0;
     // PID parameters
-    public static final double kP = 1.5;
+    public static final double kP = 3;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     // FeedForward parameters
@@ -85,8 +85,8 @@ public final class Constants {
     public static final double kV = 11.961;
     public static final double kA = 0.47998;
     // Motion Profile
-    public static final double kMaxVel = 0.75;
-    public static final double kMaxAccel = 0.3;
+    public static final double kMaxVel = 1.25;
+    public static final double kMaxAccel = 0.5;
 
     public static final double kSprocketDiameter = 0.048; //metres
     public static final double kSprocketCircumference = Math.PI * kSprocketDiameter;
@@ -107,7 +107,7 @@ public final class Constants {
     public static final int kEncoderDIOPort = 0;
     public static final int kCurrentLimit = 40;
     // PID parameters
-    public static final double kP = 5;
+    public static final double kP = 6;
     public static final double kI = 0.0;
     public static final double kD = 0.0;
     // FeedForward parameters
