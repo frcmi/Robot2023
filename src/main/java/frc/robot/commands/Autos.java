@@ -4,7 +4,10 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -15,10 +18,19 @@ public final class Autos {
     return Commands.waitSeconds(0); // Replace with real auto
   }
 
-  public static CommandBase moveFiveSeconds(DriveSubsystem driveSub, double speed, boolean reversed) {
+  public static CommandBase moveSeconds(DriveSubsystem driveSub, double speed, boolean reversed) {
     return Commands.run(() -> {
       driveSub.setSpeed(speed);
-    }).withTimeout(5.0).andThen(driveSub.stop());
+    }).withTimeout(2.5).andThen(driveSub.stop());
+  }
+
+  // Right now only cone l3
+  public static CommandBase score(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator) {
+      return Setpoints.L3(subsystem, elevator).andThen(intake.reverseIntake().withTimeout(0.5));
+  }
+
+  public static CommandBase scoreThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
+    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.5, true));
   }
 
   private Autos() {

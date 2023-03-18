@@ -8,6 +8,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Setpoints;
 import frc.robot.subsystems.*;
 
 import java.util.function.BooleanSupplier;
@@ -74,23 +75,15 @@ public class RobotContainer {
     m_driverController.x().onTrue(m_armSubsystem.moveTo(Math.toRadians(45)));
     m_driverController.b().onTrue(m_armSubsystem.moveTo(Math.toRadians(-45)));
     // Ground
-    m_driverController.povDown().onTrue(m_armSubsystem.moveTo(Math.toRadians(-90))
-      // .alongWith(m_elevatorSubsystem.lower())
-      );
+    m_driverController.povDown().onTrue(Setpoints.Ground(m_armSubsystem, m_elevatorSubsystem));
     // Stow
-    m_driverController.povUp().onTrue(m_armSubsystem.moveTo(Math.toRadians(155))
-      // .alongWith(m_elevatorSubsystem.lower())
-      );
+    m_driverController.povUp().onTrue(Setpoints.Stow(m_armSubsystem, m_elevatorSubsystem));
     // L2/Substation
-    m_driverController.povRight().onTrue(m_armSubsystem.moveTo(Math.toRadians(50))
-      // .alongWith(m_elevatorSubsystem.lower())
-      );
+    m_driverController.povRight().onTrue(Setpoints.L2(m_armSubsystem, m_elevatorSubsystem));
     // L3
-    m_driverController.povLeft().onTrue(m_armSubsystem.moveTo(Math.toRadians(50))
-      // .alongWith(m_elevatorSubsystem.raise())
-      );
+    m_driverController.povLeft().onTrue(Setpoints.L3(m_armSubsystem, m_elevatorSubsystem));
 
-    m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
+    // m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
     // LED Bindings
     // m_driverController.povUp()
     //   .onTrue(m_ledSubsystem.maroonLEDCommand());
@@ -120,6 +113,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.moveFiveSeconds(m_driveSubsystem, 0.5, true);
+    return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
   }
 }

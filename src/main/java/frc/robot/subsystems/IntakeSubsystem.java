@@ -23,6 +23,7 @@ public class IntakeSubsystem extends SubsystemBase {
         motor.setSmartCurrentLimit(30, 40);
         //motor.burnFlash();
         motor.setIdleMode(IdleMode.kBrake);
+        setDefaultCommand(stopCommand());
     }
 
     @Override

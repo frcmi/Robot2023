@@ -1,0 +1,35 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.commands;
+
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
+
+public final class Setpoints {
+    private Setpoints() {
+        throw new UnsupportedOperationException("This is a utility class!");
+    }
+
+    public static CommandBase Ground(ArmSubsystem arm, ElevatorSubsystem elevator) {
+        return arm.moveTo(Math.toRadians(-90)).alongWith(elevator.lower());
+    }
+
+    public static CommandBase Stow(ArmSubsystem arm, ElevatorSubsystem elevator) {
+        return arm.moveTo(Math.toRadians(50)).alongWith(elevator.lower());
+    }
+
+    public static CommandBase L2(ArmSubsystem arm, ElevatorSubsystem elevator) {
+        return arm.moveTo(Math.toRadians(50)).alongWith(elevator.lower());
+    }
+
+    public static CommandBase L3(ArmSubsystem arm, ElevatorSubsystem elevator) {
+        return arm.moveTo(Math.toRadians(50)).alongWith(elevator.raise());
+    }
+}
