@@ -111,6 +111,10 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Pitch", getPitch());
     SmartDashboard.putNumber("DT Current", frontLeft.getOutputCurrent());
     SmartDashboard.putNumber("DT Speed", frontLeft.get());
+    SmartDashboard.putNumber("Front Left Voltage", frontLeft.getBusVoltage());
+    SmartDashboard.putNumber("Rear Left Voltage", rearLeft.getBusVoltage());
+    SmartDashboard.putNumber("Front Right Voltage", frontRight.getBusVoltage());
+    SmartDashboard.putNumber("Rear Right Voltage", rearRight.getBusVoltage());
   }
 
   @Override

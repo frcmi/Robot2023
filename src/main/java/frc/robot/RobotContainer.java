@@ -120,6 +120,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_driveSubsystem);
+    return Autos.moveFiveSeconds(m_driveSubsystem, 100, false);
   }
 }
