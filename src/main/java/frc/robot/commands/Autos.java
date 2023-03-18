@@ -21,7 +21,7 @@ public final class Autos {
   public static CommandBase moveSeconds(DriveSubsystem driveSub, double speed) {
     return Commands.run(() -> {
       driveSub.setSpeed(speed);
-    }).withTimeout(2.5).andThen(driveSub.stop());
+    }).withTimeout(5).andThen(driveSub.stop());
   }
 
   // Right now only cone l3
