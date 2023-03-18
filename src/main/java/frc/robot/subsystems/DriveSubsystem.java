@@ -95,6 +95,10 @@ public class DriveSubsystem extends SubsystemBase {
     rightMotors.setVoltage(rightVolts);
   }
 
+  public void setSpeed(double speed) {
+    diffDrive.tankDrive(speed, speed);
+  }
+
   public CommandBase balanceCommand() {
     CommandBase command = run(() -> {
       double pitchAngleRadians = getPitch() * (Math.PI / 180.0);

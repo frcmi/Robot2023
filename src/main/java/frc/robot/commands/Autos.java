@@ -15,18 +15,10 @@ public final class Autos {
     return Commands.waitSeconds(0); // Replace with real auto
   }
 
-  public static CommandBase moveFiveSeconds(DriveSubsystem driveSub, double voltage, boolean reversed) {
+  public static CommandBase moveFiveSeconds(DriveSubsystem driveSub, double speed, boolean reversed) {
     return Commands.run(() -> {
-      Timer timer = new Timer();
-      timer.start();
-      while (timer.get() < 5.0) {
-        if (reversed) {
-          driveSub.tankDriveVolts(-voltage, -voltage);
-        } else {
-          driveSub.tankDriveVolts(voltage, voltage);
-        }
-      }
-    });
+      driveSub.setSpeed(speed);
+    }).withTimeout(5.0).andThen(driveSub.stop());
   }
 
   private Autos() {
