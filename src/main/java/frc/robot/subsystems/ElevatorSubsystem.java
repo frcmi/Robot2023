@@ -47,7 +47,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         //rightMotor.burnFlash();
 
         encoder.setPositionConversionFactor(ElevatorConstants.kElevatorEncoderDistancePerCount);
-        pidController.setTolerance(0.5);
+        pidController.setTolerance(0.005);
 
     }
 
