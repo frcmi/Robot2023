@@ -42,6 +42,9 @@ public class ArmSubsystem extends SubsystemBase {
         absoluteEncoder.setDistancePerRotation(1);
         pidController.setGoal(getAngle());
         pidController.setTolerance(Math.toRadians(1));
+        // would be optimal to use PID as default to hold position
+        // but this lets us sway our arm for intaking cones
+        setDefaultCommand(stop());
     }
 
     @Override
@@ -92,6 +95,6 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveTo(double angle) {
-        return run(() -> setGoalVolts(angle)).until(pidController::atGoal).andThen(stop());
+        return run(() -> setGoalVolts(angle)).until(pidController::atGoal);
     }
 }

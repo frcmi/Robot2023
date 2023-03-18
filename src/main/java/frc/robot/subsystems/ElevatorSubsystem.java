@@ -48,6 +48,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         encoder.setPositionConversionFactor(ElevatorConstants.kElevatorEncoderDistancePerCount);
         pidController.setTolerance(0.5);
+
     }
 
     @Override
@@ -55,6 +56,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         SmartDashboard.putData("Elevator PID", pidController);
         SmartDashboard.putNumber("Elevator Speed", leftMotor.get());
         SmartDashboard.putNumber("Elevator Pos", getPosition());
+        setDefaultCommand(run(this::stop));
         Command command = getCurrentCommand();
         if (command != null)
             SmartDashboard.putString("Elevator Command", command.getName());
@@ -80,8 +82,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightMotor.setVoltage(volts);
     }
 
-    public void stop() {
-        setVolts(ElevatorConstants.kG);
+    public CommandBase stop() {
+        CommandBase command = run(() -> setVolts(ElevatorConstants.kG));
+        command.setName("ElevatorStop");
+        return command;
     }
 
     public void setGoalVolts(double goalPosition) {
@@ -91,7 +95,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveTo(double position) {
-        return run(() -> setGoalVolts(position)).until(pidController::atGoal).andThen(this::stop);
+        return run(() -> setGoalVolts(position)).until(pidController::atGoal);
     }
 
     public CommandBase raise() {
