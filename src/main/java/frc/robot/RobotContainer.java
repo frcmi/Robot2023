@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  public final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
@@ -67,23 +67,23 @@ public class RobotContainer {
       .onFalse(m_intakeSubsystem.stopCommand());
 
     // Elevator bindings
-    m_driverController.a().onTrue(m_elevatorSubsystem.moveTo(0.0));
-    m_driverController.y().onTrue(m_elevatorSubsystem.moveTo(0.40));
+    // m_driverController.a().onTrue(m_elevatorSubsystem.moveTo(0.0));
+    // m_driverController.y().onTrue(m_elevatorSubsystem.moveTo(0.40));
 
     // Arm bindings
     m_armSubsystem.setDefaultCommand(m_armSubsystem.stop());
-    m_driverController.x().onTrue(m_armSubsystem.moveTo(Math.toRadians(45)));
-    m_driverController.b().onTrue(m_armSubsystem.moveTo(Math.toRadians(-45)));
+    // m_driverController.x().onTrue(m_armSubsystem.moveTo(Math.toRadians(45)));
+    // m_driverController.b().onTrue(m_armSubsystem.moveTo(Math.toRadians(-45)));
     // Ground
-    m_driverController.povDown().onTrue(Setpoints.Ground(m_armSubsystem, m_elevatorSubsystem));
+    m_driverController.a().onTrue(Setpoints.Ground(m_armSubsystem, m_elevatorSubsystem));
     // Stow
-    m_driverController.povUp().onTrue(Setpoints.Stow(m_armSubsystem, m_elevatorSubsystem));
+    m_driverController.y().onTrue(Setpoints.Stow(m_armSubsystem, m_elevatorSubsystem));
     // L2/Substation
-    m_driverController.povRight().onTrue(Setpoints.L2(m_armSubsystem, m_elevatorSubsystem));
+    m_driverController.b().onTrue(Setpoints.L2(m_armSubsystem, m_elevatorSubsystem));
     // L3
-    m_driverController.povLeft().onTrue(Setpoints.L3(m_armSubsystem, m_elevatorSubsystem));
+    m_driverController.x().onTrue(Setpoints.L3(m_armSubsystem, m_elevatorSubsystem));
 
-    // m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
+    m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
     // LED Bindings
     // m_driverController.povUp()
     //   .onTrue(m_ledSubsystem.maroonLEDCommand());
@@ -113,6 +113,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+    // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+    // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
   }
 }

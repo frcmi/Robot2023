@@ -8,6 +8,9 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,10 +21,19 @@ public final class Autos {
     return Commands.waitSeconds(0); // Replace with real auto
   }
 
-  public static CommandBase moveSeconds(DriveSubsystem driveSub, double speed) {
+  public static CommandBase moveSeconds(DriveSubsystem driveSub, double speed, double seconds) {
     return Commands.run(() -> {
       driveSub.setSpeed(speed);
-    }).withTimeout(5).andThen(driveSub.stop());
+    }).withTimeout(seconds).andThen(driveSub.stop());
+  }
+
+  public static CommandBase moveThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
+    return score(intake, arm, elevator)
+      .andThen(moveSeconds(drive, 0.5, 2))
+      .andThen(Commands.waitSeconds(1))
+      .andThen(() -> drive.setBrakes(IdleMode.kBrake))
+      .andThen(moveSeconds(drive, 0.5, 1.65))
+      .andThen(drive.balanceCommand());
   }
 
   // Right now only cone l3
@@ -32,7 +44,7 @@ public final class Autos {
   }
 
   public static CommandBase scoreThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
-    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.5));
+    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.5, 5));
   }
 
   private Autos() {

@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
+
+import com.ctre.phoenix.CANifier.PinValues;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.SparkMax;
 
@@ -85,9 +87,16 @@ public class DriveSubsystem extends SubsystemBase {
     return runOnce(() -> diffDrive.stopMotor());
   }
 
+  public void setBrakes(IdleMode idleMode) {
+    frontLeft.setIdleMode(idleMode);
+    frontRight.setIdleMode(idleMode);
+    rearLeft.setIdleMode(idleMode);
+    rearRight.setIdleMode(idleMode);
+  }
+
   public float getPitch() {
     // NavX mounted upside down!
-    return navX.getPitch() * -1;
+    return navX.getPitch();
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
