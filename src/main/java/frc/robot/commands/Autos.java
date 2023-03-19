@@ -32,7 +32,7 @@ public final class Autos {
       .andThen(moveSeconds(drive, 0.5, 2))
       .andThen(Commands.waitSeconds(1))
       .andThen(() -> drive.setBrakes(IdleMode.kBrake))
-      .andThen(moveSeconds(drive, 0.5, 1.65))
+      .andThen(moveSeconds(drive, 0.5, 1.63))
       .andThen(drive.balanceCommand());
   }
 
