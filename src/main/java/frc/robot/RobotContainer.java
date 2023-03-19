@@ -9,6 +9,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.LEDConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Setpoints;
+import frc.robot.commands.BalanceOnChargingStation;
 import frc.robot.subsystems.*;
 
 import java.util.function.BooleanSupplier;
@@ -34,7 +35,7 @@ public class RobotContainer {
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   //private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem(LEDConstants.kLightPorts, LEDConstants.kLightsLengthsArray);
-
+  private final BalanceOnChargingStation m_newBalanceCommand = new BalanceOnChargingStation(m_driveSubsystem);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -51,6 +52,7 @@ public class RobotContainer {
 
   private void configureAutoCommands() {
     m_autoChooser.setDefaultOption("Score and balance", Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
+    m_autoChooser.addOption("Socre and NEW balace", Autos.moveThenNewBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_newBalanceCommand));
     m_autoChooser.addOption("Score and move", Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem));
     m_autoChooser.addOption("Only score", Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
 
@@ -109,6 +111,10 @@ public class RobotContainer {
   public DoubleSupplier axisFromButtons(BooleanSupplier firstButton, BooleanSupplier secondButton) {
     // Boolean as num is 0 or 1, this prevents fighting when both are pressed and normalizes [-1, 1]!
     return () -> Boolean.compare(firstButton.getAsBoolean(), false) - Boolean.compare(secondButton.getAsBoolean(), false);
+  }
+
+  public void scheduleBalance() {
+    Commands.run(m_newBalanceCommand::execute);
   }
 
   public void robotInit () {

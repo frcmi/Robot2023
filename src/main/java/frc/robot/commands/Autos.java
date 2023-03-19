@@ -36,6 +36,15 @@ public final class Autos {
       .andThen(drive.balanceCommand());
   }
 
+  public static CommandBase moveThenNewBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator, BalanceOnChargingStation balance) {
+    return score(intake, arm, elevator)
+      .andThen(moveSeconds(drive, 0.5, 2))
+      .andThen(Commands.waitSeconds(1))
+      .andThen(() -> drive.setBrakes(IdleMode.kBrake))
+      .andThen(moveSeconds(drive, 0.5, 1.65))
+      .andThen(balance);
+  }
+
   // Right now only cone l3
   public static CommandBase score(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator) {
       return Setpoints.L3(subsystem, elevator)
