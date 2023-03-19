@@ -14,6 +14,8 @@ import frc.robot.subsystems.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -38,10 +40,21 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  SendableChooser<Command> m_autoChooser = new SendableChooser<>();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    configureAutoCommands();
     configureBindings();
+  }
+
+  private void configureAutoCommands() {
+    m_autoChooser.setDefaultOption("Score and balance", Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
+    m_autoChooser.addOption("Score and move", Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem));
+    m_autoChooser.addOption("Only score", Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
+
+    SmartDashboard.putData("Auto Selector", m_autoChooser);
   }
 
   /**
@@ -112,9 +125,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
-    // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    return m_autoChooser.getSelected();
   }
 }
