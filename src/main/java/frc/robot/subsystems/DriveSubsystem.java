@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
+import io.github.oblarg.oblog.annotations.Log;
+
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.SparkMax;
 
@@ -29,14 +31,18 @@ public class DriveSubsystem extends SubsystemBase {
   // private final CANSparkMax rearLeft = new CANSparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
   // private final CANSparkMax frontRight = new CANSparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
   // private final CANSparkMax rearRight = new CANSparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
+  @Log(tabName= "Drivetrain", name = "Left Current", methodName = "getOutputCurrent")
+  @Log(tabName= "Drivetrain", name = "Left Speed", methodName = "get")
   private final SparkMax frontLeft = new SparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
   private final SparkMax rearLeft = new SparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
   private final SparkMax frontRight = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
   private final SparkMax rearRight = new SparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
 
-
+  @Log.MotorController(tabName= "Drivetrain", name = "Left Motor")
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
+
+  @Log.DifferentialDrive(tabName = "Drivetrain", name ="Differential Drive")
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
   private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
   private final AHRS navX = new AHRS();
@@ -82,6 +88,7 @@ public class DriveSubsystem extends SubsystemBase {
     return runOnce(() -> diffDrive.stopMotor());
   }
 
+  @Log.Encoder(name = "Gyro Pitch")
   public float getPitch() {
     // NavX mounted upside down!
     return navX.getPitch() * -1;
@@ -102,11 +109,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Gyro Pitch", getPitch());
-    SmartDashboard.putNumber("DT Current", frontLeft.getOutputCurrent());
-    SmartDashboard.putNumber("DT Speed", frontLeft.get());
-  }
+  public void periodic() {}
 
   @Override
   public void simulationPeriodic() {

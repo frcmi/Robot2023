@@ -37,6 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase implements Loggable {
 
     private final ElevatorFeedforward feedforward 
         = new ElevatorFeedforward(ElevatorConstants.kS, ElevatorConstants.kG, ElevatorConstants.kV, ElevatorConstants.kA);
+    @Log.Encoder(name = "Elevator Encoder")
     private final RelativeEncoder encoder = leftMotor.getEncoder();
 
     public ElevatorSubsystem() {

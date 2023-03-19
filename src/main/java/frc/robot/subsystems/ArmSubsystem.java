@@ -17,12 +17,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class ArmSubsystem extends SubsystemBase {
+public class ArmSubsystem extends SubsystemBase implements Loggable {
+    @Log(name = "Current", methodName = "getOutputCurrent")
     private final CANSparkMax leftMotor = new CANSparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final CANSparkMax rightMotor = new CANSparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    
+    @Log.Encoder(name = "Encoder")
     private final DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(ArmConstants.kEncoderDIOPort);
 
+    @Log(name = "PID")
     private final ProfiledPIDController pidController 
         = new ProfiledPIDController(ArmConstants.kP, ArmConstants.kI, ArmConstants.kD, 
             new TrapezoidProfile.Constraints(ArmConstants.kMaxVel, ArmConstants.kMaxAccel));
@@ -52,12 +58,12 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Arm Radians", getAngle());
+        //SmartDashboard.putNumber("Arm Radians", getAngle());
         SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
-        SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.get());
-        SmartDashboard.putData("Arm PID", pidController);
+        //SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.get());
+        //SmartDashboard.putData("Arm PID", pidController);
         SmartDashboard.putNumber("Arm PID Error", Math.toDegrees(pidController.getPositionError()));
-        SmartDashboard.putNumber("Arm Current", leftMotor.getOutputCurrent());
+        //SmartDashboard.putNumber("Arm Current", leftMotor.getOutputCurrent());
     }
 
     private void setSpeed(double speed) {
@@ -86,6 +92,7 @@ public class ArmSubsystem extends SubsystemBase {
         });
     }
 
+    @Log(tabName="Arm", name = "Radians")
     public double getAngle() {
         return -(absoluteEncoder.getAbsolutePosition() * 2 * Math.PI) + ArmConstants.encoderOffset;
     }
