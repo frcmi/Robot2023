@@ -38,8 +38,10 @@ public final class Autos {
 
   // Right now only cone l3
   public static CommandBase score(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator) {
-      return Setpoints.L3(subsystem, elevator)
-        .andThen(intake.intake().withTimeout(1))
+      return Setpoints.L3(subsystem, elevator).withTimeout(2.5)
+        .andThen(Commands.waitSeconds(0.5))
+        .andThen(intake.intake().withTimeout(0.25))
+        .andThen(intake.stopCommand())
         .andThen(Setpoints.Stow(subsystem, elevator));
   }
 
