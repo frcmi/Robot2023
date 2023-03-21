@@ -32,8 +32,6 @@ public final class Constants {
     // At a value of 0.10 the robot has a maximum of 10% turning speed when at max movement speed
     public static final double kMinimumTurnRateMultiplier = 0.10;
     
-    public static final int kNeoEncoderResolutionCPR = 42;
-
     public static final int currentLimit = 35;
     //Currently placeholder values, make sure to update before testing
     public static final int kFrontLeftMotorId = 1;
@@ -44,7 +42,7 @@ public final class Constants {
     public static final double kWheelDiameter = Units.inchesToMeters(5.0);
     public static final double kWheelCircumference = kWheelDiameter * Math.PI;
     public static final double kWheelGearRatio = (64 * 52) / (11*34); // Joey: dt should be 11:52 into 34:64
-    public static final double kWheelEncoderDistancePerCount = kWheelCircumference / kWheelGearRatio / kNeoEncoderResolutionCPR;
+    public static final double kWheelEncoderDistancePerRotation = kWheelCircumference / kWheelGearRatio;
 
   }
 
@@ -95,7 +93,7 @@ public final class Constants {
 
     public static final double kSprocketDiameter = 0.048; //metres
     public static final double kSprocketCircumference = Math.PI * kSprocketDiameter;
-    public static final double kElevatorEncoderDistancePerCount = kSprocketCircumference / kElevatorGearRatio;
+    public static final double kElevatorEncoderDistancePerRotation = kSprocketCircumference / kElevatorGearRatio;
   }
 
   public static class ArmConstants {

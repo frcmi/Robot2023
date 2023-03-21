@@ -38,7 +38,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightMotor.setIdleMode(IdleMode.kCoast);
         //rightMotor.burnFlash();
 
-        encoder.setPositionConversionFactor(ElevatorConstants.kElevatorEncoderDistancePerCount);
+        encoder.setPositionConversionFactor(ElevatorConstants.kElevatorEncoderDistancePerRotation);
         pidController.setTolerance(0.02);
 
     }
