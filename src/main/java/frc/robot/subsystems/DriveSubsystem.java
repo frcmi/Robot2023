@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -16,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
-import com.ctre.phoenix.CANifier.PinValues;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.SparkMax;
 
@@ -36,6 +36,9 @@ public class DriveSubsystem extends SubsystemBase {
   private final SparkMax frontRight = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
   private final SparkMax rearRight = new SparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
 
+
+  private final RelativeEncoder leftEncoder = frontLeft.getEncoder();
+  private final RelativeEncoder rightEncoder = frontRight.getEncoder();
 
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
@@ -69,6 +72,11 @@ public class DriveSubsystem extends SubsystemBase {
     rearRight.follow(frontRight);
     
     rightMotors.setInverted(true);
+
+    leftEncoder.setPositionConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
+    rightEncoder.setPositionConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
+    leftEncoder.setVelocityConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
+    rightEncoder.setVelocityConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
   }
 
   public CommandBase setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
@@ -94,9 +102,13 @@ public class DriveSubsystem extends SubsystemBase {
     rearRight.setIdleMode(idleMode);
   }
 
-  public float getPitch() {
+  public double getPitch() {
     // NavX mounted upside down!
     return navX.getPitch();
+  }
+
+  public double getHeading() {
+    return navX.getAngle();
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -122,8 +134,11 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Gyro Pitch", getPitch());
-    SmartDashboard.putNumber("DT Current", frontLeft.getOutputCurrent());
-    SmartDashboard.putNumber("DT Speed", frontLeft.get());
+    SmartDashboard.putNumber("Gyro Heading", getHeading());
+    SmartDashboard.putNumber("Drive Left Encoder Pos", leftEncoder.getPosition());
+    SmartDashboard.putNumber("Drive Right Encoder Pos", rightEncoder.getPosition());
+    SmartDashboard.putNumber("Drive Left Encoder Vel", leftEncoder.getVelocity());
+    SmartDashboard.putNumber("Drive Right Encoder Vel", rightEncoder.getVelocity());
     SmartDashboard.putNumber("Front Left Voltage", frontLeft.getBusVoltage());
     SmartDashboard.putNumber("Rear Left Voltage", rearLeft.getBusVoltage());
     SmartDashboard.putNumber("Front Right Voltage", frontRight.getBusVoltage());
