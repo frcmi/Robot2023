@@ -45,6 +45,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
+    SmartDashboard.setDefaultNumber("Min turn rate mult", DriveConstants.kMinimumTurnRateMultiplier);
+    SmartDashboard.setPersistent("Min turn rate mult");
     //frontLeft.restoreFactoryDefaults();
     frontLeft.setIdleMode(IdleMode.kCoast);
     frontLeft.setSmartCurrentLimit(DriveConstants.currentLimit);
@@ -71,15 +73,35 @@ public class DriveSubsystem extends SubsystemBase {
     rightMotors.setInverted(true);
   }
 
+  /** Gets maximum allowed turn rate (from [0..1]) for a given speed
+   * Desmos graph for math used: https://www.desmos.com/calculator/paezdrbpal
+   */
+  public double getMaxTurnRatePerSpeed(double speed) {
+    // Invert the minimum turn rate multiplier so that it's easier to use in the math
+    double minimumTurnRateMult = 1 - SmartDashboard.getNumber("Min turn rate mult", DriveConstants.kMinimumTurnRateMultiplier);
+
+    // Calculates speed used in calculation, used for expontential relationship between speed input and max turn rate allowed
+    double inputSpeed = Math.abs(Math.pow(speed, DriveConstants.kTurnRateExpontent));
+
+    return (minimumTurnRateMult * -inputSpeed) + 1;
+
+  }
   public CommandBase setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
     return run(() -> {
       double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier;
       // speed = speedFilter.calculate(speed);
       double rotation = rotationSupplier.getAsDouble() * OperatorConstants.kRotationMultiplier;
-      if (rotationLock.getAsBoolean())
-        diffDrive.arcadeDrive(0, rotation * 1.5);
-      else
-        diffDrive.curvatureDrive(speed, rotation, false);
+      double maxAllowedRotation = getMaxTurnRatePerSpeed(speed);
+      
+      // Clamp the rotation to a maximum of the maximum allowed rotation for the given speed
+      double clampedRotation = Math.min(maxAllowedRotation, Math.abs(rotation));
+
+      if (rotation < 0) {
+        clampedRotation *= -1;
+      }
+
+      diffDrive.arcadeDrive(speed, clampedRotation);
+    
     });
   }
 
@@ -95,7 +117,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public float getPitch() {
-    // NavX mounted upside down!
     return navX.getPitch();
   }
 
