@@ -45,11 +45,15 @@ public final class Constants {
     public static final double kWheelCircumference = kWheelDiameter * Math.PI;
     public static final double kWheelGearRatio = (11.0/60.0) * (32.0/64.0); // Joey: dt should be 11/60 * 32/64 Simplified: 352/3840
     public static final double kWheelEncoderDistancePerRotation = kWheelCircumference / kWheelGearRatio;
-    public static final double kS = 0.059397;
-    public static final double kV = 2.7959;
-    public static final double kA = 1.7332;
+    public static final double kS = 0.20995;
+    public static final double kV = 2.6071;
+    public static final double kA = 1.127;
     public static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
     public static final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.5);
+    public static final double kMaxSpeedMetersPerSecond = 4;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 2;
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
   }
 
   public static class LEDConstants {
