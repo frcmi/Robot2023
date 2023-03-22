@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import javax.swing.plaf.basic.BasicGraphicsUtils;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.subsystems.DriveSubsystem; 
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -21,6 +25,9 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private boolean breakMode = true;
+  
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -73,23 +80,36 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {}
 
+  public double matchTime = 0; 
   @Override
   public void teleopInit() {
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    matchTime = Timer.getMatchTime();
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
 
     m_robotContainer.m_driveSubsystem.setBrakes(IdleMode.kCoast);
   }
 
   /** This function is called periodically during operator control. */
+  //total Match time = 150sec, auto = 15sec
   @Override
   public void teleopPeriodic() {
     m_robotContainer.teleopPeriodic();
+
+    if (matchTime <= 15 && breakMode) {
+      
+      m_robotContainer.m_driveSubsystem.setBrakes(IdleMode.kBrake);
+      breakMode = false;
+
+    }
+
   }
 
   @Override
