@@ -11,8 +11,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,15 +33,10 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DriveSubsystem extends SubsystemBase {
-  // private final CANSparkMax frontLeft = new CANSparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
-  // private final CANSparkMax rearLeft = new CANSparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
-  // private final CANSparkMax frontRight = new CANSparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
-  // private final CANSparkMax rearRight = new CANSparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
   private final SparkMax frontLeft = new SparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
   private final SparkMax rearLeft = new SparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
   private final SparkMax frontRight = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
   private final SparkMax rearRight = new SparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
-
 
   private final RelativeEncoder leftEncoder = frontLeft.getEncoder();
   private final RelativeEncoder rightEncoder = frontRight.getEncoder();
@@ -45,8 +44,13 @@ public class DriveSubsystem extends SubsystemBase {
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
-  private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
   private final AHRS navX = new AHRS();
+
+  private Pose2d m_pose = new Pose2d(0, 0, new Rotation2d(0));
+  private final Field2d field2d = new Field2d();
+  private final DifferentialDriveOdometry m_odometry 
+    = new DifferentialDriveOdometry(navX.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition(), m_pose);
+
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
@@ -130,8 +134,8 @@ public class DriveSubsystem extends SubsystemBase {
     return navX.getRoll();
   }
 
-  public double getHeading() {
-    return navX.getAngle();
+  public Rotation2d getHeading() {
+    return navX.getRotation2d();
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -141,6 +145,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setSpeed(double speed) {
     diffDrive.tankDrive(speed, speed);
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
+    m_odometry.resetPosition(getHeading(), 0, 0, pose);
   }
 
   public CommandBase balanceCommand() {
@@ -158,6 +168,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    field2d.setRobotPose(m_pose);
+
+      rightEncoder.getPosition());
+      leftEncoder.getPosition(),
+    m_pose = m_odometry.update(gyroAngle,
+    // Update the pose
+    Rotation2d gyroAngle = navX.getRotation2d();
+
     SmartDashboard.putNumber("Gyro Pitch", navX.getPitch());
     SmartDashboard.putNumber("Gyro Yaw", navX.getYaw());
     SmartDashboard.putNumber("Gyro Roll", navX.getRoll());
