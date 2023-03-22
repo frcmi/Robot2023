@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
@@ -38,7 +40,11 @@ public final class Constants {
     public static final double kWheelCircumference = kWheelDiameter * Math.PI;
     public static final double kWheelGearRatio = 8.89839; // Joey: dt should be 11:52 into 34:64
     public static final double kWheelEncoderDistancePerRotation = kWheelCircumference / kWheelGearRatio;
-
+    public static final double kS = 0.059397;
+    public static final double kV = 2.7959;
+    public static final double kA = 1.7332;
+    public static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
+    public static final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.5);
   }
 
   public static class LEDConstants {
