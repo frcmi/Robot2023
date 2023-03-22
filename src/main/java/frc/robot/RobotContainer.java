@@ -14,6 +14,9 @@ import frc.robot.subsystems.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -115,8 +118,8 @@ public class RobotContainer {
     // An example command will be run in autonomous
     // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
     // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    // return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    return m_driveSubsystem.followTrajectoryCommand(PathPlanner.loadPath("1.5+B P1", new PathConstraints(4, 3)), true);
     // return Autos.moveThenBalanceMobility(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-
   }
 }
