@@ -10,8 +10,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,15 +31,10 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class DriveSubsystem extends SubsystemBase {
-  // private final CANSparkMax frontLeft = new CANSparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
-  // private final CANSparkMax rearLeft = new CANSparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
-  // private final CANSparkMax frontRight = new CANSparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
-  // private final CANSparkMax rearRight = new CANSparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
   private final SparkMax frontLeft = new SparkMax(DriveConstants.kFrontLeftMotorId, MotorType.kBrushless);
   private final SparkMax rearLeft = new SparkMax(DriveConstants.kRearLeftMotorId, MotorType.kBrushless);
   private final SparkMax frontRight = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
   private final SparkMax rearRight = new SparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
-
 
   private final RelativeEncoder leftEncoder = frontLeft.getEncoder();
   private final RelativeEncoder rightEncoder = frontRight.getEncoder();
@@ -43,8 +42,13 @@ public class DriveSubsystem extends SubsystemBase {
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
   private final MotorControllerGroup rightMotors = new MotorControllerGroup(frontRight, rearRight);
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
-  private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
   private final AHRS navX = new AHRS();
+
+  private Pose2d m_pose = new Pose2d(0, 0, new Rotation2d(0));
+  private final Field2d field2d = new Field2d();
+  private final DifferentialDriveOdometry m_odometry 
+    = new DifferentialDriveOdometry(navX.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition(), m_pose);
+
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
@@ -107,8 +111,8 @@ public class DriveSubsystem extends SubsystemBase {
     return navX.getPitch();
   }
 
-  public double getHeading() {
-    return navX.getAngle();
+  public Rotation2d getHeading() {
+    return navX.getRotation2d();
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -118,6 +122,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setSpeed(double speed) {
     diffDrive.tankDrive(speed, speed);
+  }
+
+  public void resetOdometry(Pose2d pose) {
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
+    m_odometry.resetPosition(getHeading(), 0, 0, pose);
   }
 
   public CommandBase balanceCommand() {
@@ -133,16 +143,24 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    Rotation2d gyroAngle = navX.getRotation2d();
+
+    // Update the pose
+    m_pose = m_odometry.update(gyroAngle,
+      leftEncoder.getPosition(),
+      rightEncoder.getPosition());
+
+    field2d.setRobotPose(m_pose);
+
     SmartDashboard.putNumber("Gyro Pitch", getPitch());
-    SmartDashboard.putNumber("Gyro Heading", getHeading());
+    SmartDashboard.putNumber("Gyro Heading", getHeading().getDegrees());
     SmartDashboard.putNumber("Drive Left Encoder Pos", leftEncoder.getPosition());
     SmartDashboard.putNumber("Drive Right Encoder Pos", rightEncoder.getPosition());
     SmartDashboard.putNumber("Drive Left Encoder Vel", leftEncoder.getVelocity());
     SmartDashboard.putNumber("Drive Right Encoder Vel", rightEncoder.getVelocity());
     SmartDashboard.putNumber("Front Left Voltage", frontLeft.getBusVoltage());
-    SmartDashboard.putNumber("Rear Left Voltage", rearLeft.getBusVoltage());
     SmartDashboard.putNumber("Front Right Voltage", frontRight.getBusVoltage());
-    SmartDashboard.putNumber("Rear Right Voltage", rearRight.getBusVoltage());
+    SmartDashboard.putData("Field", field2d);
   }
 
   @Override
