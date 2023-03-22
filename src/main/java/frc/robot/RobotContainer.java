@@ -14,6 +14,9 @@ import frc.robot.subsystems.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -114,7 +117,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
-    return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
     // return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    return m_driveSubsystem.followTrajectoryCommand(PathPlanner.loadPath("1.5+B P1", new PathConstraints(4, 3)), true);
   }
 }
