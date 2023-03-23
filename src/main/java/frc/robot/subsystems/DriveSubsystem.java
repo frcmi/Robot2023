@@ -54,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final AHRS navX = new AHRS();
 
   private Pose2d m_pose = new Pose2d(0, 0, new Rotation2d(0));
-  public PathPlannerTrajectory traj;
+  private PathPlannerTrajectory m_traj;
   private final Field2d field2d = new Field2d();
   private final DifferentialDriveOdometry m_odometry 
     = new DifferentialDriveOdometry(navX.getRotation2d(), -leftEncoder.getPosition(), rightEncoder.getPosition(), m_pose);
@@ -196,9 +196,9 @@ public class DriveSubsystem extends SubsystemBase {
       rightEncoder.getPosition());
 
     field2d.setRobotPose(m_pose);
-    if (traj != null)
+    if (m_traj != null)
     {
-      field2d.getObject("traj").setTrajectory(traj);
+      field2d.getObject("traj").setTrajectory(m_traj);
     }
 
     SmartDashboard.putNumber("Gyro Pitch", navX.getPitch());
@@ -217,6 +217,10 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  public void setTrajectory(PathPlannerTrajectory traj){
+    this.m_traj = traj;
   }
 
   public CommandBase followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {

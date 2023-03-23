@@ -121,6 +121,6 @@ public class RobotContainer {
     // return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
     var traj = PathPlanner.loadPath("1.5+B", new PathConstraints(0.2,0.1), true);
     //System.out.println(traj.getState(0));
-    m_driveSubsystem.traj = traj;
+    m_driveSubsystem.setTrajectory(traj);
     return m_driveSubsystem.followTrajectoryCommand(traj, true);  }
 }
