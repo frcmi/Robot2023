@@ -26,6 +26,7 @@ import frc.robot.Constants.OperatorConstants;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPRamseteCommand;
 
 import frc.robot.SparkMax;
@@ -33,6 +34,7 @@ import frc.robot.SparkMax;
 
 import frc.robot.Constants.DriveConstants;
 
+import java.util.HashMap;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
@@ -54,7 +56,6 @@ public class DriveSubsystem extends SubsystemBase {
   private final Field2d field2d = new Field2d();
   private final DifferentialDriveOdometry m_odometry 
     = new DifferentialDriveOdometry(navX.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition(), m_pose);
-
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
@@ -205,4 +206,14 @@ public class DriveSubsystem extends SubsystemBase {
             this // Requires this drive subsystem
         ));
   }
+
+  public FollowPathWithEvents getPathWithEvents(PathPlannerTrajectory traj) {
+    FollowPathWithEvents pathWithEvents = new FollowPathWithEvents(
+      followTrajectoryCommand(traj, true),
+      traj.getMarkers(),
+      DriveConstants.kEventMap
+    );
+    return pathWithEvents;
+  }
+
 }

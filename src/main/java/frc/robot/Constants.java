@@ -4,10 +4,16 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
+import com.pathplanner.lib.PathConstraints;
+
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -49,6 +55,8 @@ public final class Constants {
     public static final double kMaxAccelerationMetersPerSecondSquared = 2;
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
+    public static final HashMap<String, Command> kEventMap = new HashMap<>();
+    public static final PathConstraints kPathConstraints = new PathConstraints(4, 3);
   }
 
   public static class LEDConstants {

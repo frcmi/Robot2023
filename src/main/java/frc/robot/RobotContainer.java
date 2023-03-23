@@ -45,6 +45,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    hashmapInit();
   }
 
   /**
@@ -101,6 +102,14 @@ public class RobotContainer {
     return () -> Boolean.compare(firstButton.getAsBoolean(), false) - Boolean.compare(secondButton.getAsBoolean(), false);
   }
 
+  public void hashmapInit() {
+    DriveConstants.kEventMap.put("groundSetpoint", Setpoints.Ground(m_armSubsystem, m_elevatorSubsystem));
+    DriveConstants.kEventMap.put("stowSetpoint", Setpoints.Stow(m_armSubsystem, m_elevatorSubsystem));
+    DriveConstants.kEventMap.put("highSetpoint", Setpoints.L3(m_armSubsystem, m_elevatorSubsystem));
+    DriveConstants.kEventMap.put("intake", m_intakeSubsystem.intake());
+    DriveConstants.kEventMap.put("outtake", m_intakeSubsystem.reverseIntake());
+  }
+
   public void robotInit () {
     SparkMax.burnFlashInSync();
   }
@@ -119,6 +128,7 @@ public class RobotContainer {
     // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
     // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
     // return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    return m_driveSubsystem.followTrajectoryCommand(PathPlanner.loadPath("1.5+B P1", new PathConstraints(4, 3)), true);
+    //return m_driveSubsystem.followTrajectoryCommand(PathPlanner.loadPath("1.5+B P1", DriveConstants.kPathConstraints), true);
+    return m_driveSubsystem.getPathWithEvents(PathPlanner.loadPath("1.5+B P1", DriveConstants.kPathConstraints));
   }
 }
