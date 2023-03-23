@@ -119,7 +119,8 @@ public class RobotContainer {
     // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
     // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
     // return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    return m_driveSubsystem.followTrajectoryCommand(PathPlanner.loadPath("1.5+B P1", new PathConstraints(4, 3)), true);
-    // return Autos.moveThenBalanceMobility(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-  }
+    var traj = PathPlanner.loadPath("1.5+B", new PathConstraints(0.2,0.1), true);
+    //System.out.println(traj.getState(0));
+    m_driveSubsystem.traj = traj;
+    return m_driveSubsystem.followTrajectoryCommand(traj, true);  }
 }

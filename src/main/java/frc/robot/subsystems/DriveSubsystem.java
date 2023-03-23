@@ -14,6 +14,8 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -52,9 +54,10 @@ public class DriveSubsystem extends SubsystemBase {
   private final AHRS navX = new AHRS();
 
   private Pose2d m_pose = new Pose2d(0, 0, new Rotation2d(0));
+  public PathPlannerTrajectory traj;
   private final Field2d field2d = new Field2d();
   private final DifferentialDriveOdometry m_odometry 
-    = new DifferentialDriveOdometry(navX.getRotation2d(), leftEncoder.getPosition(), rightEncoder.getPosition(), m_pose);
+    = new DifferentialDriveOdometry(navX.getRotation2d(), -leftEncoder.getPosition(), rightEncoder.getPosition(), m_pose);
 
 
   /** Creates a new ExampleSubsystem. */
@@ -84,15 +87,14 @@ public class DriveSubsystem extends SubsystemBase {
     rearLeft.follow(frontLeft);
     rearRight.follow(frontRight);
     
-    leftMotors.setInverted(true);
+    rightMotors.setInverted(true);
 
     leftEncoder.setPositionConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
     rightEncoder.setPositionConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
     leftEncoder.setVelocityConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation/60);
     rightEncoder.setVelocityConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation/60);
 
-    Pose2d pose = new Pose2d();
-    this.resetOdometry(pose);
+    //Pose2d pose = new Pose2d(new Translation2d(), new Rotation2d(-Math.PI));
   }
 
   /** Gets maximum allowed turn rate (from [0..1]) for a given speed
@@ -158,7 +160,9 @@ public class DriveSubsystem extends SubsystemBase {
   public void resetOdometry(Pose2d pose) {
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
+    //pose = pose.plus(new Transform2d(new Translation2d(), new Rotation2d(Math.PI)));
     m_odometry.resetPosition(getHeading(), 0, 0, pose);
+    m_pose=pose;
   }
 
   public Pose2d getPose() {
@@ -191,6 +195,12 @@ public class DriveSubsystem extends SubsystemBase {
       -leftEncoder.getPosition(),
       rightEncoder.getPosition());
 
+    field2d.setRobotPose(m_pose);
+    if (traj != null)
+    {
+      field2d.getObject("traj").setTrajectory(traj);
+    }
+
     SmartDashboard.putNumber("Gyro Pitch", navX.getPitch());
     SmartDashboard.putNumber("Gyro Yaw", navX.getYaw());
     SmartDashboard.putNumber("Gyro Roll", navX.getRoll());
@@ -216,7 +226,7 @@ public class DriveSubsystem extends SubsystemBase {
               this.resetOdometry(traj.getInitialPose());
           }
 
-          field2d.getRobotObject().setTrajectory(traj);
+         // field2d.getRobotObject().setTrajectory(traj);
         }).andThen(
         new PPRamseteCommand(
             traj, 
@@ -225,8 +235,8 @@ public class DriveSubsystem extends SubsystemBase {
             DriveConstants.feedforward,
             DriveConstants.kinematics, // DifferentialDriveKinematics
             this::getWheelSpeeds, // DifferentialDriveWheelSpeeds supplier
-            new PIDController(1, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(1, 0, 0), // Right controller (usually the same values as left controller)
+            new PIDController(0, 0, 0), // Left controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(0, 0, 0), // Right controller (usually the same values as left controller)
             this::tankDriveVolts, // Voltage biconsumer
             false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
             this // Requires this drive subsystem
