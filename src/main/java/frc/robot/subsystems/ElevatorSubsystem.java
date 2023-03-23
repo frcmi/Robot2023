@@ -49,7 +49,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         // SmartDashboard.putNumber("Elevator Speed", leftMotor.get());
         setGoalVolts(goalPosition);
         
-        SmartDashboard.putNumber("Elevator Pos", getPosition());
+        // SmartDashboard.putNumber("Elevator Pos", getPosition());
         Command command = getCurrentCommand();
         if (command != null)
             SmartDashboard.putString("Elevator Command", command.getName());
@@ -71,8 +71,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (position > ElevatorConstants.maxPos)
             volts = Math.max(-2, Math.min(0, volts));
         
-        SmartDashboard.putBoolean("Elevator Bounds", !outOfBounds);
-        SmartDashboard.putNumber("Elevator Out Volts", volts);
+        // SmartDashboard.putBoolean("Elevator Bounds", !outOfBounds);
+        // SmartDashboard.putNumber("Elevator Out Volts", volts);
 
         leftMotor.setVoltage(volts);
         rightMotor.setVoltage(volts);

@@ -50,7 +50,7 @@ public class ArmSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // SmartDashboard.putNumber("Arm Radians", getAngle());
-        SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
+        // SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
         // SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.getAbsolutePosition());
         // SmartDashboard.putData("Arm PID", pidController);
         // SmartDashboard.putNumber("Arm PID Error Deg", Math.toDegrees(pidController.getPositionError()));
@@ -59,9 +59,9 @@ public class ArmSubsystem extends SubsystemBase {
     private void setVolts(double volts) {
         double angle = getAngle();
         double kg = feedforward.calculate(angle, 0);
-        SmartDashboard.putNumber("Arm Voltage Input", volts);
+        // SmartDashboard.putNumber("Arm Voltage Input", volts);
         // SmartDashboard.putNumber("Arm kg", kg);
-        SmartDashboard.putBoolean("Arm Bounds", !(angle > ArmConstants.maxAngle || angle < ArmConstants.minAngle));
+        // SmartDashboard.putBoolean("Arm Bounds", !(angle > ArmConstants.maxAngle || angle < ArmConstants.minAngle));
         // Stop movement if outside bounds
         if (angle < ArmConstants.minAngle) 
             volts = Math.max(kg, Math.min(2, volts));
@@ -82,9 +82,9 @@ public class ArmSubsystem extends SubsystemBase {
         double pidOutput = pidController.calculate(getAngle(), goalAngle);
         State setpoint = pidController.getSetpoint();
         double ffOutpout = feedforward.calculate(setpoint.position, setpoint.velocity);
-        SmartDashboard.putNumber("Arm FF Out", ffOutpout);
-        SmartDashboard.putNumber("Arm PID Out", pidOutput);
-        SmartDashboard.putNumber("Arm Goal Volts", pidOutput + ffOutpout);
+        // SmartDashboard.putNumber("Arm FF Out", ffOutpout);
+        // SmartDashboard.putNumber("Arm PID Out", pidOutput);
+        // SmartDashboard.putNumber("Arm Goal Volts", pidOutput + ffOutpout);
         setVolts(pidOutput + ffOutpout);  
     }
       

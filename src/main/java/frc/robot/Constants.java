@@ -49,7 +49,7 @@ public final class Constants {
     public static final double kV = 2.6071;
     public static final double kA = 1.127;
     public static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
-    public static final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.5);
+    public static final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(0.58);
     public static final double kMaxSpeedMetersPerSecond = 4;
     public static final double kMaxAccelerationMetersPerSecondSquared = 2;
     public static final double kRamseteB = 2;

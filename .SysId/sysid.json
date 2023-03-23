@@ -1,20 +1,13 @@
 {
   "SysId": {
     "Analysis Type": "Drivetrain",
-    "Generator": {
+    "Analyzer": {
       "window": {
         "visible": false
       }
     },
     "NetworkTables Settings": {
       "serverTeam": "5937"
-    },
-    "Program Log": {
-      "window": {
-        "visible": false
-      }
-    },
-    "mode": "Client (NT4)",
-    "serverTeam": "5937"
+    }
   }
 }

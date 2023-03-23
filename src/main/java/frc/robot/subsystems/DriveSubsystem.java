@@ -43,7 +43,7 @@ public class DriveSubsystem extends SubsystemBase {
   private final SparkMax frontRight = new SparkMax(DriveConstants.kFrontRightMotorId, MotorType.kBrushless);
   private final SparkMax rearRight = new SparkMax(DriveConstants.kRearRightMotorId, MotorType.kBrushless);
 
-  private final RelativeEncoder leftEncoder = frontLeft.getEncoder();
+  private final RelativeEncoder leftEncoder = rearLeft.getEncoder();
   private final RelativeEncoder rightEncoder = frontRight.getEncoder();
 
   private final MotorControllerGroup leftMotors = new MotorControllerGroup(frontLeft, rearLeft);
@@ -84,12 +84,15 @@ public class DriveSubsystem extends SubsystemBase {
     rearLeft.follow(frontLeft);
     rearRight.follow(frontRight);
     
-    rightMotors.setInverted(true);
+    leftMotors.setInverted(true);
 
     leftEncoder.setPositionConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
     rightEncoder.setPositionConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
-    leftEncoder.setVelocityConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
-    rightEncoder.setVelocityConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
+    leftEncoder.setVelocityConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation/60);
+    rightEncoder.setVelocityConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation/60);
+
+    Pose2d pose = new Pose2d();
+    this.resetOdometry(pose);
   }
 
   /** Gets maximum allowed turn rate (from [0..1]) for a given speed
@@ -163,7 +166,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+    return new DifferentialDriveWheelSpeeds(-leftEncoder.getVelocity(), rightEncoder.getVelocity());
   }
 
   public CommandBase balanceCommand() {
@@ -183,11 +186,10 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     field2d.setRobotPose(m_pose);
 
-      rightEncoder.getPosition());
-      leftEncoder.getPosition(),
-    m_pose = m_odometry.update(gyroAngle,
     // Update the pose
-    Rotation2d gyroAngle = navX.getRotation2d();
+    m_pose = m_odometry.update(gyroAngle,
+      -leftEncoder.getPosition(),
+      rightEncoder.getPosition());
 
     SmartDashboard.putNumber("Gyro Pitch", navX.getPitch());
     SmartDashboard.putNumber("Gyro Yaw", navX.getYaw());
