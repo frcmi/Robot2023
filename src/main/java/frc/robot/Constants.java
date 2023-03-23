@@ -27,6 +27,11 @@ public final class Constants {
   }
 
   public static class DriveConstants {
+    // An integer greater than or equal to 1 which controls at what speeds maximum turn rate is allowed (this is expontential) 
+    public static final int kTurnRateExpontent = 3;
+    // At a value of 0.10 the robot has a maximum of 10% turning speed when at max movement speed
+    public static final double kMinimumTurnRateMultiplier = 0.10;
+    
     public static final int currentLimit = 35;
     //Currently placeholder values, make sure to update before testing
     public static final int kFrontLeftMotorId = 1;
