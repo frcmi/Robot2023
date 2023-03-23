@@ -16,6 +16,13 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class LoggingConfig {
+    public static final boolean armSubsystemLogging = false;
+    public static final boolean drivetrainSubsystemLogging = false;
+    public static final boolean elevatorSubsystemLogging = false;
+    public static final boolean intakeSubsystemLogging = false;
+
+  }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
     public static final double kSpeedMultiplier = 0.75;

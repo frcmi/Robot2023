@@ -6,12 +6,14 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SparkMax;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.LoggingConfig;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
@@ -25,6 +27,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final RelativeEncoder encoder = leftMotor.getEncoder();
 
     private double goalPosition = 0.0;
+    ShuffleboardTab shuffleBoardTab = Shuffleboard.getTab("Elevator");
 
     public ElevatorSubsystem() {
         //leftMotor.restoreFactoryDefaults();
@@ -46,15 +49,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // SmartDashboard.putData("Elevator PID", pidController);
-        // SmartDashboard.putNumber("Elevator Speed", leftMotor.get());
+        // shuffleBoardTab.add("Elevator Speed", leftMotor.get());
         setGoalVolts(goalPosition);
         
-        SmartDashboard.putNumber("Elevator Pos", getPosition());
-        Command command = getCurrentCommand();
-        if (command != null)
-            SmartDashboard.putString("Elevator Command", command.getName());
-        else
-            SmartDashboard.putString("Elevator Command", "null");
+        if (LoggingConfig.elevatorSubsystemLogging){
+            shuffleBoardTab.add("Elevator Pos", getPosition());
+            Command command = getCurrentCommand();
+            if (command != null)
+                shuffleBoardTab.add("Elevator Command", command.getName());
+            else
+                shuffleBoardTab.add("Elevator Command", "null");
+        }
     }
 
     public double getPosition() {
@@ -71,9 +76,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (position > ElevatorConstants.maxPos)
             volts = Math.max(-2, Math.min(0, volts));
         
-        SmartDashboard.putBoolean("Elevator Bounds", !outOfBounds);
-        SmartDashboard.putNumber("Elevator Out Volts", volts);
-
+        if (LoggingConfig.elevatorSubsystemLogging){
+            shuffleBoardTab.add("Elevator Bounds", !outOfBounds);
+            shuffleBoardTab.add("Elevator Out Volts", volts);
+        }
+        
         leftMotor.setVoltage(volts);
         rightMotor.setVoltage(volts);
     }

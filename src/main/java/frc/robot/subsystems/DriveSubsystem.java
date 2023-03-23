@@ -10,12 +10,17 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.LoggingConfig;
 
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.SparkMax;
@@ -46,10 +51,15 @@ public class DriveSubsystem extends SubsystemBase {
   private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
   private final AHRS navX = new AHRS();
 
+  ShuffleboardTab shuffleBoardTab = Shuffleboard.getTab("Drive");
+  private GenericEntry minimumTurnRateMultiplier;
+
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
-    SmartDashboard.setDefaultNumber("Min turn rate mult", DriveConstants.kMinimumTurnRateMultiplier);
-    SmartDashboard.setPersistent("Min turn rate mult");
+    minimumTurnRateMultiplier = shuffleBoardTab
+      .addPersistent("Min turn rate mult", DriveConstants.kMinimumTurnRateMultiplier)
+      .getEntry(); 
+    
     //frontLeft.restoreFactoryDefaults();
     frontLeft.setIdleMode(IdleMode.kCoast);
     frontLeft.setSmartCurrentLimit(DriveConstants.currentLimit);
@@ -86,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getMaxTurnRatePerSpeed(double speed) {
     // Invert the minimum turn rate multiplier so that it's easier to use in the math
-    double minimumTurnRateMult = 1 - SmartDashboard.getNumber("Min turn rate mult", DriveConstants.kMinimumTurnRateMultiplier);
+    double minimumTurnRateMult = 1 - minimumTurnRateMultiplier.getDouble(DriveConstants.kMinimumTurnRateMultiplier);
 
     // Calculates speed used in calculation, used for expontential relationship between speed input and max turn rate allowed
     double inputSpeed = Math.abs(Math.pow(speed, DriveConstants.kTurnRateExpontent));
@@ -155,16 +165,18 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Gyro Pitch", getPitch());
-    SmartDashboard.putNumber("Gyro Heading", getHeading());
-    SmartDashboard.putNumber("Drive Left Encoder Pos", leftEncoder.getPosition());
-    SmartDashboard.putNumber("Drive Right Encoder Pos", rightEncoder.getPosition());
-    SmartDashboard.putNumber("Drive Left Encoder Vel", leftEncoder.getVelocity());
-    SmartDashboard.putNumber("Drive Right Encoder Vel", rightEncoder.getVelocity());
-    SmartDashboard.putNumber("Front Left Voltage", frontLeft.getBusVoltage());
-    SmartDashboard.putNumber("Rear Left Voltage", rearLeft.getBusVoltage());
-    SmartDashboard.putNumber("Front Right Voltage", frontRight.getBusVoltage());
-    SmartDashboard.putNumber("Rear Right Voltage", rearRight.getBusVoltage());
+    if (LoggingConfig.drivetrainSubsystemLogging){
+      shuffleBoardTab.add("Gyro Pitch", getPitch());
+      shuffleBoardTab.add("Gyro Heading", getHeading());
+      shuffleBoardTab.add("Drive Left Encoder Pos", leftEncoder.getPosition());
+      shuffleBoardTab.add("Drive Right Encoder Pos", rightEncoder.getPosition());
+      shuffleBoardTab.add("Drive Left Encoder Vel", leftEncoder.getVelocity());
+      shuffleBoardTab.add("Drive Right Encoder Vel", rightEncoder.getVelocity());
+      shuffleBoardTab.add("Front Left Voltage", frontLeft.getBusVoltage());
+      shuffleBoardTab.add("Rear Left Voltage", rearLeft.getBusVoltage());
+      shuffleBoardTab.add("Front Right Voltage", frontRight.getBusVoltage());
+      shuffleBoardTab.add("Rear Right Voltage", rearRight.getBusVoltage());
+    }
   }
 
   @Override

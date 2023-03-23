@@ -12,12 +12,14 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SparkMax;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.LoggingConfig;
 
 public class ArmSubsystem extends SubsystemBase {
     private final SparkMax leftMotor = new SparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -31,6 +33,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     double lastSpeed = 0;
     double lastTime = Timer.getFPGATimestamp();
+    ShuffleboardTab shuffleBoardTab = Shuffleboard.getTab("Arm");
 
     public ArmSubsystem() {
         leftMotor.setSmartCurrentLimit(ArmConstants.kCurrentLimit);
@@ -49,27 +52,31 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("Arm Radians", getAngle());
-        SmartDashboard.putNumber("Arm Degrees", Math.toDegrees(getAngle()));
-        // SmartDashboard.putNumber("Arm Encoder", absoluteEncoder.getAbsolutePosition());
-        // SmartDashboard.putData("Arm PID", pidController);
-        // SmartDashboard.putNumber("Arm PID Error Deg", Math.toDegrees(pidController.getPositionError()));
+        if (LoggingConfig.armSubsystemLogging){ 
+            // shuffleBoardTab.add("Arm Radians", getAngle());
+            shuffleBoardTab.add("Arm Degrees", Math.toDegrees(getAngle()));
+            // shuffleBoardTab.add("Arm Encoder", absoluteEncoder.getAbsolutePosition());
+            // SmartDashboard.putData("Arm PID", pidController);
+            // shuffleBoardTab.add("Arm PID Error Deg", Math.toDegrees(pidController.getPositionError()));
+        }
     }
 
     private void setVolts(double volts) {
         double angle = getAngle();
         double kg = feedforward.calculate(angle, 0);
-        SmartDashboard.putNumber("Arm Voltage Input", volts);
-        // SmartDashboard.putNumber("Arm kg", kg);
-        SmartDashboard.putBoolean("Arm Bounds", !(angle > ArmConstants.maxAngle || angle < ArmConstants.minAngle));
-        // Stop movement if outside bounds
+        if (LoggingConfig.armSubsystemLogging){
+            shuffleBoardTab.add("Arm Voltage Input", volts);
+            // shuffleBoardTab.add("Arm kg", kg);
+            shuffleBoardTab.add("Arm Bounds", !(angle > ArmConstants.maxAngle || angle < ArmConstants.minAngle));
+            // Stop movement if outside bounds
+        }
         if (angle < ArmConstants.minAngle) 
             volts = Math.max(kg, Math.min(2, volts));
         if (angle > ArmConstants.maxAngle)
             volts = Math.max(-2, Math.min(kg, volts));
 
-        // SmartDashboard.putNumber("Arm Voltage Set", volts);
-        // SmartDashboard.putNumber("Arm Voltage Left", leftMotor.getAppliedOutput());
+        // shuffleBoardTab.add("Arm Voltage Set", volts);
+        // shuffleBoardTab.add("Arm Voltage Left", leftMotor.getAppliedOutput());
         leftMotor.setVoltage(volts);
         rightMotor.setVoltage(volts);
     }
@@ -82,9 +89,11 @@ public class ArmSubsystem extends SubsystemBase {
         double pidOutput = pidController.calculate(getAngle(), goalAngle);
         State setpoint = pidController.getSetpoint();
         double ffOutpout = feedforward.calculate(setpoint.position, setpoint.velocity);
-        SmartDashboard.putNumber("Arm FF Out", ffOutpout);
-        SmartDashboard.putNumber("Arm PID Out", pidOutput);
-        SmartDashboard.putNumber("Arm Goal Volts", pidOutput + ffOutpout);
+        if (LoggingConfig.armSubsystemLogging){
+            shuffleBoardTab.add("Arm FF Out", ffOutpout);
+            shuffleBoardTab.add("Arm PID Out", pidOutput);
+            shuffleBoardTab.add("Arm Goal Volts", pidOutput + ffOutpout);
+        }
         setVolts(pidOutput + ffOutpout);  
     }
       
