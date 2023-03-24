@@ -47,6 +47,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    hashmapInit();
   }
 
   /**
@@ -101,6 +102,14 @@ public class RobotContainer {
     return () -> Boolean.compare(firstButton.getAsBoolean(), false) - Boolean.compare(secondButton.getAsBoolean(), false);
   }
 
+  public void hashmapInit() {
+    DriveConstants.kEventMap.put("groundSetpoint", Setpoints.Ground(m_armSubsystem, m_elevatorSubsystem));
+    DriveConstants.kEventMap.put("stowSetpoint", Setpoints.Stow(m_armSubsystem, m_elevatorSubsystem));
+    DriveConstants.kEventMap.put("highSetpoint", Setpoints.L3(m_armSubsystem, m_elevatorSubsystem));
+    DriveConstants.kEventMap.put("intake", m_intakeSubsystem.intake());
+    DriveConstants.kEventMap.put("outtake", m_intakeSubsystem.reverseIntake());
+  }
+
   public void robotInit () {
     SparkMax.burnFlashInSync();
   }
@@ -122,5 +131,6 @@ public class RobotContainer {
     var traj = PathPlanner.loadPath("1.5+B", new PathConstraints(0.2,0.1), true);
     //System.out.println(traj.getState(0));
     m_driveSubsystem.setTrajectory(traj);
-    return m_driveSubsystem.followTrajectoryCommand(traj, true);  }
+    return m_driveSubsystem.followTrajectoryCommand(traj, true);
+  }
 }
