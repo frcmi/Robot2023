@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -20,6 +21,7 @@ import frc.robot.Constants.OperatorConstants;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.SparkMax;
 
+import edu.wpi.first.wpilibj.Timer;
 
 import frc.robot.Constants.DriveConstants;
 
@@ -144,10 +146,11 @@ public class DriveSubsystem extends SubsystemBase {
   public CommandBase balanceCommand() {
     CommandBase command = run(() -> {
       double pitchAngleRadians = getRoll() * (Math.PI / 28.0);
-      double xAxisRate = Math.sin(pitchAngleRadians) * -1.5;
+      double xAxisRate = Math.sin(pitchAngleRadians) * -1.05;
+      // double xAxisRate = Math.pow(pitchAngleRadians, 3) / 100;
       SmartDashboard.putNumber("Balance Power", xAxisRate);
       tankDriveVolts(xAxisRate, xAxisRate);
-    });
+    }).withTimeout(8);
       // .until(() -> Math.abs(getRoll()) < 3);
     command.setName("Balance");
     return runOnce(() -> setBrakes(IdleMode.kBrake)).andThen(command);

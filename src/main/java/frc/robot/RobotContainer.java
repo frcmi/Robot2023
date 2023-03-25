@@ -114,7 +114,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
-    return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    // return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    // return Autos.moveThenBalanceMobility(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+
   }
 }
