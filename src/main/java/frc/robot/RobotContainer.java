@@ -14,6 +14,8 @@ import frc.robot.subsystems.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -67,13 +69,11 @@ public class RobotContainer {
       .onFalse(m_intakeSubsystem.stopCommand());
 
     // Elevator bindings
-    // m_driverController.a().onTrue(m_elevatorSubsystem.moveTo(0.0));
-    // m_driverController.y().onTrue(m_elevatorSubsystem.moveTo(0.40));
+    m_driverController.povUp().onTrue(m_elevatorSubsystem.raise());
+    m_driverController.povDown().onTrue(m_elevatorSubsystem.lower());
 
     // Arm bindings
     m_armSubsystem.setDefaultCommand(m_armSubsystem.stop());
-    // m_driverController.x().onTrue(m_armSubsystem.moveTo(Math.toRadians(45)));
-    // m_driverController.b().onTrue(m_armSubsystem.moveTo(Math.toRadians(-45)));
     // Ground
     m_driverController.a().onTrue(Setpoints.Ground(m_armSubsystem, m_elevatorSubsystem));
     // Stow

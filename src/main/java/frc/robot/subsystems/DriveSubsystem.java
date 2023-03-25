@@ -124,9 +124,8 @@ public class DriveSubsystem extends SubsystemBase {
     rearRight.setIdleMode(idleMode);
   }
 
-  public double getPitch() {
-    // NavX mounted upside down!
-    return navX.getPitch();
+  public double getRoll() {
+    return navX.getRoll();
   }
 
   public double getHeading() {
@@ -144,27 +143,29 @@ public class DriveSubsystem extends SubsystemBase {
 
   public CommandBase balanceCommand() {
     CommandBase command = run(() -> {
-      double pitchAngleRadians = getPitch() * (Math.PI / 180.0);
-      double xAxisRate = Math.sin(pitchAngleRadians) * 7;
+      double pitchAngleRadians = getRoll() * (Math.PI / 28.0);
+      double xAxisRate = Math.sin(pitchAngleRadians) * -1.5;
+      SmartDashboard.putNumber("Balance Power", xAxisRate);
       tankDriveVolts(xAxisRate, xAxisRate);
-    })
-      .until(() -> Math.abs(getPitch()) < 3);
+    });
+      // .until(() -> Math.abs(getRoll()) < 3);
     command.setName("Balance");
-    return command;
+    return runOnce(() -> setBrakes(IdleMode.kBrake)).andThen(command);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Gyro Pitch", getPitch());
-    SmartDashboard.putNumber("Gyro Heading", getHeading());
+    SmartDashboard.putNumber("Gyro Pitch", navX.getPitch());
+    SmartDashboard.putNumber("Gyro Yaw", navX.getYaw());
+    SmartDashboard.putNumber("Gyro Roll", navX.getRoll());
     SmartDashboard.putNumber("Drive Left Encoder Pos", leftEncoder.getPosition());
     SmartDashboard.putNumber("Drive Right Encoder Pos", rightEncoder.getPosition());
     SmartDashboard.putNumber("Drive Left Encoder Vel", leftEncoder.getVelocity());
     SmartDashboard.putNumber("Drive Right Encoder Vel", rightEncoder.getVelocity());
-    SmartDashboard.putNumber("Front Left Voltage", frontLeft.getBusVoltage());
-    SmartDashboard.putNumber("Rear Left Voltage", rearLeft.getBusVoltage());
-    SmartDashboard.putNumber("Front Right Voltage", frontRight.getBusVoltage());
-    SmartDashboard.putNumber("Rear Right Voltage", rearRight.getBusVoltage());
+    SmartDashboard.putNumber("Front Left Voltage", frontLeft.getAppliedOutput());
+    SmartDashboard.putNumber("Rear Left Voltage", rearLeft.getAppliedOutput());
+    SmartDashboard.putNumber("Front Right Voltage", frontRight.getAppliedOutput());
+    SmartDashboard.putNumber("Rear Right Voltage", rearRight.getAppliedOutput());
   }
 
   @Override
