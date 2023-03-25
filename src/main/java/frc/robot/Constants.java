@@ -20,7 +20,7 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final double kSpeedMultiplier = 1.0;
     public static final double kSpeedSlewRate = 0.5;
-    public static final double kRotationMultiplier = 0.3;
+    public static final double kRotationMultiplier = 0.8;
     public static final double kElevatorSpeed = 0.5;
     public static final double kArmSpeed = 0.5;
     public static final double kArmDeadzone = 0.2;
