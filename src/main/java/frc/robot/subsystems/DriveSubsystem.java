@@ -92,8 +92,8 @@ public class DriveSubsystem extends SubsystemBase {
     double inputSpeed = Math.abs(Math.pow(speed, DriveConstants.kTurnRateExpontent));
 
     return (minimumTurnRateMult * -inputSpeed) + 1;
-
   }
+  
   public CommandBase setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
     return run(() -> {
       double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier;

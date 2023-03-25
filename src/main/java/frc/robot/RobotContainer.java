@@ -58,7 +58,7 @@ public class RobotContainer {
   private void configureBindings() {
     // Drive bindings
     m_driveSubsystem.setDefaultCommand(m_driveSubsystem
-      .setSpeed(m_driverController::getLeftY, m_driverController::getLeftX, m_driverController.leftBumper()));
+      .setSpeed(m_driverController::getLeftY, m_driverController::getRightX, m_driverController.leftBumper()));
 
     // Intake bindings
     m_driverController.rightTrigger()
