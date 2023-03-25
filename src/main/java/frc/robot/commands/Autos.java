@@ -29,6 +29,15 @@ public final class Autos {
 
   public static CommandBase moveThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
     return score(intake, arm, elevator)
+      .andThen(moveSeconds(drive, 0.5, 2))
+      .andThen(Commands.waitSeconds(1))
+      .andThen(() -> drive.setBrakes(IdleMode.kBrake))
+      .andThen(moveSeconds(drive, 0.5, 1.63))
+      .andThen(drive.balanceCommand());
+  }
+
+  public static CommandBase moveThenBalanceMobility(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
+    return score(intake, arm, elevator)
       .andThen(moveSeconds(drive, 0.5, 1.8))
       .andThen(Commands.waitSeconds(0.8)) // wait for charge station to tilt
       .andThen(moveSeconds(drive, 0.5, 2)) // go over charge station for mobility
