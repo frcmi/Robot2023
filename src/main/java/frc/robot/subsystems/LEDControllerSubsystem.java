@@ -13,28 +13,22 @@ public class LEDControllerSubsystem extends SubsystemBase {
   /** Creates a new LEDSubsystem. */
 
   protected Color8Bit currentColor;
-  protected AddressableLED[] addressableLEDs;
-  protected AddressableLEDBuffer[] addressableLEDBuffers;
+  protected AddressableLED addressableLED;
+  protected AddressableLEDBuffer addressableLEDBuffer;
   protected boolean increasing = true;
   protected boolean breathing;
 
-  public LEDControllerSubsystem(int[] ports, int[] numberOfLights) {
-    addressableLEDs = new AddressableLED[ports.length];
-    addressableLEDBuffers = new AddressableLEDBuffer[ports.length];
-    for (int i = 0; i < ports.length; i++) {
-      addressableLEDs[i] = new AddressableLED(ports[i]);
-      addressableLEDBuffers[i] = new AddressableLEDBuffer(1);
-      addressableLEDs[i].setData(addressableLEDBuffers[i]);
-      addressableLEDs[i].setLength(addressableLEDBuffers[i].getLength());
-    }
+  public LEDControllerSubsystem() {
+    addressableLED = new AddressableLED(LEDConstants.kLightPort);
+    addressableLEDBuffer = new AddressableLEDBuffer(LEDConstants.kNumberOfLights);
+    addressableLED.setData(addressableLEDBuffer);
+    addressableLED.setLength(addressableLEDBuffer.getLength());
   }
 
   public CommandBase setColor(Color8Bit color) {
     return runOnce(() -> {
-      for (int j = 0; j < addressableLEDs.length; j++) {
-        for (int i = 0; i < addressableLEDBuffers[j].getLength(); i++) {
-          addressableLEDBuffers[j].setLED(i, color);
-        }
+      for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
+        addressableLEDBuffer.setLED(i, color);
       }
     });
   }
@@ -83,9 +77,7 @@ public class LEDControllerSubsystem extends SubsystemBase {
       currentColor = breathingColor();
     }
     setColor(currentColor);
-    for (AddressableLED addressableLED : addressableLEDs) {
-      addressableLED.start();
-    }
+    addressableLED.start();
   }
 }
 
