@@ -49,7 +49,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     },
     "Plot <1>": {
       "plots": [
@@ -89,6 +92,13 @@
               "id": "NT:/SmartDashboard/Gyro Roll"
             }
           ]
+        }
+      ]
+    },
+    "Plot <2>": {
+      "plots": [
+        {
+          "height": 332
         }
       ]
     }

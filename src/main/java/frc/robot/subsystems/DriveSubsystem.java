@@ -88,7 +88,7 @@ public class DriveSubsystem extends SubsystemBase {
     rearLeft.follow(frontLeft);
     rearRight.follow(frontRight);
     
-    rightMotors.setInverted(true);
+    leftMotors.setInverted(true);
 
     leftEncoder.setPositionConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
     rightEncoder.setPositionConversionFactor(DriveConstants.kWheelEncoderDistancePerRotation);
@@ -192,7 +192,7 @@ public class DriveSubsystem extends SubsystemBase {
     field2d.setRobotPose(m_pose);
 
     // Update the pose
-    m_pose = m_odometry.update(gyroAngle,
+    m_pose = m_odometry.update(getHeading(),
       -leftEncoder.getPosition(),
       rightEncoder.getPosition());
 
@@ -205,9 +205,9 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Pitch", navX.getPitch());
     SmartDashboard.putNumber("Gyro Yaw", navX.getYaw());
     SmartDashboard.putNumber("Gyro Roll", navX.getRoll());
-    SmartDashboard.putNumber("Drive Left Encoder Pos", leftEncoder.getPosition());
+    SmartDashboard.putNumber("Drive Left Encoder Pos", -leftEncoder.getPosition());
     SmartDashboard.putNumber("Drive Right Encoder Pos", rightEncoder.getPosition());
-    SmartDashboard.putNumber("Drive Left Encoder Vel", leftEncoder.getVelocity());
+    SmartDashboard.putNumber("Drive Left Encoder Vel", -leftEncoder.getVelocity());
     SmartDashboard.putNumber("Drive Right Encoder Vel", rightEncoder.getVelocity());
     SmartDashboard.putNumber("Front Left Voltage", frontLeft.getAppliedOutput());
     SmartDashboard.putNumber("Rear Left Voltage", rearLeft.getAppliedOutput());
