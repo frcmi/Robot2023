@@ -2,9 +2,13 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.awt.Color;
 import frc.robot.Constants.LEDConstants;
@@ -17,15 +21,19 @@ public class LEDControllerSubsystem extends SubsystemBase {
   protected AddressableLEDBuffer addressableLEDBuffer;
   protected boolean increasing = true;
   protected boolean breathing;
+  protected boolean ledColorState = true;
 
   public LEDControllerSubsystem() {
     addressableLED = new AddressableLED(LEDConstants.kLightPort);
     addressableLEDBuffer = new AddressableLEDBuffer(LEDConstants.kNumberOfLights);
-    addressableLED.setData(addressableLEDBuffer);
     addressableLED.setLength(addressableLEDBuffer.getLength());
+
+    addressableLED.setData(addressableLEDBuffer);
+    addressableLED.start();
   }
 
   public CommandBase setColor(Color8Bit color) {
+    currentColor = color;
     return runOnce(() -> {
       for (int i = 0; i < addressableLEDBuffer.getLength(); i++) {
         addressableLEDBuffer.setLED(i, color);
@@ -53,6 +61,19 @@ public class LEDControllerSubsystem extends SubsystemBase {
     return startBreathing().andThen(setColor(LEDConstants.kInitialMaroon));
   }
 
+  public CommandBase toggleLEDCommand() {
+    return runOnce(() -> {
+      if (ledColorState) {
+        ledColorState = false;
+        stopBreathing().andThen(setColor(LEDConstants.kPurple)).schedule();;
+      }
+      else {
+        ledColorState = true;
+        stopBreathing().andThen(setColor(LEDConstants.kYellow)).schedule();;
+      }
+    });
+  }
+
   public Color8Bit breathingColor() {
     float[] HSBArray = Color.RGBtoHSB(currentColor.red, currentColor.green, currentColor.blue, null);
     if (increasing) {
@@ -73,11 +94,13 @@ public class LEDControllerSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("COLOR TOGGLESTATE", ledColorState);
     if (breathing) {
       currentColor = breathingColor();
+      setColor(currentColor);
     }
-    setColor(currentColor);
-    addressableLED.start();
+    // addressableLED.start();
+    addressableLED.setData(addressableLEDBuffer);
   }
 }
 

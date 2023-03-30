@@ -17,7 +17,9 @@ import java.util.function.DoubleSupplier;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -33,7 +35,7 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
-  //private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem(LEDConstants.kLightPorts, LEDConstants.kLightsLengthsArray);
+  private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem();
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -55,7 +57,7 @@ public class RobotContainer {
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
-  private void configureBindings() {
+  private void configureBindings() {/* 
     // Drive bindings
     m_driveSubsystem.setDefaultCommand(m_driveSubsystem
       .setSpeed(m_driverController::getLeftY, m_driverController::getRightX, m_driverController.leftBumper()));
@@ -84,13 +86,16 @@ public class RobotContainer {
     m_driverController.x().onTrue(Setpoints.L3(m_armSubsystem, m_elevatorSubsystem));
 
     m_driverController.rightBumper().onTrue(m_driveSubsystem.balanceCommand());
+    */
     // LED Bindings
     // m_driverController.povUp()
     //   .onTrue(m_ledSubsystem.maroonLEDCommand());
-    // m_driverController.povRight()
-    //   .onTrue(m_ledSubsystem.purpleLEDCommand());
-    // m_driverController.povLeft()
-    //   .onTrue(m_ledSubsystem.yellowLEDCommand());
+    m_driverController.povRight()
+      .onTrue(m_ledSubsystem.toggleLEDCommand());
+    m_driverController.povLeft()
+      .onTrue(m_ledSubsystem.startBreathing());
+    m_driverController.start()
+      .onTrue(m_ledSubsystem.maroonLEDCommand());
   }
 
   public DoubleSupplier axisFromButtons(BooleanSupplier firstButton, BooleanSupplier secondButton) {
