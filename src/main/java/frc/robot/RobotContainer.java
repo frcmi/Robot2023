@@ -132,6 +132,6 @@ public class RobotContainer {
     //System.out.println(traj.getState(0));
     m_driveSubsystem.setTrajectory(traj);
     // return m_driveSubsystem.followTrajectoryCommand(traj, true);
-    return m_driveSubsystem.getPathWithEvents(PathPlanner.loadPath("1.5+B P1", DriveConstants.kPathConstraints));
+    return m_driveSubsystem.getPathWithEvents(traj);
   }
 }
