@@ -49,7 +49,7 @@ public final class Constants {
 
     public static final double kWheelDiameter = Units.inchesToMeters(5.0);
     public static final double kWheelCircumference = kWheelDiameter * Math.PI;
-    public static final double kWheelGearRatio = 0.8; // ? Joey: dt should be 11/60 * 32/64 Simplified: 352/3840
+    public static final double kWheelGearRatio = (11.0/60.0) * (32.0/64.0); // Joey: dt should be 11/60 * 32/64 Simplified: 352/3840
     public static final double kWheelEncoderDistancePerRotation = kWheelCircumference / kWheelGearRatio;
     public static final double kS = 0.20995;
     public static final double kV = 2.6071;

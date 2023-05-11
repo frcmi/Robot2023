@@ -62,7 +62,7 @@
               "autoFit": true
             }
           ],
-          "height": 498,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -98,7 +98,7 @@
     "Plot <2>": {
       "plots": [
         {
-          "height": 332
+          "height": 0
         }
       ]
     }

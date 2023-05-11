@@ -128,7 +128,7 @@ public class RobotContainer {
     // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
     // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
     // return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    var traj = PathPlanner.loadPath("1.5+B", new PathConstraints(0.2,0.1), true);
+    var traj = PathPlanner.loadPath("ForwardAndIntake", new PathConstraints(0.3,0.1), true);
     //System.out.println(traj.getState(0));
     m_driveSubsystem.setTrajectory(traj);
     // return m_driveSubsystem.followTrajectoryCommand(traj, true);
