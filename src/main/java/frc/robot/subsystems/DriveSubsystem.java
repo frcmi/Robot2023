@@ -93,9 +93,12 @@ public class DriveSubsystem extends SubsystemBase {
     // Calculates speed used in calculation, used for expontential relationship between speed input and max turn rate allowed
     double inputSpeed = Math.abs(Math.pow(speed, DriveConstants.kTurnRateExpontent));
 
-    return (minimumTurnRateMult * -inputSpeed) + 1;
+    return 1 - minimumTurnRateMult * inputSpeed;
   }
   
+  /**
+   * Sets the desired speed.
+   */
   public CommandBase setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
     return run(() -> {
       double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier;
@@ -115,10 +118,16 @@ public class DriveSubsystem extends SubsystemBase {
     });
   }
 
+  /**
+   * Stops the drive motor.
+   */
   public CommandBase stop() {
     return runOnce(() -> diffDrive.stopMotor());
   }
 
+  /**
+   * Sets the idle modes of all motors to the given IdleMode.
+   */
   public void setBrakes(IdleMode idleMode) {
     frontLeft.setIdleMode(idleMode);
     frontRight.setIdleMode(idleMode);
@@ -126,19 +135,31 @@ public class DriveSubsystem extends SubsystemBase {
     rearRight.setIdleMode(idleMode);
   }
 
+  /**
+   * Gets the current roll of the drive motors in degrees
+   */
   public double getRoll() {
     return navX.getRoll();
   }
 
+  /**
+   * Gets the direction in which the drive system is pointed, in degrees
+   */
   public double getHeading() {
     return navX.getAngle();
   }
 
+  /**
+   * Set the voltage of both sets of motors independently
+   */
   public void tankDriveVolts(double leftVolts, double rightVolts) {
     leftMotors.setVoltage(leftVolts);
     rightMotors.setVoltage(rightVolts);
   }
 
+  /**
+   * Sets the speed of both sides of the 4-wheel drive
+   */
   public void setSpeed(double speed) {
     diffDrive.tankDrive(speed, speed);
   }
@@ -156,6 +177,9 @@ public class DriveSubsystem extends SubsystemBase {
     return runOnce(() -> setBrakes(IdleMode.kBrake)).andThen(command);
   }
 
+  /**
+   * Update display values
+   */
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Gyro Pitch", navX.getPitch());

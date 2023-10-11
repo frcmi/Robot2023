@@ -45,6 +45,9 @@ public class IntakeSubsystem extends SubsystemBase {
                 ;
     }
 
+    /**
+     * Continuously set the speed of the motor
+     */
     private CommandBase setMotor(double speed) {
         return Commands.run(() -> motor.set(speed), this);
     }
@@ -58,14 +61,23 @@ public class IntakeSubsystem extends SubsystemBase {
                 ;
     }
 
+    /**
+     * Stop the motor
+     */
     public void stop() {
         motor.set(0);
     }
 
+    /**
+     * Stop the motor
+     */
     public CommandBase stopCommand() {
         return runOnce(this::stop);
     }
 
+    /**
+     * Determine if the motor is using more current than... some threshold
+     */
     public boolean motorOverCurrent() {
         filteredCurrent = currentFilter.calculate(motor.getOutputCurrent());
         return filteredCurrent > IntakeConstants.kCurrentThreshold;

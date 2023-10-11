@@ -43,6 +43,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     }
 
+    /**
+     * Update display values and voltage of the motors
+     */
     @Override
     public void periodic() {
         // SmartDashboard.putData("Elevator PID", pidController);
@@ -51,16 +54,19 @@ public class ElevatorSubsystem extends SubsystemBase {
         
         SmartDashboard.putNumber("Elevator Pos", getPosition());
         Command command = getCurrentCommand();
-        if (command != null)
-            SmartDashboard.putString("Elevator Command", command.getName());
-        else
-            SmartDashboard.putString("Elevator Command", "null");
+        SmartDashboard.putString("Elevator Command", command != null ? command.getName() : "null");
     }
 
+    /**
+     * Gets the current position of the elevator in units native to the motors
+     */
     public double getPosition() {
         return encoder.getPosition();
     }
 
+    /**
+     * Set the voltage of both motors
+     */
     private void setVolts(double volts) {
         double position = getPosition();
         boolean outOfBounds = position < ElevatorConstants.minPos || position > ElevatorConstants.maxPos;
@@ -78,22 +84,33 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightMotor.setVoltage(volts);
     }
 
+    /**
+     * Sets the voltage of both numbers in terms of the goal position
+     */
     public void setGoalVolts(double goalPosition) {
         double pidOutput = pidController.calculate(getPosition(), goalPosition);
-        pidOutput *= 25;
-        setVolts(pidOutput + ElevatorConstants.kG);
+        setVolts(pidOutput * 25 + ElevatorConstants.kG);
     }
 
+    /**
+     * Move to a specified goal position
+     */
     public CommandBase moveTo(double position) {
         return run(() -> goalPosition = position).until(pidController::atGoal);
     }
 
+    /**
+     * Raise the elevator by 0.4 units (meters?)
+     */
     public CommandBase raise() {
         CommandBase command = moveTo(0.4);
         command.setName("RaiseElevator");
         return command;
     }
 
+    /**
+     * Lower the elevator to the initial position
+     */
     public CommandBase lower() {
         CommandBase command = moveTo(0);
         command.setName("LowerElevator");
