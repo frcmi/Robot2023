@@ -27,7 +27,7 @@ public final class Autos {
     }).withTimeout(seconds).andThen(driveSub.stop());
   }
 
-  public static CommandBase moveThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
+  public static CommandBase scoreThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
     return score(intake, arm, elevator)
       .andThen(moveSeconds(drive, 0.75, 2))
       .andThen(Commands.waitSeconds(1))
@@ -36,7 +36,16 @@ public final class Autos {
       .andThen(drive.balanceCommand());
   }
 
-  public static CommandBase moveThenBalanceMobility(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
+  public static CommandBase scoreMidThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
+    return scoreMid(intake, arm, elevator)
+      .andThen(moveSeconds(drive, 0.75, 2))
+      .andThen(Commands.waitSeconds(1))
+      .andThen(() -> drive.setBrakes(IdleMode.kBrake))
+      .andThen(moveSeconds(drive, 0.5, 1.63))
+      .andThen(drive.balanceCommand());
+  }
+
+  public static CommandBase scoreThenBalanceMobility(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
     return score(intake, arm, elevator)
       .andThen(moveSeconds(drive, 0.75, 2))
       .andThen(Commands.waitSeconds(0.8)) // wait for charge station to tilt
@@ -54,11 +63,25 @@ public final class Autos {
         .andThen(Commands.waitSeconds(0.5))
         .andThen(intake.intake().withTimeout(0.25))
         .andThen(intake.stopCommand())
-        .andThen(Setpoints.Stow(subsystem, elevator));
+        .andThen(Setpoints.Stow(subsystem, elevator))
+        .andThen(Commands.waitSeconds(1));
   }
 
+  public static CommandBase scoreMid(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator) {
+    return Setpoints.L2(subsystem, elevator).withTimeout(2.5)
+      .andThen(Commands.waitSeconds(0.5))
+      .andThen(intake.intake().withTimeout(0.25))
+      .andThen(intake.stopCommand())
+      .andThen(Setpoints.Stow(subsystem, elevator))
+      .andThen(Commands.waitSeconds(0.75));
+}
+
   public static CommandBase scoreThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
-    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.5, 5));
+    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.3, 5));
+  }
+
+  public static CommandBase scoreMidThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
+    return scoreMid(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.3, 5));
   }
 
   private Autos() {

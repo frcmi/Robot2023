@@ -18,12 +18,14 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final double kSpeedMultiplier = 1.0;
+    public static final double kSpeedMultiplier = 0.8; // Was 1.0
     public static final double kSpeedSlewRate = 0.5;
-    public static final double kRotationMultiplier = 0.8;
+    public static final double kRotationMultiplier = 0.65; // Was 0.8
     public static final double kElevatorSpeed = 0.5;
     public static final double kArmSpeed = 0.5;
     public static final double kArmDeadzone = 0.2;
+    public static final double kMaxSensitivity = 1.0;
+    public static final double kMinSensitivity = 0.5;
   }
 
   public static class DriveConstants {
@@ -101,7 +103,7 @@ public final class Constants {
     public static final int kRightMotorId = 8;
     public static final double kArmGearRatio = 180.0/1.0;
     // 0 should be the middle
-    public static final double encoderOffset = Math.toRadians(224.45);
+    public static final double encoderOffset = Math.toRadians(169.45); // Was 224.45 (Pre-Girls Gen)
     // Lowest safe rotation relative to encoderOffset 
     public static final double minAngle = -Math.toRadians(125);
     // Highest safe rotation relative to encoderOffset 

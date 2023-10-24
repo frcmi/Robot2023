@@ -97,6 +97,8 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveTo(double angle) {
-        return run(() -> setGoalVolts(angle)).until(pidController::atGoal);
+        CommandBase command = run(() -> setGoalVolts(angle /*+ Math.toRadians(45)*/)).until(pidController::atGoal);
+        command.addRequirements(this);
+        return command;
     }
 }

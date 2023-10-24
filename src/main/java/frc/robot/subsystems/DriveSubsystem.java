@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
@@ -47,6 +48,8 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive diffDrive = new DifferentialDrive(leftMotors, rightMotors);
   private final SlewRateLimiter speedFilter = new SlewRateLimiter(OperatorConstants.kSpeedSlewRate);
   private final AHRS navX = new AHRS();
+
+  private double sensitivity = 1.0;
 
   /** Creates a new ExampleSubsystem. */
   public DriveSubsystem() {
@@ -98,9 +101,9 @@ public class DriveSubsystem extends SubsystemBase {
   
   public CommandBase setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
     return run(() -> {
-      double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier;
+      double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier * sensitivity;
       // speed = speedFilter.calculate(speed);
-      double rotation = rotationSupplier.getAsDouble() * OperatorConstants.kRotationMultiplier;
+      double rotation = rotationSupplier.getAsDouble() * OperatorConstants. kRotationMultiplier;
       double maxAllowedRotation = getMaxTurnRatePerSpeed(speed);
       
       // Clamp the rotation to a maximum of the maximum allowed rotation for the given speed
@@ -140,13 +143,22 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void setSpeed(double speed) {
+    speed*=sensitivity;
     diffDrive.tankDrive(speed, speed);
+  }
+
+  public void setNewSensitivity(double newSensitivity) {
+   sensitivity = newSensitivity;
+  }
+
+  public CommandBase setSensitivity(double newSensitivity) {
+    return Commands.run(() -> setNewSensitivity(newSensitivity), this);
   }
 
   public CommandBase balanceCommand() {
     CommandBase command = run(() -> {
       double pitchAngleRadians = getRoll() * (Math.PI / 28.0);
-      double xAxisRate = Math.sin(pitchAngleRadians) * -1.05;
+      double xAxisRate = Math.sin(pitchAngleRadians) * -1.0; // Was -1.05
       // double xAxisRate = Math.pow(pitchAngleRadians, 3) / 100;
       SmartDashboard.putNumber("Balance Power", xAxisRate);
       tankDriveVolts(xAxisRate, xAxisRate);

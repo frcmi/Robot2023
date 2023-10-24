@@ -26,7 +26,7 @@ public final class Setpoints {
     }
 
     public static CommandBase L2(ArmSubsystem arm, ElevatorSubsystem elevator) {
-        return arm.moveTo(Math.toRadians(50)).alongWith(elevator.lower());
+        return arm.moveTo(Math.toRadians(55)).alongWith(elevator.lower()); // Was 50 degrees
     }
 
     public static CommandBase L3(ArmSubsystem arm, ElevatorSubsystem elevator) {

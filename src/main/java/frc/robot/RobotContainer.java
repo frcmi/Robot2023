@@ -16,6 +16,8 @@ import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -35,7 +37,7 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   //private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem(LEDConstants.kLightPorts, LEDConstants.kLightsLengthsArray);
 
-
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -44,6 +46,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    configureAutoChooser();
   }
 
   /**
@@ -59,6 +62,9 @@ public class RobotContainer {
     // Drive bindings
     m_driveSubsystem.setDefaultCommand(m_driveSubsystem
       .setSpeed(m_driverController::getLeftY, m_driverController::getRightX, m_driverController.leftBumper()));
+    m_driverController.rightBumper()
+      .onTrue(m_driveSubsystem.setSensitivity(OperatorConstants.kMinSensitivity))
+      .onFalse(m_driveSubsystem.setSensitivity(OperatorConstants.kMaxSensitivity));
 
     // Intake bindings
     m_driverController.rightTrigger()
@@ -93,6 +99,26 @@ public class RobotContainer {
     //   .onTrue(m_ledSubsystem.yellowLEDCommand());
   }
 
+  private void configureAutoChooser() {
+    autoChooser.addOption("None", Commands.waitSeconds(0));
+    // L2 score:
+
+    autoChooser.addOption("L2 & Taxi", Autos.scoreMidThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem));
+    autoChooser.addOption("L2 Score (No Taxi)", Autos.scoreMid(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
+    autoChooser.addOption("L2 Score & Balance", Autos.scoreMidThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
+    // return Autos.scoreMidThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+    // return Autos.scoreMid(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+    // return Autos.scoreMidThenBalance(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+
+    // L3 score:
+    // return ;
+    autoChooser.setDefaultOption("L3 & Taxi", Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem));
+    autoChooser.addOption("L3 Score (No Taxi)", Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
+    autoChooser.addOption("L3 Score & Balance", Autos.scoreThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
+    
+    SmartDashboard.putData("Auto Command", autoChooser);
+  }
+
   public DoubleSupplier axisFromButtons(BooleanSupplier firstButton, BooleanSupplier secondButton) {
     // Boolean as num is 0 or 1, this prevents fighting when both are pressed and normalizes [-1, 1]!
     return () -> Boolean.compare(firstButton.getAsBoolean(), false) - Boolean.compare(secondButton.getAsBoolean(), false);
@@ -113,10 +139,22 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
-    // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    // return Autos.moveThenBalanceMobility(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+
+    // L2 score:
+
+    // return Autos.scoreMidThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+    // return Autos.scoreMid(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+    // return Autos.scoreMidThenBalance(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+
+    // L3 score:
+    
+    return autoChooser.getSelected();// Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+    //return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    // return Autos.scoreThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+
+    // UNTESTED:
+    // return Autos.scoreThenBalanceMobility(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
 
   }
 }
+   
