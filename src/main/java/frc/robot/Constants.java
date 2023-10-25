@@ -28,6 +28,7 @@ public final class Constants {
     public static final double kMinSensitivity = 0.5;
   }
 
+
   public static class DriveConstants {
     // An integer greater than or equal to 1 which controls at what speeds maximum turn rate is allowed (this is expontential) 
     public static final int kTurnRateExpontent = 3;

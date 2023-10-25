@@ -37,7 +37,10 @@ public class RobotContainer {
   private final ElevatorSubsystem m_elevatorSubsystem = new ElevatorSubsystem();
   //private final LEDControllerSubsystem m_ledSubsystem = new LEDControllerSubsystem(LEDConstants.kLightPorts, LEDConstants.kLightsLengthsArray);
 
-  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  
+  public final static SendableChooser<String> levelChooser = new SendableChooser<>(); //Auto chooeser for scoring level 
+  public final static SendableChooser<String> actionChooser = new SendableChooser<>(); 
+   
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
@@ -46,7 +49,6 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-    configureAutoChooser();
   }
 
   /**
@@ -99,34 +101,55 @@ public class RobotContainer {
     //   .onTrue(m_ledSubsystem.yellowLEDCommand());
   }
 
-  private void configureAutoChooser() {
-    autoChooser.addOption("None", Commands.waitSeconds(0));
-    // L2 score:
-
-    autoChooser.addOption("L2 & Taxi", Autos.scoreMidThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem));
-    autoChooser.addOption("L2 Score (No Taxi)", Autos.scoreMid(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
-    autoChooser.addOption("L2 Score & Balance", Autos.scoreMidThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
-    // return Autos.scoreMidThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
-    // return Autos.scoreMid(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
-    // return Autos.scoreMidThenBalance(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
-
-    // L3 score:
-    // return ;
-    autoChooser.setDefaultOption("L3 & Taxi", Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem));
-    autoChooser.addOption("L3 Score (No Taxi)", Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
-    autoChooser.addOption("L3 Score & Balance", Autos.scoreThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem));
-    
-    SmartDashboard.putData("Auto Command", autoChooser);
-  }
 
   public DoubleSupplier axisFromButtons(BooleanSupplier firstButton, BooleanSupplier secondButton) {
     // Boolean as num is 0 or 1, this prevents fighting when both are pressed and normalizes [-1, 1]!
     return () -> Boolean.compare(firstButton.getAsBoolean(), false) - Boolean.compare(secondButton.getAsBoolean(), false);
   }
 
+// Temporary
+ // for auto selector of scoring mode 
+ public final static String kL2Scoring = "L2"; 
+ public final static String kL3Scoring = "L3"; 
+
+ //for auto selector of actions after scoring in automous 
+ public final static String kNoTaxi = "NoTaxi";
+ public final static String kTaxi = "Taxi";
+ public final static String kBalance = "Balance";
+
   public void robotInit () {
     SparkMax.burnFlashInSync();
+
+    //Code for the autochooser level chooser 
+    levelChooser.setDefaultOption("Option 1: L3 Scoring", kL2Scoring);
+    levelChooser.addOption("Option 2: L2 Scoring", kL3Scoring);
+    SmartDashboard.putData("Level Choice", levelChooser);
+
+    //Code for the autochooser action chooser for actions after scoring in automous 
+    actionChooser.setDefaultOption("Action 1: NoTaxi", kNoTaxi);
+    actionChooser.addOption("Action 2: Taxi", kTaxi);
+    actionChooser.addOption("Action 3: Balance", kBalance);
+
+    //Chose Correct scoring level and action combination 
+    String level = levelChooser.getSelected();
+    String action = actionChooser.getSelected(); 
+
+    switch (level + action) {
+      case kL3Scoring + kNoTaxi: 
+        Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+      case kL3Scoring + kTaxi:
+        Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem); 
+      case kL3Scoring + kBalance:
+        Autos.scoreThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+      case kL2Scoring + kNoTaxi:
+        Autos.scoreMid(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+      case kL2Scoring + kTaxi: 
+        Autos.scoreMidThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
+      case kL2Scoring + kBalance:
+        Autos.scoreMidThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
+    }
   }
+
 
   public void teleopPeriodic() {
 

@@ -67,6 +67,7 @@ public final class Autos {
         .andThen(Commands.waitSeconds(1));
   }
 
+    //scores L2
   public static CommandBase scoreMid(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator) {
     return Setpoints.L2(subsystem, elevator).withTimeout(2.5)
       .andThen(Commands.waitSeconds(0.5))
