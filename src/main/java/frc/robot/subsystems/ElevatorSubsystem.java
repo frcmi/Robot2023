@@ -85,7 +85,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public CommandBase moveTo(double position) {
-        return run(() -> goalPosition = position).until(pidController::atGoal);
+        return this.run(() -> goalPosition = position).until(pidController::atGoal);
     }
 
     public CommandBase raise() {

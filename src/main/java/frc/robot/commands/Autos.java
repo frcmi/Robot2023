@@ -11,13 +11,12 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public final class Autos {
   /** Example static factory for an autonomous command. */
-  public static CommandBase exampleAuto(DriveSubsystem subsystem) {
+  public static CommandBase doNothing() {
     return Commands.waitSeconds(0); // Replace with real auto
   }
 
@@ -39,19 +38,8 @@ public final class Autos {
       .andThen(drive.balanceCommand());
   }
 
-  public static CommandBase scoreThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
-    return score(intake, arm, elevator)
-      .andThen(balance(drive));
-  }
-
-  public static CommandBase scoreMidThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
-    return scoreMid(intake, arm, elevator)
-      .andThen(balance(drive));
-  }
-
-  public static CommandBase scoreThenBalanceMobility(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
-    return score(intake, arm, elevator)
-      .andThen(moveSeconds(drive, 0.75, 2))
+  public static CommandBase balanceMobility(DriveSubsystem drive) {
+    return moveSeconds(drive, 0.75, 2)
       .andThen(Commands.waitSeconds(0.8)) // wait for charge station to tilt
       .andThen(moveSeconds(drive, 0.5, 0.2)) // go over charge station for mobility
       .andThen(Commands.waitSeconds(0.8)) // wait for charge station to tilt
@@ -63,32 +51,9 @@ public final class Autos {
 
   // Right now only cone l3
   public static CommandBase score(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator) {
-      return Setpoints.L3(subsystem, elevator).withTimeout(2.5)
-        .andThen(Commands.waitSeconds(0.5))
-        .andThen(intake.intake().withTimeout(0.25))
+      return intake.intake().withTimeout(0.25)
         .andThen(intake.stopCommand())
         .andThen(Setpoints.Stow(subsystem, elevator))
         .andThen(Commands.waitSeconds(1));
-  }
-
-  public static CommandBase scoreMid(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator) {
-    return Setpoints.L2(subsystem, elevator).withTimeout(2.5)
-      .andThen(Commands.waitSeconds(0.5))
-      .andThen(intake.intake().withTimeout(0.25))
-      .andThen(intake.stopCommand())
-      .andThen(Setpoints.Stow(subsystem, elevator))
-      .andThen(Commands.waitSeconds(0.75));
-  }
-
-  public static CommandBase scoreThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
-    return score(intake, subsystem, elevator).andThen(taxi(drive));
-  }
-
-  public static CommandBase scoreMidThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
-    return scoreMid(intake, subsystem, elevator).andThen(taxi(drive));
-  }
-
-  private Autos() {
-    throw new UnsupportedOperationException("This is a utility class!");
   }
 }
