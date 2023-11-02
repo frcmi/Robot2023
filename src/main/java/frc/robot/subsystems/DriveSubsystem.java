@@ -103,7 +103,7 @@ public class DriveSubsystem extends SubsystemBase {
     return run(() -> {
       double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier * sensitivity;
       // speed = speedFilter.calculate(speed);
-      double rotation = rotationSupplier.getAsDouble() * OperatorConstants. kRotationMultiplier;
+      double rotation = rotationSupplier.getAsDouble() * OperatorConstants.kRotationMultiplier * sensitivity;
       double maxAllowedRotation = getMaxTurnRatePerSpeed(speed);
       
       // Clamp the rotation to a maximum of the maximum allowed rotation for the given speed
@@ -119,7 +119,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public CommandBase stop() {
-    return runOnce(() -> diffDrive.stopMotor());
+    return this.runOnce(() -> diffDrive.stopMotor());
   }
 
   public void setBrakes(IdleMode idleMode) {

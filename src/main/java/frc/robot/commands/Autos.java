@@ -22,27 +22,31 @@ public final class Autos {
   }
 
   public static CommandBase moveSeconds(DriveSubsystem driveSub, double speed, double seconds) {
-    return Commands.run(() -> {
+    return driveSub.run(() -> {
       driveSub.setSpeed(speed);
     }).withTimeout(seconds).andThen(driveSub.stop());
   }
 
-  public static CommandBase scoreThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
-    return score(intake, arm, elevator)
-      .andThen(moveSeconds(drive, 0.75, 2))
+  public static CommandBase taxi(DriveSubsystem drive) {
+    return moveSeconds(drive, 0.5, 5);
+  }
+
+  public static CommandBase balance(DriveSubsystem drive) {
+    return moveSeconds(drive, 0.75, 2)
       .andThen(Commands.waitSeconds(1))
       .andThen(() -> drive.setBrakes(IdleMode.kBrake))
       .andThen(moveSeconds(drive, 0.5, 1.63))
       .andThen(drive.balanceCommand());
   }
 
+  public static CommandBase scoreThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
+    return score(intake, arm, elevator)
+      .andThen(balance(drive));
+  }
+
   public static CommandBase scoreMidThenBalance(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
     return scoreMid(intake, arm, elevator)
-      .andThen(moveSeconds(drive, 0.75, 2))
-      .andThen(Commands.waitSeconds(1))
-      .andThen(() -> drive.setBrakes(IdleMode.kBrake))
-      .andThen(moveSeconds(drive, 0.5, 1.63))
-      .andThen(drive.balanceCommand());
+      .andThen(balance(drive));
   }
 
   public static CommandBase scoreThenBalanceMobility(DriveSubsystem drive, IntakeSubsystem intake, ArmSubsystem arm, ElevatorSubsystem elevator) {
@@ -74,14 +78,14 @@ public final class Autos {
       .andThen(intake.stopCommand())
       .andThen(Setpoints.Stow(subsystem, elevator))
       .andThen(Commands.waitSeconds(0.75));
-}
+  }
 
   public static CommandBase scoreThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
-    return score(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.3, 5));
+    return score(intake, subsystem, elevator).andThen(taxi(drive));
   }
 
   public static CommandBase scoreMidThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
-    return scoreMid(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.3, 5));
+    return scoreMid(intake, subsystem, elevator).andThen(taxi(drive));
   }
 
   private Autos() {
