@@ -23,7 +23,7 @@ public class PositionEstimationSubsystem extends SubsystemBase {
     private PhotonPoseEstimator poseEstimator;
     private Optional<EstimatedRobotPose> lastPose;
 
-    private final PhotonCamera camera = new PhotonCamera("photonvision");
+    private final PhotonCamera camera = new PhotonCamera("USB_Camera");
 
     public PositionEstimationSubsystem() {
         // todo: mount & measure
