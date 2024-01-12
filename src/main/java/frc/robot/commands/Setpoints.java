@@ -9,7 +9,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public final class Setpoints {
@@ -17,19 +17,19 @@ public final class Setpoints {
         throw new UnsupportedOperationException("This is a utility class!");
     }
 
-    public static CommandBase Ground(ArmSubsystem arm, ElevatorSubsystem elevator) {
+    public static Command Ground(ArmSubsystem arm, ElevatorSubsystem elevator) {
         return arm.moveTo(Math.toRadians(-90)).alongWith(elevator.lower());
     }
 
-    public static CommandBase Stow(ArmSubsystem arm, ElevatorSubsystem elevator) {
+    public static Command Stow(ArmSubsystem arm, ElevatorSubsystem elevator) {
         return arm.moveTo(Math.toRadians(155)).alongWith(elevator.lower());
     }
 
-    public static CommandBase L2(ArmSubsystem arm, ElevatorSubsystem elevator) {
+    public static Command L2(ArmSubsystem arm, ElevatorSubsystem elevator) {
         return arm.moveTo(Math.toRadians(50)).alongWith(elevator.lower());
     }
 
-    public static CommandBase L3(ArmSubsystem arm, ElevatorSubsystem elevator) {
+    public static Command L3(ArmSubsystem arm, ElevatorSubsystem elevator) {
         return arm.moveTo(Math.toRadians(50)).alongWith(elevator.raise());
     }
 }

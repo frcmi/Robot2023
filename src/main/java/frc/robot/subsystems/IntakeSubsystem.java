@@ -6,7 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SparkMax;
@@ -37,7 +37,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     // Intake cone, release cube
-    public CommandBase intake() {
+    public Command intake() {
         return setMotor(IntakeConstants.kIntakeSpeed)
                 // .until(this::motorOverCurrent)
                 // .andThen(Commands.waitSeconds(IntakeConstants.kIntakeTime))
@@ -45,12 +45,12 @@ public class IntakeSubsystem extends SubsystemBase {
                 ;
     }
 
-    private CommandBase setMotor(double speed) {
+    private Command setMotor(double speed) {
         return Commands.run(() -> motor.set(speed), this);
     }
 
     // Release cone, intake cube
-    public CommandBase reverseIntake() {
+    public Command reverseIntake() {
         return setMotor(IntakeConstants.kIntakeSpeed * -1)
                 // .until(this::motorOverCurrent)
                 // .andThen(Commands.waitSeconds(IntakeConstants.kIntakeTime))
@@ -62,7 +62,7 @@ public class IntakeSubsystem extends SubsystemBase {
         motor.set(0);
     }
 
-    public CommandBase stopCommand() {
+    public Command stopCommand() {
         return runOnce(this::stop);
     }
 

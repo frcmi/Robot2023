@@ -13,7 +13,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SparkMax;
 import frc.robot.Constants.ArmConstants;
@@ -88,7 +88,7 @@ public class ArmSubsystem extends SubsystemBase {
         setVolts(pidOutput + ffOutpout);  
     }
       
-    public CommandBase stop() {
+    public Command stop() {
         return run(() -> {
             double angle = getAngle();
             pidController.reset(angle);
@@ -96,7 +96,7 @@ public class ArmSubsystem extends SubsystemBase {
         });
     }
 
-    public CommandBase moveTo(double angle) {
+    public Command moveTo(double angle) {
         return run(() -> setGoalVolts(angle)).until(pidController::atGoal);
     }
 }

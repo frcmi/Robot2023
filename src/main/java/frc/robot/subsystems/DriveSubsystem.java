@@ -14,7 +14,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
@@ -96,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
     return (minimumTurnRateMult * -inputSpeed) + 1;
   }
   
-  public CommandBase setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
+  public Command setSpeed(DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier rotationLock) {
     return run(() -> {
       double speed = speedSupplier.getAsDouble() * OperatorConstants.kSpeedMultiplier;
       // speed = speedFilter.calculate(speed);
@@ -115,7 +115,7 @@ public class DriveSubsystem extends SubsystemBase {
     });
   }
 
-  public CommandBase stop() {
+  public Command stop() {
     return runOnce(() -> diffDrive.stopMotor());
   }
 
@@ -143,8 +143,8 @@ public class DriveSubsystem extends SubsystemBase {
     diffDrive.tankDrive(speed, speed);
   }
 
-  public CommandBase balanceCommand() {
-    CommandBase command = run(() -> {
+  public Command balanceCommand() {
+    Command command = run(() -> {
       double pitchAngleRadians = getRoll() * (Math.PI / 28.0);
       double xAxisRate = Math.sin(pitchAngleRadians) * -1.05;
       // double xAxisRate = Math.pow(pitchAngleRadians, 3) / 100;

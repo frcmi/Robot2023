@@ -8,7 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SparkMax;
 import frc.robot.Constants.ElevatorConstants;
@@ -84,18 +84,18 @@ public class ElevatorSubsystem extends SubsystemBase {
         setVolts(pidOutput + ElevatorConstants.kG);
     }
 
-    public CommandBase moveTo(double position) {
+    public Command moveTo(double position) {
         return run(() -> goalPosition = position).until(pidController::atGoal);
     }
 
-    public CommandBase raise() {
-        CommandBase command = moveTo(0.4);
+    public Command raise() {
+        Command command = moveTo(0.4);
         command.setName("RaiseElevator");
         return command;
     }
 
-    public CommandBase lower() {
-        CommandBase command = moveTo(0);
+    public Command lower() {
+        Command command = moveTo(0);
         command.setName("LowerElevator");
         return command;
     }

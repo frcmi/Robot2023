@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.awt.Color;
@@ -29,7 +29,7 @@ public class LEDControllerSubsystem extends SubsystemBase {
     }
   }
 
-  public CommandBase setColor(Color8Bit color) {
+  public Command setColor(Color8Bit color) {
     return runOnce(() -> {
       for (int j = 0; j < addressableLEDs.length; j++) {
         for (int i = 0; i < addressableLEDBuffers[j].getLength(); i++) {
@@ -39,23 +39,23 @@ public class LEDControllerSubsystem extends SubsystemBase {
     });
   }
 
-  public CommandBase startBreathing() {
+  public Command startBreathing() {
     return runOnce(() -> breathing = true);
   }
 
-  public CommandBase stopBreathing() {
+  public Command stopBreathing() {
     return runOnce(() -> breathing = false);
   }
 
-  public CommandBase yellowLEDCommand() {
+  public Command yellowLEDCommand() {
     return stopBreathing().andThen(setColor(LEDConstants.kYellow));
   }
 
-  public CommandBase purpleLEDCommand() {
+  public Command purpleLEDCommand() {
     return stopBreathing().andThen(setColor(LEDConstants.kPurple));
   }
 
-  public CommandBase maroonLEDCommand() {
+  public Command maroonLEDCommand() {
     return startBreathing().andThen(setColor(LEDConstants.kInitialMaroon));
   }
 
