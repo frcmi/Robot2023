@@ -3,8 +3,8 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -20,8 +20,8 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OperatorConstants;
 
 public class ArmSubsystem extends SubsystemBase {
-    private final SparkMax leftMotor = new SparkMax(ArmConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final SparkMax rightMotor = new SparkMax(ArmConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final SparkMax leftMotor = new SparkMax(ArmConstants.kLeftMotorId, CANSparkLowLevel.MotorType.kBrushless);
+    private final SparkMax rightMotor = new SparkMax(ArmConstants.kRightMotorId, CANSparkLowLevel.MotorType.kBrushless);
     private final DutyCycleEncoder absoluteEncoder = new DutyCycleEncoder(ArmConstants.kEncoderDIOPort);
 
     private final ProfiledPIDController pidController 

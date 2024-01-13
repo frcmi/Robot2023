@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -15,8 +15,8 @@ import frc.robot.Constants.ElevatorConstants;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
-    private final SparkMax leftMotor = new SparkMax(ElevatorConstants.kLeftMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final SparkMax rightMotor = new SparkMax(ElevatorConstants.kRightMotorId, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final SparkMax leftMotor = new SparkMax(ElevatorConstants.kLeftMotorId, CANSparkLowLevel.MotorType.kBrushless);
+    private final SparkMax rightMotor = new SparkMax(ElevatorConstants.kRightMotorId, CANSparkLowLevel.MotorType.kBrushless);
 
 
     private final ProfiledPIDController pidController 
