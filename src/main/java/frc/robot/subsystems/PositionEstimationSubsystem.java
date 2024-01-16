@@ -12,6 +12,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -62,5 +63,14 @@ public class PositionEstimationSubsystem extends SubsystemBase {
         }
 
         return null;
+    }
+
+    public Optional<Pose3d> getPose() {
+        Optional<Pose3d> pose = Optional.empty();
+        if (lastPose.isPresent()) {
+            pose = Optional.of(lastPose.get().estimatedPose);
+        }
+
+        return pose;
     }
 }

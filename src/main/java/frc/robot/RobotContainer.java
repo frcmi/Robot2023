@@ -16,6 +16,7 @@ import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -113,11 +114,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    // return Autos.scoreThenMove(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem, m_driveSubsystem);
-    // return Autos.score(m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    return Autos.moveThenBalance(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-    // return Autos.moveThenBalanceMobility(m_driveSubsystem, m_intakeSubsystem, m_armSubsystem, m_elevatorSubsystem);
-
+    var aprilTag = new Translation2d(14.02, 34.79);
+    return Autos.moveToCircle(m_positionEstimationSubsystem, m_driveSubsystem, 0.2, aprilTag, 0.5);
   }
 }

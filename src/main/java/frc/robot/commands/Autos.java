@@ -8,9 +8,11 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PositionEstimationSubsystem;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -59,6 +61,22 @@ public final class Autos {
 
   public static Command scoreThenMove(IntakeSubsystem intake, ArmSubsystem subsystem, ElevatorSubsystem elevator, DriveSubsystem drive) {
     return score(intake, subsystem, elevator).andThen(moveSeconds(drive, 0.5, 5));
+  }
+
+  public static Command moveToCircle(PositionEstimationSubsystem vision, DriveSubsystem drive, double speed, Translation2d targetCenter, double targetRadius) {
+    return Commands.run(() -> {
+      drive.setSpeed(speed);
+    }).onlyWhile(() -> {
+      var pose = vision.getPose();
+      if (pose.isPresent()) {
+        var poseValue = pose.get();
+
+        double distance2 = Math.pow(poseValue.getX() - targetCenter.getX(), 2) + Math.pow(poseValue.getY() - targetCenter.getY(), 2);
+        return distance2 > targetRadius * targetRadius;
+      }
+
+      return false;
+    });
   }
 
   private Autos() {
