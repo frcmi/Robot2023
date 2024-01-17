@@ -76,7 +76,7 @@ public final class Autos {
       }
 
       return false;
-    });
+    }).finallyDo(() -> drive.setSpeed(0));
   }
 
   private Autos() {
