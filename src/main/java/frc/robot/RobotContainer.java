@@ -115,6 +115,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     var aprilTag = new Translation2d(14.02, 34.79);
-    return Autos.moveToCircle(m_positionEstimationSubsystem, m_driveSubsystem, 0.2, aprilTag, 0.5);
+    double aprilTagAngle = Math.atan2(aprilTag.getY(), aprilTag.getX());
+
+    return Autos.rotate(m_driveSubsystem, () -> m_positionEstimationSubsystem.getPose().get().getRotation().getY(), aprilTagAngle, 0.5, Math.PI / 12).repeatedly();
   }
 }

@@ -10,6 +10,8 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PositionEstimationSubsystem;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -76,7 +78,19 @@ public final class Autos {
       }
 
       return false;
-    }).finallyDo(() -> drive.setSpeed(0));
+    }).finallyDo(() -> drive.setSpeed(0)).repeatedly();
+  }
+
+  public static Command rotate(DriveSubsystem drive, DoubleSupplier rotation, double target, double speed, double margin) {
+    return Commands.run(() -> {
+      double rotationAngle = rotation.getAsDouble();
+      double leftSpeed = speed * rotationAngle / Math.abs(rotationAngle);
+
+      drive.setSpeed(leftSpeed, leftSpeed);
+    }).onlyWhile(() -> {
+      double rotationAngle = rotation.getAsDouble();
+      return Math.abs(rotationAngle - target) > margin;
+    }).andThen(drive.stop());
   }
 
   private Autos() {

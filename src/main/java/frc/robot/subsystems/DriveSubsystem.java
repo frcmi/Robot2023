@@ -143,6 +143,10 @@ public class DriveSubsystem extends SubsystemBase {
     diffDrive.tankDrive(speed, speed);
   }
 
+  public void setSpeed(double leftSpeed, double rightSpeed) {
+    diffDrive.tankDrive(leftSpeed, rightSpeed);
+  }
+
   public Command balanceCommand() {
     Command command = run(() -> {
       double pitchAngleRadians = getRoll() * (Math.PI / 28.0);
