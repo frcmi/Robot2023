@@ -14,6 +14,7 @@ import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -81,15 +82,31 @@ public final class Autos {
     }).finallyDo(() -> drive.setSpeed(0)).repeatedly();
   }
 
-  public static Command rotate(DriveSubsystem drive, DoubleSupplier rotation, double target, double speed, double margin) {
+  public static Command rotateToFaceTarget(DriveSubsystem drive, PositionEstimationSubsystem vision, Translation2d target, double speed, double margin) {
     return Commands.run(() -> {
-      double rotationAngle = rotation.getAsDouble();
-      double leftSpeed = speed * rotationAngle / Math.abs(rotationAngle);
+      var pose = vision.getPose();
+      if (pose.isEmpty()) {
+        return;
+      }
 
-      drive.setSpeed(leftSpeed, leftSpeed);
+      var posePosition = pose.get().getTranslation();
+      double targetAngle = Math.atan2(target.getX() - posePosition.getX(), target.getY() - posePosition.getY());
+      double rotationAngle = pose.get().getRotation().getZ();
+      double delta = targetAngle - rotationAngle;
+      double leftSpeed = speed * delta / Math.abs(delta);
+
+      drive.setSpeed(leftSpeed, -leftSpeed);
     }).onlyWhile(() -> {
-      double rotationAngle = rotation.getAsDouble();
-      return Math.abs(rotationAngle - target) > margin;
+      var pose = vision.getPose();
+      if (pose.isEmpty()) {
+        return false;
+      }
+
+      var posePosition = pose.get().getTranslation();
+      double targetAngle = Math.atan2(target.getX() - posePosition.getX(), target.getY() - posePosition.getY());
+      double rotationAngle = pose.get().getRotation().getZ();
+
+      return Math.abs(rotationAngle - targetAngle) > margin;
     }).andThen(drive.stop());
   }
 
